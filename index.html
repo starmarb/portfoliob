@@ -1,0 +1,1065 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="description" content="Sammi Kwon: product and UX designer, creative technologist, physicist.">
+<title>Sammi Kwon</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400..700&family=JetBrains+Mono:wght@400..700&display=swap">
+<style>
+/* Layout: a product designer's home page on white. Work comes first and stays clean;
+   the personality lives in small clay objects: a cowboy hat drawn by Fourier epicycles, a prism in the lab, beads on a string, a sunset. */
+:root {
+  --bg: #FFFFFF;
+  --fg: #1B1726;
+  --muted: #645E73;
+  --line: #ECE8F3;
+  --tint: #F4EEFF;
+  --accent: #6B3DF0; /* purple for text and links */
+  --clay: #A77BFF;    /* grape */
+  --rust: #4DA3FF;    /* sky blue */
+  --ochre: #FFD23F;   /* sunshine */
+  --sage: #3CCB7F;    /* lime-mint */
+  --teal: #2ED3C6;
+  --pink: #FF7EB6;    /* bubblegum */
+  --sand: #FFD6E7;    /* candy pink: desert floor, ruler */
+  --string: #A69FB8;
+  --mis: rgba(255, 126, 182, 0.5);   /* risograph misregistration ink */
+  --ink: #1B1726;     /* text on light inks, both themes */
+  --on-tile: #FFFFFF;
+  --grain: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='140' height='140'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 .1 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+  --sans: 'Instrument Sans', 'Helvetica Neue', Arial, sans-serif;
+  --mono: 'JetBrains Mono', ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #14121C; --fg: #F1EEF8; --muted: #A7A0B9; --line: #2B2738; --tint: #1E1A2B;
+    --accent: #C7B0FF; --clay: #A77BFF; --rust: #4DA3FF; --ochre: #FFD23F; --sage: #3CCB7F; --teal: #2ED3C6; --pink: #FF7EB6; --sand: #6B3D5A; --string: #6F6882;
+    --mis: rgba(255, 126, 182, 0.4);
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #14121C; --fg: #F1EEF8; --muted: #A7A0B9; --line: #2B2738; --tint: #1E1A2B;
+  --accent: #C7B0FF; --clay: #A77BFF; --rust: #4DA3FF; --ochre: #FFD23F; --sage: #3CCB7F; --teal: #2ED3C6; --pink: #FF7EB6; --sand: #6B3D5A; --string: #6F6882;
+  --mis: rgba(255, 126, 182, 0.4);
+  color-scheme: dark;
+}
+
+* { box-sizing: border-box; }
+body { background: var(--bg); color: var(--fg); font-family: var(--sans); font-size: 16px; line-height: 1.55; -webkit-font-smoothing: antialiased; }
+a { color: inherit; text-decoration: none; }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; border-radius: 4px; }
+h1, h2, h3 { margin: 0; text-wrap: balance; }
+p { margin: 0; }
+.sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+.wrap { max-width: 1440px; margin: 0 auto; padding-left: max(clamp(16px, 3vw, 40px), env(safe-area-inset-left, 0px)); padding-right: max(clamp(16px, 3vw, 40px), env(safe-area-inset-right, 0px)); padding-block: 0; display: flex; flex-direction: column; }
+html, body { overflow-x: clip; }
+
+/* printed material: flat ink, grain, a slightly misregistered second ink */
+.clay { --c: var(--clay); background-color: var(--c); background-image: var(--grain); box-shadow: 3px 3px 0 var(--mis); }
+.ball { border-radius: 50%; }
+
+/* header */
+.top { position: relative; z-index: 2; width: 100vw; margin-left: calc(50% - 50vw); padding-left: max(16px, 2vw, env(safe-area-inset-left, 0px)); padding-right: max(16px, 2vw, env(safe-area-inset-right, 0px)); display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 0 24px; padding-block: 10px; font-size: 16px; background: var(--bg); border-bottom: 1px solid var(--line); }
+.top a { display: inline-flex; align-items: center; min-height: 44px; }
+.top a:hover { color: var(--accent); }
+.brand { font-weight: 700; font-size: 17px; gap: 8px; letter-spacing: -0.01em; }
+.star { color: var(--accent); }
+.top nav { display: flex; flex-wrap: wrap; gap: 4px; color: var(--fg); font-weight: 600; }
+.top nav a { padding: 0 14px; border-radius: 999px; transition: background-color 0.2s; }
+.top nav a:hover { color: var(--fg); background: var(--tint); }
+
+/* buttons */
+.btn { display: inline-flex; align-items: center; gap: 10px; min-height: 48px; padding: 0 22px; border-radius: 999px; font-weight: 600; font-size: 16px; border: 1px solid transparent; transition: transform 0.2s, background-color 0.2s; }
+.btn-primary { color: var(--ink); --c: var(--clay); }
+.btn-primary:hover { transform: translateY(-2px); color: var(--ink); }
+.btn-ghost { border-color: var(--fg); color: var(--fg); }
+.btn-ghost:hover { background: var(--fg); color: var(--bg); }
+
+/* hero */
+.hero { position: relative; display: grid; grid-template-columns: minmax(0, 1fr); align-items: center; gap: 32px 56px; padding-block: 48px 72px; width: 100vw; margin-left: calc(50% - 50vw); padding-left: max(16px, 2vw, env(safe-area-inset-left, 0px)); padding-right: max(16px, 2vw, env(safe-area-inset-right, 0px)); }
+.worm { position: absolute; left: 0; top: 0; width: 100%; height: 100%; pointer-events: none; z-index: 0; }
+.hero-text { position: relative; z-index: 1; }
+.hero-text { display: flex; flex-direction: column; gap: 26px; min-width: 0; }
+.status { align-self: flex-start; display: inline-flex; align-items: center; gap: 10px; padding: 6px 14px 6px 10px; border-radius: 999px; background: var(--tint); font-size: 14px; font-weight: 500; }
+.status i { width: 10px; height: 10px; border-radius: 50%; --c: var(--sage); }
+.hero-row { display: flex; flex-wrap: wrap; align-items: center; gap: 10px 14px; position: relative; z-index: 4; }
+.gmode { display: inline-flex; align-items: center; gap: 8px; min-height: 34px; padding: 0 14px 0 6px; border-radius: 999px; border: 1px solid var(--line); background: var(--bg); color: var(--fg); font: 600 12px var(--mono); cursor: pointer; }
+.gmode .sw { position: relative; width: 30px; height: 18px; border-radius: 999px; background: var(--line); transition: background-color 0.2s; }
+.gmode .sw::after { content: ""; position: absolute; left: 2px; top: 2px; width: 14px; height: 14px; border-radius: 50%; background: var(--bg); box-shadow: 1px 1px 0 var(--mis); transition: transform 0.2s; }
+.gmode[aria-pressed="true"] { border-color: var(--fg); }
+.gmode[aria-pressed="true"] .sw { background: var(--clay); }
+.gmode[aria-pressed="true"] .sw::after { transform: translateX(12px); }
+.ghint { font: 500 12px var(--mono); color: var(--muted); }
+.gwrap { position: absolute; z-index: 7; top: 48px; right: max(16px, 2vw, env(safe-area-inset-right, 0px)); display: flex; flex-direction: column; align-items: flex-end; gap: 8px; }
+.hero.grav { cursor: none; }
+.hero.grav a, .hero.grav button { cursor: pointer; }
+.massdot { position: absolute; left: 0; top: 0; width: 22px; height: 22px; margin: -11px 0 0 -11px; border-radius: 50%; --c: var(--pink); z-index: 5; pointer-events: none; opacity: 0; transition: opacity 0.2s; }
+.hero.grav .massdot.on { opacity: 1; }
+.bh { position: absolute; left: 0; top: 0; width: 0; height: 0; z-index: 6; pointer-events: none; }
+.bh .core { position: absolute; left: -50%; top: -50%; width: 100%; height: 100%; opacity: 0; }
+.bh .hz { position: absolute; inset: 0; border-radius: 50%; background: #0B0910; box-shadow: 0 0 0 2px rgba(255, 210, 63, 0.9), 0 0 18px 6px rgba(255, 126, 182, 0.55), 0 0 60px 18px rgba(167, 123, 255, 0.3); z-index: 2; }
+.bh .disk { position: absolute; left: -85%; top: -85%; width: 270%; height: 270%; transform: rotate(-14deg) scaleY(0.28); z-index: 1; }
+.bh .disk i { position: absolute; inset: 0; border-radius: 50%; background: conic-gradient(from 0deg, var(--ochre), var(--pink), transparent 30%, var(--clay), var(--teal), transparent 62%, var(--pink), var(--ochre)); -webkit-mask: radial-gradient(circle, transparent 36%, #000 38%, #000 60%, transparent 66%); mask: radial-gradient(circle, transparent 36%, #000 38%, #000 60%, transparent 66%); animation: bhspin 0.9s linear infinite; }
+@keyframes bhspin { to { transform: rotate(360deg); } }
+.bh.flash::after { content: ""; position: absolute; left: -60px; top: -60px; width: 120px; height: 120px; border-radius: 50%; border: 3px solid var(--ochre); animation: hawking 0.7s ease-out forwards; }
+@keyframes hawking { from { transform: scale(0.2); opacity: 1; } to { transform: scale(3.2); opacity: 0; } }
+@media (hover: none), (prefers-reduced-motion: reduce), (max-width: 760px) { .gwrap, .gmode, .ghint { display: none; } }
+.howdy { font-weight: 600; font-size: clamp(72px, 10vw, 148px); line-height: 0.92; letter-spacing: -0.05em; }
+.hat { position: relative; display: block; padding: 0; border: 0; background: none; cursor: pointer; width: clamp(96px, 11vw, 156px); aspect-ratio: 2 / 1; margin-left: 0.2em; transform: rotate(-11deg) translateY(20%); transform-origin: 30% 100%; }
+.hat span { position: absolute; display: block; transition: opacity 0.5s; }
+.hat.drawing span { opacity: 0; }
+.hat-fx { position: absolute; left: -25%; top: -50%; width: 150%; height: 200%; pointer-events: none; transition: opacity 0.6s; }
+.hat .crown { left: 25%; right: 25%; bottom: 26%; height: 74%; border-radius: 46% 46% 20% 20% / 64% 64% 16% 16%; --c: var(--pink); z-index: 1; }
+.hat .crown::after { content: ""; position: absolute; left: 42%; right: 42%; top: 6%; height: 30%; border-radius: 50%; background: var(--bg); opacity: 0.35; }
+.hat .band { left: 25.5%; right: 25.5%; bottom: 34%; height: 13%; border-radius: 3px; z-index: 2; background-color: var(--ochre); background-image: var(--grain); }
+.hat .brim { left: 4%; right: 4%; bottom: 8%; height: 30%; border-radius: 50%; --c: color-mix(in srgb, var(--pink) 78%, #D9628F); z-index: 3; }
+.hat .brim::before, .hat .brim::after { content: ""; position: absolute; bottom: 38%; width: 20%; height: 110%; border-radius: 50%; background: inherit; box-shadow: inherit; }
+.hat .brim::before { left: -6%; transform: rotate(-38deg); }
+.hat .brim::after { right: -6%; transform: rotate(38deg); }
+.intro { display: flex; flex-wrap: wrap; align-items: center; gap: 12px 12px; font-size: clamp(22px, 2.3vw, 30px); font-weight: 500; line-height: 1.2; letter-spacing: -0.015em; }
+.spinner { position: relative; display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
+.drum { position: relative; width: 12.5ch; height: 54px; perspective: 1000px; font-family: var(--mono); font-size: 0.78em; }
+.drum-rot { position: absolute; inset: 0; transform-style: preserve-3d; transition: transform 0.48s cubic-bezier(.16, 1, .3, 1); will-change: transform; }
+.face { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; padding: 0 10px; border-radius: 14px; font-weight: 700; text-transform: lowercase; white-space: nowrap; overflow: hidden; backface-visibility: hidden; background-image: var(--grain); color: var(--ink); transform: rotateX(calc(var(--i) * 90deg)) translateZ(27px); }
+.reel-btn { position: absolute; inset: 0; z-index: 2; padding: 0; border: 0; border-radius: 14px; background: transparent; cursor: pointer; }
+/* spin control: a plain rounded arrow, taller than wide */
+.sw-btn { flex: none; width: 24px; height: 38px; margin-left: 2px; padding: 0; border: 0; background: none; color: var(--muted); cursor: pointer; }
+.sw-btn svg { display: block; width: 100%; height: 100%; overflow: visible; transition: transform 0.55s cubic-bezier(.16, 1, .3, 1); }
+.sw-btn path { fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; vector-effect: non-scaling-stroke; }
+.sw-btn:hover { color: var(--fg); }
+.sw-btn.closed svg { transform: rotate(180deg); }
+.drum-rot { transition-property: transform; }
+.persp { display: inline-block; font-style: italic; white-space: nowrap; }
+.persp i { font-style: italic; }
+.hero .w { display: inline-block; position: relative; }
+.hero .w, .hero .drum, .hero .spin-btn, .hero .hat, .hero .btn, .hero .status { will-change: translate, scale; }
+.pitch { font-size: clamp(18px, 1.6vw, 20px); line-height: 1.55; color: var(--muted); max-width: 54ch; }
+.pitch strong { color: var(--fg); font-weight: 600; }
+.cta-row { display: flex; flex-wrap: wrap; gap: 12px; }
+.creds { display: flex; flex-direction: column; gap: 6px; font-size: clamp(16px, 1.4vw, 18px); line-height: 1.5; color: var(--muted); max-width: 60ch; }
+.creds b { color: var(--fg); font-weight: 600; }
+.creds .sep { color: var(--accent); margin: 0 8px; }
+
+/* coupled pendulums: the swing passes back and forth; whichever pendulum takes it flips its word */
+.pend2 { position: relative; display: block; width: 100%; max-width: 360px; margin-inline: auto; padding: 0; border: 0; background: none; color: inherit; font: inherit; cursor: pointer; border-radius: 20px; }
+.pend2 svg { display: block; width: 100%; height: auto; overflow: visible; }
+.pend-cap { display: flex; flex-direction: column; align-items: center; gap: 2px; margin-top: 8px; text-align: center; }
+.pend-cap b { font-weight: 600; font-size: 15px; }
+.pend-cap span { font: 500 12px var(--mono); color: var(--muted); }
+.pend2:hover .pend-cap span { color: var(--accent); }
+.f-clay { fill: var(--clay); } .f-rust { fill: var(--rust); } .f-ochre { fill: var(--ochre); } .f-sage { fill: var(--sage); } .f-teal { fill: var(--teal); } .f-pink { fill: var(--pink); } .f-sand { fill: var(--sand); } .f-bg { fill: var(--bg); } .f-fg { fill: var(--fg); }
+.rod { stroke: var(--fg); stroke-width: 2; stroke-linecap: round; }
+.coil { fill: none; stroke: var(--fg); stroke-width: 2; stroke-linejoin: round; stroke-linecap: round; }
+.etrack { fill: var(--tint); }
+
+/* sections */
+.sec { display: flex; flex-direction: column; gap: 36px; padding-block: 72px; border-top: 1px solid var(--line); }
+.sec-head { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 8px 24px; }
+.sec-head h2 { font-size: clamp(30px, 3.6vw, 44px); font-weight: 600; letter-spacing: -0.03em; }
+.sec-head p { color: var(--muted); font-size: 16px; }
+
+/* work: an index of case studies; on hover a preview hangs from the cursor on a spring */
+.worklist { position: relative; display: flex; flex-direction: column; border-top: 1px solid var(--line); }
+.row { position: relative; display: grid; grid-template-columns: 220px minmax(0, 1fr) 64px; align-items: start; gap: 18px 36px; padding-block: 36px; border-bottom: 1px solid var(--line); }
+.r-meta { display: flex; flex-direction: column; gap: 3px; font-size: 14px; color: var(--muted); line-height: 1.5; }
+.r-skills { margin-top: 10px; font-size: 13px; line-height: 1.5; color: var(--fg); }
+.r-skills em { display: block; margin-bottom: 2px; font: 500 11px var(--mono); font-style: normal; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); }
+.r-meta b { color: var(--fg); font-weight: 600; }
+.r-main { display: flex; flex-direction: column; gap: 8px; min-width: 0; }
+.r-title { font-size: clamp(26px, 3vw, 38px); font-weight: 600; letter-spacing: -0.03em; line-height: 1.08; transition: color 0.2s, transform 0.3s cubic-bezier(.16, 1, .3, 1); }
+.r-desc { font-size: 16px; line-height: 1.65; color: var(--muted); max-width: 54ch; }
+.r-tags { display: flex; flex-wrap: wrap; justify-content: flex-start; gap: 6px; grid-column: 2; grid-row: 2; }
+.r-meta { grid-column: 1; grid-row: 1 / span 2; padding-top: 8px; }
+.r-main { grid-column: 2; grid-row: 1; }
+.r-yr { grid-column: 3; grid-row: 1; padding-top: 8px; }
+.r-tags > span { font-size: 13px; font-weight: 500; padding: 4px 12px; border-radius: 999px; white-space: nowrap; color: var(--fg); }
+/* pill colour code: field/industry · what it is · status */
+.r-tags .t-field { background: color-mix(in srgb, var(--pink) 22%, var(--bg)); }
+.r-tags .t-what { background: color-mix(in srgb, var(--rust) 20%, var(--bg)); }
+.r-tags .t-status { background: color-mix(in srgb, var(--ochre) 32%, var(--bg)); }
+.r-yr { font: 500 14px var(--mono); color: var(--muted); text-align: right; font-variant-numeric: tabular-nums; }
+.r-yr i { display: block; font-style: normal; color: var(--accent); font-size: 20px; margin-top: 6px; transition: transform 0.3s; }
+@media (hover: hover) {
+  .row:hover .r-title { color: var(--accent); transform: translateX(8px); }
+  .row:hover .r-yr i { transform: translateX(6px); }
+}
+.row:focus-visible .r-title { color: var(--accent); }
+button.row { width: 100%; margin: 0; padding-inline: 0; border: 0; border-bottom: 1px solid var(--line); background: none; color: inherit; font: inherit; text-align: left; cursor: pointer; }
+.row-drawer .r-yr i { font-size: 24px; line-height: 1; }
+@media (hover: hover) { .row-drawer:hover .r-yr i { transform: none; } }
+.row-drawer[aria-expanded="true"] .r-yr i { transform: rotate(45deg); }
+.row-drawer[aria-expanded="true"] { border-bottom-color: transparent; }
+.status-pill { display: inline-flex; align-items: center; gap: 7px; }
+.pulse { position: relative; display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: var(--ochre); flex: none; }
+.pulse::after { content: ""; position: absolute; inset: 0; border-radius: 50%; background: var(--ochre); animation: pulse 1.6s ease-out infinite; }
+@keyframes pulse { from { transform: scale(1); opacity: 0.7; } to { transform: scale(2.6); opacity: 0; } }
+.drawer { display: grid; grid-template-rows: 0fr; transition: grid-template-rows 0.45s cubic-bezier(.2, .8, .2, 1); border-bottom: 1px solid var(--line); }
+.drawer.open { grid-template-rows: 1fr; }
+.drawer-in { overflow: hidden; min-height: 0; }
+.drawer-grid { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 6fr); gap: 28px 40px; padding: 0 0 40px 256px; }
+.drawer-img { width: 100%; height: auto; border-radius: 16px; box-shadow: 5px 5px 0 var(--mis); }
+.drawer-text { display: flex; flex-direction: column; gap: 24px; min-width: 0; }
+.drawer-note { font-size: 16px; line-height: 1.6; color: var(--fg); max-width: 54ch; }
+.drawer-facts { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px 28px; margin: 0; padding-block: 20px; border-block: 1px solid var(--line); }
+.drawer-facts dt { font-size: 12px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); }
+.drawer-facts .wide { grid-column: 1 / -1; }
+.drawer-facts dd { margin: 4px 0 0; font-size: 15px; line-height: 1.5; }
+.drawer-block h4 { margin: 0 0 6px; font-size: 16px; font-weight: 600; }
+.drawer-block p { font-size: 15px; line-height: 1.65; color: var(--muted); max-width: 60ch; }
+@media (max-width: 900px) { .drawer-grid { grid-template-columns: minmax(0, 1fr); padding-left: 0; } }
+/* the row already shows its thumbnail on touch screens and narrow widths, so the drawer doesn't repeat it */
+@media (hover: none), (max-width: 760px) {
+  .drawer-img { display: none; }
+  .drawer-grid { padding: 4px 0 36px; }
+}
+@media (max-width: 560px) {
+  .drawer-facts { grid-template-columns: minmax(0, 1fr); gap: 14px; }
+  .row { padding-block: 32px; gap: 16px 20px; }
+}
+@media (prefers-reduced-motion: reduce) { .drawer { transition: none; } .pulse::after { animation: none; } }
+.thumb { display: none; aspect-ratio: 16 / 9; max-width: 100%; border-radius: 16px; background-size: cover; background-position: center; align-items: center; justify-content: center; }
+.thumb span, .peek-in span { font: 500 12px var(--mono); color: var(--muted); background: var(--bg); padding: 4px 10px; border-radius: 999px; }
+.peek { position: absolute; left: 0; top: 0; width: 380px; z-index: 5; pointer-events: none; transform: scale(0); will-change: transform; }
+.peek-in { aspect-ratio: 16 / 9; border-radius: 18px; display: flex; align-items: center; justify-content: center; background-size: cover; background-position: center; box-shadow: 5px 5px 0 var(--mis); }
+@media (hover: none), (max-width: 760px) {
+  .peek { display: none; }
+  .row { grid-template-columns: minmax(0, 1fr) auto; }
+  .thumb { display: flex; grid-column: 1 / -1; }
+  .r-meta { grid-column: 1 / 2; grid-row: 2; padding-top: 0; }
+  .r-yr { grid-column: 2 / 3; grid-row: 2; padding-top: 0; }
+  .r-main { grid-column: 1 / -1; grid-row: 3; }
+  .r-tags { grid-column: 1 / -1; grid-row: 4; }
+  .thumb { grid-row: 1; }
+  .r-tags { justify-content: flex-start; }
+}
+
+/* lab: white light through a clay prism, one ray per experiment */
+.labwrap { position: relative; display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 6fr); gap: 32px 72px; align-items: center; }
+.labwrap canvas { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; z-index: 0; }
+.stage { position: relative; min-height: 380px; cursor: pointer; }
+body.disperse :is(h1, h2, h3, p, a, li, b, em, span, i, button, dt, dd) { animation: disperse 1.6s ease-out; }
+@keyframes disperse {
+  0%, 35% { text-shadow: -6px 0 rgba(255, 126, 182, 0.9), 6px 0 rgba(46, 211, 198, 0.9), 0 5px rgba(255, 210, 63, 0.85); }
+  100% { text-shadow: 0 0 rgba(255, 126, 182, 0), 0 0 rgba(46, 211, 198, 0), 0 0 rgba(255, 210, 63, 0); }
+}
+.exps { position: relative; z-index: 1; display: flex; flex-direction: column; gap: 14px; }
+.exp { position: relative; display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 4px 16px; padding: 18px 22px 18px 30px; border-radius: 18px; background: var(--bg); border: 1px solid var(--line); transition: transform 0.3s cubic-bezier(.16, 1, .3, 1), border-color 0.2s; }
+.exp:hover, .exp:focus-visible { transform: translateX(6px); border-color: var(--fg); }
+.exp .dot { position: absolute; left: -11px; top: 50%; width: 22px; height: 22px; margin-top: -11px; border-radius: 50%; }
+.exp b { font: 700 15px var(--mono); }
+.exp .yr { font: 500 13px var(--mono); color: var(--muted); font-variant-numeric: tabular-nums; text-align: right; }
+.exp p { grid-column: 1 / -1; font-size: 15px; color: var(--muted); }
+.exp .try { grid-column: 1 / -1; font-size: 14px; font-weight: 600; margin-top: 4px; }
+.exp:hover .try { color: var(--accent); }
+
+/* experience: beads on a string */
+.xp { position: relative; list-style: none; margin: 0; padding: 0 0 0 36px; display: flex; flex-direction: column; }
+.xp::before { content: ""; position: absolute; left: 10px; top: 30px; bottom: 30px; width: 1.5px; background: var(--string); }
+.xp li { position: relative; display: grid; grid-template-columns: 160px minmax(0, 1fr) minmax(0, 1.4fr); gap: 6px 32px; padding-block: 24px; border-top: 1px solid var(--line); }
+.xp li:last-child { border-bottom: 1px solid var(--line); }
+.xp .bead { position: absolute; left: -36px; top: 26px; width: 22px; height: 22px; }
+.xp .when { font: 500 13px/1.9 var(--mono); color: var(--muted); font-variant-numeric: tabular-nums; }
+.xp h3 { font-size: 19px; font-weight: 600; letter-spacing: -0.01em; }
+.xp .role { color: var(--muted); font-size: 15px; }
+.xp .did { font-size: 16px; color: var(--fg); max-width: 56ch; }
+
+/* contact + sunset diorama */
+.cta-sec { padding-block: 24px 64px; }
+.panel { position: relative; border-radius: 28px; background: var(--tint); overflow: hidden; display: flex; flex-direction: column; }
+.sky { position: absolute; inset: 0; z-index: 0; opacity: 0; transition: opacity 0.9s ease; pointer-events: none; }
+.sky.k0 { background: linear-gradient(180deg, #C7B0FF 0%, #F6B3D6 48%, #FFC98F 78%, #FFE29A 100%); }
+.sky.k1 { background: linear-gradient(180deg, #F9B8D3 0%, #FFC1A6 50%, #FFD98A 80%, #FFEFB0 100%); }
+.sky.k2 { background: linear-gradient(180deg, #A9C8FF 0%, #C5B2FF 45%, #F7AFCF 75%, #FFC9A0 100%); }
+.panel[data-trail="0"] .sky.k0, .panel[data-trail="1"] .sky.k1, .panel[data-trail="2"] .sky.k2 { opacity: 1; }
+.panel-text { position: relative; z-index: 6; display: flex; flex-direction: column; gap: 16px; padding: clamp(24px, 5vw, 56px) clamp(20px, 5vw, 56px) 0; }
+.cta { display: flex; flex-wrap: wrap; align-items: center; gap: 0.1em 0.3em; font-weight: 600; font-size: clamp(40px, 5.6vw, 76px); line-height: 1; letter-spacing: -0.04em; }
+.trails { display: flex; flex-direction: column; gap: 0.06em; min-width: 4.3em; }
+.trail { display: block; padding: 0.04em 0.16em 0.08em; border-radius: 0.18em; }
+.trail.on { color: var(--ink); }
+.trail[data-i="0"].on { background: var(--clay); }
+.trail[data-i="1"].on { background: var(--pink); color: var(--ink); }
+.trail[data-i="2"].on { background: var(--rust); }
+.hint { font-size: 14px; color: var(--muted); }
+.dio { position: relative; height: clamp(200px, 26vw, 300px); margin-top: -30px; }
+.dio .sun { position: absolute; left: 66%; bottom: 46%; width: clamp(84px, 13vw, 150px); aspect-ratio: 1; transform: translateX(-50%); --c: var(--ochre); z-index: 1; transition: bottom 1.4s cubic-bezier(.3, 0, .2, 1); }
+.dio .sun::after { content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 46%; border-radius: 0 0 999px 999px; background-image: radial-gradient(circle, color-mix(in srgb, var(--pink) 70%, #D9628F) 1.5px, transparent 1.8px); background-size: 8px 8px; opacity: 0.9; }
+.panel[data-trail="0"] .dio .sun { --c: var(--clay); }
+.panel[data-trail="1"] .dio .sun { --c: var(--pink); }
+.panel[data-trail="2"] .dio .sun { --c: var(--rust); }
+.panel[data-trail] .dio .sun { bottom: 10%; }
+.fbd { position: absolute; inset: 0; width: 100%; height: 100%; z-index: 2; overflow: visible; }
+.fbd .vec path { fill: none; stroke: var(--fg); stroke-width: 1.6; stroke-linecap: round; opacity: 0.4; }
+.fbd .lbl { font: italic 17px 'Times New Roman', Georgia, serif; fill: var(--fg); opacity: 0.45; }
+.fbd .eline { fill: none; stroke: var(--fg); stroke-width: 1.2; stroke-dasharray: 5 6; opacity: 0.3; }
+.fbd .hatch { stroke: var(--fg); stroke-width: 1.2; opacity: 0.22; }
+.fbd .rib { fill: none; stroke: var(--bg); stroke-width: 1.4; opacity: 0.35; }
+.fbd .spine { stroke: var(--ochre); stroke-width: 1.8; stroke-linecap: round; }
+.fbd .gline { stroke: var(--fg); stroke-width: 1.6; opacity: 0.55; }
+
+footer { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 4px 24px; padding-block: 12px 32px; border-top: 1px solid var(--line); font-size: 14px; color: var(--muted); }
+footer a { display: inline-flex; align-items: center; min-height: 44px; }
+footer a:hover { color: var(--accent); }
+.credit { font-size: 13px; color: var(--muted); }
+.credit i { font-style: italic; }
+footer .credit { flex-basis: 100%; order: 3; padding-bottom: 8px; }
+
+@media (max-width: 960px) {
+  .hero { grid-template-columns: minmax(0, 1fr); }
+  .pend2 { max-width: 320px; }
+  .labwrap { grid-template-columns: minmax(0, 1fr); gap: 8px; }
+  .stage { min-height: 260px; }
+  .xp li { grid-template-columns: minmax(0, 1fr); }
+}
+@media (max-width: 680px) {
+  .work { grid-template-columns: minmax(0, 1fr); gap: 48px; }
+  .pend .ball { width: 38px; height: 38px; margin-left: -19px; margin-bottom: -19px; }
+  .pend.p1 { left: calc(50% - 76px); } .pend.p2 { left: calc(50% - 38px); } .pend.p4 { left: calc(50% + 38px); } .pend.p5 { left: calc(50% + 76px); }
+  .clack.c1 { left: calc(50% - 57px); } .clack.c2 { left: calc(50% + 57px); }
+  .dio { margin-top: 0; height: auto; aspect-ratio: 1200 / 300; }
+  .dio .sun { width: 13%; }
+}
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { transition: none !important; }
+}
+</style>
+
+<style>body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
+</head>
+<body>
+<svg width="0" height="0" style="position: absolute" aria-hidden="true" focusable="false">
+  <defs>
+    <filter id="soft" x="-20%" y="-20%" width="150%" height="150%"><feFlood flood-color="#FF7EB6" flood-opacity="0.5"></feFlood><feComposite in2="SourceAlpha" operator="in"></feComposite><feOffset dx="5" dy="5" result="mis"></feOffset><feMerge><feMergeNode in="mis"></feMergeNode><feMergeNode in="SourceGraphic"></feMergeNode></feMerge></filter>
+    <radialGradient id="shine"><stop offset="0" stop-color="#FFFFFF" stop-opacity="0"></stop><stop offset="1" stop-color="#FFFFFF" stop-opacity="0"></stop></radialGradient>
+  </defs>
+</svg>
+
+<div id="top" class="wrap">
+  <header class="top">
+    <a class="brand" href="#top">Sammi Kwon <span class="star" aria-hidden="true">★</span></a>
+    <nav aria-label="Main">
+      <a href="#work">Work</a>
+      <a href="#lab">Lab</a>
+      <a href="about/index.html">About</a>
+      <a href="#contact">Contact</a>
+    </nav>
+  </header>
+
+  <section class="hero" id="hero" aria-labelledby="howdy-title">
+    <canvas class="worm" id="worm" aria-hidden="true"></canvas>
+    <div class="gwrap">
+      <button class="gmode" id="gmode" type="button" aria-pressed="false"><span class="sw" aria-hidden="true"></span>gravity mode</button>
+      <span class="ghint" id="ghint" hidden>Click empty space to make a black hole</span>
+    </div>
+    <span class="massdot ball clay" id="massdot" aria-hidden="true"></span>
+    <div class="bh" id="bh" aria-hidden="true"><div class="core"><span class="disk"><i></i></span><span class="hz"></span></div></div>
+    <div class="hero-text">
+      <div class="hero-row">
+        <span class="status"><i class="ball clay" aria-hidden="true"></i>Open to product &amp; UX design roles</span>
+      </div>
+      <div>
+        <button class="hat" id="hat" type="button" aria-label="Redraw the hat with Fourier epicycles"><span class="crown clay" aria-hidden="true"></span><span class="band" aria-hidden="true"></span><span class="brim clay" aria-hidden="true"></span><canvas class="hat-fx" id="hatfx" aria-hidden="true"></canvas></button>
+        <h1 id="howdy-title" class="howdy">Howdy!</h1>
+      </div>
+      <div class="intro">
+        <span>I'm Sammi Kwon, a</span>
+        <div class="spinner">
+          <div class="drum" id="drum1"><div class="drum-rot"><div class="face" style="--i:0"></div><div class="face" style="--i:1"></div><div class="face" style="--i:2"></div><div class="face" style="--i:3"></div></div><button class="reel-btn" type="button" aria-label="Spin this word"></button></div>
+          <div class="drum" id="drum2"><div class="drum-rot"><div class="face" style="--i:0"></div><div class="face" style="--i:1"></div><div class="face" style="--i:2"></div><div class="face" style="--i:3"></div></div><button class="reel-btn" type="button" aria-label="Spin this word"></button></div>
+          <button class="sw-btn" id="spin" type="button" aria-label="Spin the words" title="Spin"><svg viewBox="0 0 20 32" aria-hidden="true"><path d="M7 5H11A5 5 0 0 1 16 10V23"></path><path d="M13 20L16 23L19 20"></path><path d="M13 27H9A5 5 0 0 1 4 22V9"></path><path d="M1 12L4 9L7 12"></path></svg></button>
+          
+        </div>
+        <span>with <span class="persp">perspective</span>.</span>
+        <span class="sr" id="pair" aria-live="polite"></span>
+      </div>
+      <div class="creds">
+        <p><b>Physics &amp; Computing and the Arts</b> @ Yale</p>
+        <p>Previously <b>Hanwha Life</b><span class="sep">★</span><b>CreativeMUT</b><span class="sep">★</span><b>Yale University Library Technical Services</b></p>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec" id="work" aria-labelledby="work-title">
+    <div class="sec-head"><h2 id="work-title">Selected work</h2></div>
+    <div class="worklist" id="worklist">
+      <div class="peek" id="peek" aria-hidden="true"><div class="peek-in" id="peek-in"><span id="peek-label">case study image</span></div></div>
+
+      <a class="row" href="gift-growth-planner/index.html" data-tint="#FFF5D1" data-img="thumbs/gift-growth-planner.webp">
+        <span class="thumb" style="background-color: #FFF5D1"><span>case study image</span></span>
+        <span class="r-meta"><b>Hanwha Life</b><span class="r-role">UI/UX Design Intern</span><span class="r-skills"><em>Skills</em>UI/UX design, prototyping</span></span>
+        <span class="r-main"><span class="r-title">Gift Growth Planner</span><span class="r-desc">An in-app planner for Pi, Hanwha Life's family investing app, that shows parents how much they can gift their children tax-free, and when.</span></span>
+        <span class="r-tags"><span class="t-field">Fintech</span><span class="t-what">Mobile app</span></span>
+        <span class="r-yr">2026<i aria-hidden="true">→</i></span>
+      </a>
+
+      <a class="row" href="message-wall/index.html" data-tint="#FFE4F0" data-img="thumbs/message-wall.webp">
+        <span class="thumb" style="background-color: #FFE4F0"><span>case study image</span></span>
+        <span class="r-meta"><b>CreativeMUT</b><span class="r-role">Design Engineering Intern</span><span class="r-skills"><em>Skills</em>UX design, full-stack development</span></span>
+        <span class="r-main"><span class="r-title">Interactive Message Wall</span><span class="r-desc">A live drawing wall for G-Dragon's exhibition in Osaka. Visitors drew on their phones and their drawings appeared on an LED screen.</span></span>
+        <span class="r-tags"><span class="t-field">Exhibition design</span><span class="t-what">Interactive installation</span></span>
+        <span class="r-yr">2025<i aria-hidden="true">→</i></span>
+      </a>
+
+      <a class="row" href="fit-for-the-weather/index.html" data-tint="#E2F0FF" data-img="thumbs/fit-for-the-weather.webp">
+        <span class="thumb" style="background-color: #E2F0FF"><span>case study image</span></span>
+        <span class="r-meta"><b>Yale</b><span class="r-role">Product Lead</span><span class="r-skills"><em>Skills</em>UI/UX design, frontend development</span></span>
+        <span class="r-main"><span class="r-title">Fit for the Weather</span><span class="r-desc">A web app and e-ink display that suggest outfits from your own closet based on the day's weather.</span></span>
+        <span class="r-tags"><span class="t-field">Lifestyle</span><span class="t-what">Cross-device web app</span><span class="t-status">Voted Best Project</span></span>
+        <span class="r-yr">2023<i aria-hidden="true">→</i></span>
+      </a>
+
+      <button class="row row-drawer" type="button" id="bca-row" aria-expanded="false" aria-controls="bca-drawer" data-tint="#DDF8EC" data-img="thumbs/blue-collar-assistant.webp">
+        <span class="thumb" style="background-color: #DDF8EC"><span>case study image</span></span>
+        <span class="r-meta"><b>Ok A/C</b><span class="r-role">UI/UX Designer &amp; Frontend Developer</span><span class="r-skills"><em>Skills</em>UI/UX design, frontend development</span></span>
+        <span class="r-main"><span class="r-title">Blue Collar Technician Assistant</span><span class="r-desc">A job-tracking app for an HVAC company. Technicians log each job on their phone, and the office sees it on a live dashboard.</span></span>
+        <span class="r-tags"><span class="t-field">Field service</span><span class="t-what">Mobile web app + dashboard</span><span class="t-status status-pill"><i class="pulse" aria-hidden="true"></i>In impact assessment</span></span>
+        <span class="r-yr">2026<i aria-hidden="true">+</i></span>
+      </button>
+      <div class="drawer" id="bca-drawer" role="region" aria-labelledby="bca-row">
+        <div class="drawer-in">
+          <div class="drawer-grid">
+            <img class="drawer-img" src="thumbs/blue-collar-assistant.webp" alt="Technician app screens: today's jobs, appointment details and parts used" width="1400" height="788" loading="lazy">
+            <div class="drawer-text">
+              <p class="drawer-note">The app is live and used daily, and is in the final stage of its business impact assessment.</p>
+              <dl class="drawer-facts">
+                <div><dt>Role</dt><dd>UI/UX Designer &amp; Frontend Developer</dd></div>
+                <div><dt>Timeline</dt><dd>May – August 2026</dd></div>
+                <div class="wide"><dt>Platform</dt><dd>Mobile task management web app for technicians, web dashboard for the office</dd></div>
+              </dl>
+              <div class="drawer-block"><h4>The problem</h4><p>HVAC technicians had a scattered system for tracking appointments, work logs and serial numbers, which led to operational inefficiencies in creating invoices and following up with clients.</p></div>
+              <div class="drawer-block"><h4>What I built</h4><p>A task management platform that centralizes appointments, work logs and equipment information and forwards them directly to the office, for a faster turnaround on invoices. The office dashboard helps collapse duplicate information from technician forms, manage schedules and generate invoices.</p></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <section class="sec" id="lab" aria-labelledby="lab-title">
+    <div class="sec-head"><h2 id="lab-title">Lab</h2><p>Try out selected mini-projects that combine all of my interests.</p></div>
+    <div class="labwrap" id="labwrap">
+      <canvas id="rays" aria-hidden="true"></canvas>
+      <div class="stage" id="stage" aria-hidden="true"></div>
+      <div class="exps">
+        <a class="exp" href="https://starmarb.github.io/qlock/"><span class="dot ball clay" style="--c: var(--pink)"></span><b>qlock</b><span class="yr">2024</span><p>Qubit Clock to tell the date-time through a qubit.</p><span class="try">Try it out →</span></a>
+        <a class="exp" href="https://starmarb.github.io/tempjar/"><span class="dot ball clay" style="--c: var(--ochre)"></span><b>ascii-moonjar</b><span class="yr">2025</span><p>Moonjar ASCII art generator with export to GIF.</p><span class="try">Try it out →</span></a>
+        <a class="exp" href="https://starmarb.github.io/pocketliferoom/"><span class="dot ball clay" style="--c: var(--teal)"></span><b>pocketliferoom</b><span class="yr">2026</span><p>Goal tracking as an interactive game-ified room.</p><span class="try">Try it out →</span></a>
+        <a class="exp" href="https://starmarb.github.io/yuag-search-demo/"><span class="dot ball clay" style="--c: var(--clay)"></span><b>art-search</b><span class="yr">2023</span><p>Backend project to search items in an art gallery.</p><span class="try">Try it out →</span></a>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec" id="experience" aria-labelledby="xp-title">
+    <div class="sec-head"><h2 id="xp-title">Experience</h2><p>The trail I've treaded so far.</p></div>
+    <ol class="xp">
+      <li data-k="hanwha"><span class="bead ball clay" style="--c: var(--clay)" aria-hidden="true"></span><span class="when">Jun – Aug 2026</span><div><h3>Hanwha Life</h3><p class="role">UI/UX Design Intern</p></div><p class="did">Designed the Gift Growth Planner for the Pi app, presented it to executive leadership, and worked with PMs and engineers through implementation.</p></li>
+      <li data-k="lib"><span class="bead ball clay" style="--c: var(--ochre)" aria-hidden="true"></span><span class="when">Jan – Jun 2026</span><div><h3>Yale University Library Technical Services</h3><p class="role">Data Engineer</p></div><p class="did">Built data pipelines and interactive visualizations that make 12,031 catalog records in 1,671 languages easier to discover.</p></li>
+      <li data-k="mut"><span class="bead ball clay" style="--c: var(--teal)" aria-hidden="true"></span><span class="when">Jun – Aug 2025</span><div><h3>CreativeMUT</h3><p class="role">Design Engineering Intern</p></div><p class="did">Technical lead for media-art exhibitions in Osaka and at Singapore Changi Airport, and took the Interactive Message Wall from concept to launch.</p></li>
+      <li data-k="yale"><span class="bead ball clay" style="--c: var(--pink)" aria-hidden="true"></span><span class="when"></span><div><h3>Yale University</h3><p class="role">Physics &amp; Computing and the Arts</p></div><p class="did">Physics alongside computer graphics and systems programming.</p></li>
+    </ol>
+  </section>
+
+  <section class="cta-sec" id="contact" aria-labelledby="contact-title">
+    <h2 id="contact-title" class="sr">Contact</h2>
+    <div class="panel" id="panel">
+      <span class="sky k0" aria-hidden="true"></span><span class="sky k1" aria-hidden="true"></span><span class="sky k2" aria-hidden="true"></span>
+      <div class="panel-text">
+        <div class="cta">
+          <span>Let's</span>
+          <span class="trails">
+            <a class="trail" data-i="0" data-word="build" data-dest="github" href="https://github.com/starmarb" aria-label="build: GitHub">build</a>
+            <a class="trail" data-i="1" data-word="follow up" data-dest="email" href="mailto:sammiyoukwon@gmail.com" aria-label="follow up: email">follow up</a>
+            <a class="trail" data-i="2" data-word="work" data-dest="linkedin" href="https://www.linkedin.com/in/sammikwon/" aria-label="work: LinkedIn">work</a>
+          </span>
+          <span>together!</span>
+        </div>
+      </div>
+      <div class="dio" id="dio" aria-hidden="true">
+        <span class="sun ball clay"></span>
+        <svg class="fbd" viewBox="0 0 1200 300" preserveAspectRatio="xMidYMax slice" aria-hidden="true">
+          <defs>
+            <marker id="ahy" viewBox="0 0 10 10" refX="2" refY="5" markerWidth="7" markerHeight="7" markerUnits="userSpaceOnUse" orient="auto"><path d="M0 0L10 5L0 10z" class="f-ochre"></path></marker>
+            <marker id="ahk" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="12" markerHeight="12" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" class="f-fg"></path></marker>
+            <marker id="ahg" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="30" markerHeight="30" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" class="f-sage"></path></marker>
+          </defs>
+          <g filter="url(#soft)">
+            <path class="f-rust" d="M640 230 L640 229.4 L648 228.9 L656 228.3 L664 227.3 L672 225.8 L680 223.8 L688 220.9 L696 217.0 L704 212.0 L712 205.7 L720 198.0 L728 189.0 L736 178.8 L744 167.8 L752 156.3 L760 144.9 L768 134.3 L776 125.1 L784 118.0 L792 113.5 L800 112.0 L808 113.5 L816 118.0 L824 125.1 L832 134.3 L840 144.9 L848 156.3 L856 167.8 L864 178.8 L872 189.0 L880 198.0 L888 205.6 L896 211.8 L904 216.6 L912 220.3 L920 222.7 L928 224.2 L936 224.8 L944 224.5 L952 223.4 L960 221.3 L968 218.2 L976 214.0 L984 208.4 L992 201.5 L1000 193.1 L1008 183.2 L1016 171.9 L1024 159.4 L1032 146.2 L1040 132.7 L1048 119.5 L1056 107.2 L1064 96.6 L1072 88.2 L1080 82.6 L1088 80.1 L1096 80.9 L1104 85.0 L1112 92.1 L1120 101.6 L1128 113.2 L1136 126.0 L1144 139.5 L1152 152.9 L1160 165.8 L1168 177.7 L1176 188.3 L1184 197.5 L1192 205.2 L1200 211.5 L1200 230 Z"></path>
+            <path class="f-clay" d="M60 230 L440 230 L440 95 Z"></path>
+          </g>
+          <g id="blockg">
+            <g filter="url(#soft)"><rect class="f-ochre" x="-24" y="-24" width="48" height="48" rx="6" transform="translate(325.6 110.2) rotate(-19.6)"></rect></g>
+            <g class="vec">
+              <path d="M325.6 110.2 L325.6 172.2" marker-end="url(#ahk)"></path>
+              <path d="M325.6 110.2 L304.8 51.8" marker-end="url(#ahk)"></path>
+              <path d="M325.6 110.2 L378.3 91.4" marker-end="url(#ahk)"></path>
+            </g>
+            <text class="lbl" x="333" y="172">mg</text>
+            <text class="lbl" x="287" y="54">N</text>
+            <text class="lbl" x="383" y="88">f</text>
+          </g>
+          <g class="vec"><path d="M124 230 A64 64 0 0 0 120.3 208.6"></path></g>
+          <text class="lbl" x="134" y="223">θ</text>
+          <g filter="url(#soft)"><path class="f-sage" id="cactus" d="M563 230 V199 H538 A26 26 0 0 1 512 173 V150 A13 13 0 0 1 538 150 V173 H563 V117 A17 17 0 0 1 597 117 V160 H622 V125 A13 13 0 0 1 648 125 V160 A26 26 0 0 1 622 186 H597 V230 Z"></path></g>
+          <path class="rib" d="M574 112 V228 M586 112 V228 M525 152 V176 M635 127 V164"></path>
+          <g id="spines"></g>
+          <path class="eline" id="eline" d=""></path>
+          <text class="lbl" id="elabel" x="0" y="0">E</text>
+          <circle class="f-ochre" id="pball" r="17" filter="url(#soft)"></circle>
+          <rect class="f-sand" x="0" y="230" width="1200" height="70"></rect>
+          <path class="hatch" d="M14 233 l-12 14M32 233 l-12 14M50 233 l-12 14M68 233 l-12 14M86 233 l-12 14M104 233 l-12 14M122 233 l-12 14M140 233 l-12 14M158 233 l-12 14M176 233 l-12 14M194 233 l-12 14M212 233 l-12 14M230 233 l-12 14M248 233 l-12 14M266 233 l-12 14M284 233 l-12 14M302 233 l-12 14M320 233 l-12 14M338 233 l-12 14M356 233 l-12 14M374 233 l-12 14M392 233 l-12 14M410 233 l-12 14M428 233 l-12 14M446 233 l-12 14M464 233 l-12 14M482 233 l-12 14M500 233 l-12 14M518 233 l-12 14M536 233 l-12 14M554 233 l-12 14M572 233 l-12 14M590 233 l-12 14M608 233 l-12 14M626 233 l-12 14M644 233 l-12 14M662 233 l-12 14M680 233 l-12 14M698 233 l-12 14M716 233 l-12 14M734 233 l-12 14M752 233 l-12 14M770 233 l-12 14M788 233 l-12 14M806 233 l-12 14M824 233 l-12 14M842 233 l-12 14M860 233 l-12 14M878 233 l-12 14M896 233 l-12 14M914 233 l-12 14M932 233 l-12 14M950 233 l-12 14M968 233 l-12 14M986 233 l-12 14M1004 233 l-12 14M1022 233 l-12 14M1040 233 l-12 14M1058 233 l-12 14M1076 233 l-12 14M1094 233 l-12 14M1112 233 l-12 14M1130 233 l-12 14M1148 233 l-12 14M1166 233 l-12 14M1184 233 l-12 14"></path>
+          <path class="gline" d="M0 230 H1200"></path>
+        </svg>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <span>© 2026 Sammi Kwon</span>
+    <a href="#top">Back to top ↑</a>
+  </footer>
+</div>
+
+<script>
+(function () {
+  /* return visitors to where they were on the home page.
+     Anchored to the project they clicked (not a raw pixel offset), so fonts loading,
+     the drawer state or the hero's height can't push them too far down. */
+  try { if ('scrollRestoration' in history) history.scrollRestoration = 'manual'; } catch (e) {}
+  function saveSpot(link) {
+    var spot = { y: Math.round(window.scrollY), drawer: document.getElementById('bca-row') && document.getElementById('bca-row').getAttribute('aria-expanded') === 'true' };
+    if (link) { spot.href = link.getAttribute('href'); spot.top = Math.round(link.getBoundingClientRect().top); }
+    try { sessionStorage.setItem('home-spot', JSON.stringify(spot)); } catch (e) {}
+  }
+  document.querySelectorAll('a.row').forEach(function (a) { a.addEventListener('click', function () { saveSpot(a); }); });
+  window.addEventListener('pagehide', function () { var s0 = null; try { s0 = JSON.parse(sessionStorage.getItem('home-spot') || 'null'); } catch (e) {} if (!s0 || !s0.href) saveSpot(null); });
+  var restoreSpot = (function () {
+    var spot = null; try { spot = JSON.parse(sessionStorage.getItem('home-spot') || 'null'); } catch (e) {}
+    if (!spot || location.hash) return function () {};
+    try { sessionStorage.removeItem('home-spot'); } catch (e) {}
+    var go = function () {
+      var link = spot.href && document.querySelector('a.row[href="' + spot.href + '"]');
+      if (link) window.scrollTo(0, window.scrollY + link.getBoundingClientRect().top - spot.top);
+      else window.scrollTo(0, spot.y);
+    };
+    window.addEventListener('load', go);
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(go);
+    setTimeout(go, 300);
+    return function (openDrawer) { if (spot.drawer) openDrawer(); go(); };
+  })();
+  var reduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  /* ---------- word spinner (port of the Framer component) ---------- */
+  var TILES = ['#FF8CC0', '#FFD84D', '#3DDAC8', '#B593FF'];
+  var W1 = ['creative', 'curious', 'user-focused', 'design', 'cowboy'];
+  var W2 = ['engineer', 'physicist', 'nerd', 'technologist', 'cowboy'];
+  var pairEl = document.getElementById('pair');
+  function pickColor(avoid) { var c = TILES[Math.floor(Math.random() * 4)], g = 0; while (c === avoid && g++ < 10) c = TILES[Math.floor(Math.random() * 4)]; return c; }
+  function front(rot) { return (((-rot / 90) % 4) + 4) % 4; }
+  function diffIndex(n, cur) { var x = cur, g = 0; while (x === cur && g++ < 10) x = Math.floor(Math.random() * n); return x; }
+  function paint(face, color) { face.style.backgroundColor = color; }
+  function makeDrum(el, words, startColor) {
+    var d = { rot: el.querySelector('.drum-rot'), faces: el.querySelectorAll('.face'), words: words, rotation: 0, current: 0, colors: [] };
+    for (var i = 0; i < 4; i++) { d.colors[i] = i === 0 ? startColor : pickColor(); d.faces[i].textContent = words[i % words.length]; paint(d.faces[i], d.colors[i]); }
+    return d;
+  }
+  function spinDrum(d, q, ms) {
+    var f = front(d.rotation), target = diffIndex(d.words.length, d.current);
+    if (reduced) { d.faces[f].textContent = d.words[target]; d.colors[f] = pickColor(d.colors[f]); paint(d.faces[f], d.colors[f]); d.current = target; announce(); return; }
+    if (q % 4 === 0) q += 1;
+    d.rotation -= q * 90;
+    var land = front(d.rotation);
+    d.faces[land].textContent = d.words[target];
+    d.colors[land] = pickColor(d.colors[f]); paint(d.faces[land], d.colors[land]);
+    for (var i = 0; i < 4; i++) {
+      if (i === f || i === land) continue;
+      d.faces[i].textContent = d.words[Math.floor(Math.random() * d.words.length)];
+      d.colors[i] = pickColor(); paint(d.faces[i], d.colors[i]);
+    }
+    d.rot.style.transitionDuration = ms + 'ms';
+    d.rot.style.transform = 'rotateX(' + d.rotation + 'deg)';
+    d.current = target; announce();
+  }
+  var d1 = makeDrum(document.getElementById('drum1'), W1, TILES[0]);
+  var d2 = makeDrum(document.getElementById('drum2'), W2, TILES[3]);
+  function announce() { pairEl.textContent = 'Selected pairing: ' + d1.words[d1.current] + ' ' + d2.words[d2.current]; }
+  announce();
+  /* the switch closes the circuit and both reels spin */
+  var swBtn = document.getElementById('spin');
+  swBtn.addEventListener('click', function () {
+    if (typeof mode !== 'undefined' && mode !== 'lens') return;
+    swBtn.classList.add('closed');
+    clearTimeout(swBtn._t); swBtn._t = setTimeout(function () { swBtn.style.transition = 'none'; swBtn.classList.remove('closed'); void swBtn.offsetWidth; swBtn.style.transition = ''; }, 600);
+    spinDrum(d1, 5 + Math.floor(Math.random() * 3), 460);
+    setTimeout(function () { spinDrum(d2, 5 + Math.floor(Math.random() * 3), 460); }, 60);
+  });
+  /* each word tile is its own reel: click it to spin that word */
+  document.querySelectorAll('.reel-btn').forEach(function (btn, i) {
+    btn.addEventListener('click', function () {
+      if (typeof mode !== 'undefined' && mode !== 'lens') return;
+      spinDrum(i === 0 ? d1 : d2, 5 + Math.floor(Math.random() * 3), 460);
+    });
+  });
+
+  /* ---------- visibility ---------- */
+  var visible = {};
+  function watch(el, key) {
+    visible[key] = true;
+    if ('IntersectionObserver' in window) new IntersectionObserver(function (es) { visible[key] = es[0].isIntersecting; }).observe(el);
+  }
+  var dioEl = document.getElementById('dio'), labEl = document.getElementById('labwrap');
+  watch(document.getElementById('hero'), 'hero'); watch(document.getElementById('worklist'), 'work'); watch(labEl, 'lab'); watch(dioEl, 'dio');
+  if (!reduced) {
+    setInterval(function () { if (visible.hero && !document.hidden && mode === 'lens') spinDrum(d1, 1, 560); }, 2800);
+    setTimeout(function () { setInterval(function () { if (visible.hero && !document.hidden && mode === 'lens') spinDrum(d2, 1, 560); }, 3500); }, 800);
+  }
+
+  /* ---------- the hat is drawn by Fourier epicycles: a sum of spinning circles tracing its outline ---------- */
+  var hatBtn = document.getElementById('hat'), hatCv = document.getElementById('hatfx');
+  var HAT = [[2, 34], [10, 58], [30, 82], [100, 93], [170, 82], [190, 58], [198, 34], [186, 52], [165, 64], [150, 64], [150, 30], [140, 6], [118, 2], [100, 10], [82, 2], [60, 6], [50, 30], [50, 64], [35, 64], [14, 52]];
+  var TERMS = (function () {
+    var N = 256, segs = [], total = 0, i;
+    for (i = 0; i < HAT.length; i++) { var a = HAT[i], b = HAT[(i + 1) % HAT.length], l = Math.hypot(b[0] - a[0], b[1] - a[1]); segs.push([a, b, l]); total += l; }
+    var pts = [], si = 0, acc = 0;
+    for (i = 0; i < N; i++) {
+      var d = i / N * total;
+      while (acc + segs[si][2] < d) { acc += segs[si][2]; si++; }
+      var sg = segs[si], u = (d - acc) / sg[2];
+      pts.push([sg[0][0] + (sg[1][0] - sg[0][0]) * u - 100, sg[0][1] + (sg[1][1] - sg[0][1]) * u - 50]);
+    }
+    var out = [];
+    for (var k = 0; k < N; k++) {
+      var re = 0, im = 0;
+      for (var n = 0; n < N; n++) { var ph = -2 * Math.PI * k * n / N; re += pts[n][0] * Math.cos(ph) - pts[n][1] * Math.sin(ph); im += pts[n][0] * Math.sin(ph) + pts[n][1] * Math.cos(ph); }
+      re /= N; im /= N;
+      out.push({ f: k <= N / 2 ? k : k - N, amp: Math.hypot(re, im), ph: Math.atan2(im, re) });
+    }
+    return out.sort(function (a, b) { return b.amp - a.amp; }).slice(0, 48);
+  })();
+  var drawing = false;
+  function drawHat() {
+    if (reduced || drawing) return;
+    drawing = true; hatBtn.classList.add('drawing'); hatCv.style.opacity = 1;
+    var start = performance.now(), DUR = 3200, trail = [];
+    function step(now) {
+      var dpr = Math.min(window.devicePixelRatio || 1, 2), cw = hatCv.clientWidth, ch = hatCv.clientHeight;
+      if (hatCv.width !== Math.round(cw * dpr)) { hatCv.width = Math.round(cw * dpr); hatCv.height = Math.round(ch * dpr); }
+      var ctx = hatCv.getContext('2d'); ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.clearRect(0, 0, cw, ch);
+      var w = cw / 1.5, h = ch / 2, sx = w / 200, sy = h / 100, ox = cw / 2, oy = ch / 2;
+      var tau = Math.min(1, (now - start) / DUR), x = 0, y = 0;
+      ctx.lineWidth = 1;
+      TERMS.forEach(function (T) {
+        var nx = x + T.amp * Math.cos(2 * Math.PI * T.f * tau + T.ph), ny = y + T.amp * Math.sin(2 * Math.PI * T.f * tau + T.ph);
+        if (T.amp * sx > 0.6) {
+          ctx.strokeStyle = rgba(C.string, 0.45); ctx.beginPath(); ctx.ellipse(ox + x * sx, oy + y * sy, T.amp * sx, T.amp * sy, 0, 0, Math.PI * 2); ctx.stroke();
+          ctx.strokeStyle = rgba(C.accent, 0.7); ctx.beginPath(); ctx.moveTo(ox + x * sx, oy + y * sy); ctx.lineTo(ox + nx * sx, oy + ny * sy); ctx.stroke();
+        }
+        x = nx; y = ny;
+      });
+      trail.push([ox + x * sx, oy + y * sy]);
+      ctx.strokeStyle = C.pink; ctx.lineWidth = 2.5; ctx.lineJoin = 'round'; ctx.lineCap = 'round';
+      ctx.beginPath(); trail.forEach(function (p, i) { if (i) ctx.lineTo(p[0], p[1]); else ctx.moveTo(p[0], p[1]); }); ctx.stroke();
+      if (tau < 1) requestAnimationFrame(step);
+      else {
+        ctx.clearRect(0, 0, cw, ch);
+        ctx.beginPath(); trail.forEach(function (p, i) { if (i) ctx.lineTo(p[0], p[1]); else ctx.moveTo(p[0], p[1]); }); ctx.closePath(); ctx.stroke();
+        hatBtn.classList.remove('drawing');
+        setTimeout(function () { hatCv.style.opacity = 0; drawing = false; }, 500);
+      }
+    }
+    requestAnimationFrame(step);
+  }
+  hatBtn.addEventListener('click', drawHat);
+
+  /* ---------- selected work: a preview hangs from the cursor on a spring ---------- */
+  var wl = document.getElementById('worklist'), peek = document.getElementById('peek'), peekIn = document.getElementById('peek-in'), peekLabel = document.getElementById('peek-label');
+  var canHover = window.matchMedia && window.matchMedia('(hover: hover)').matches;
+  var PK = { x: 0, y: 0, vx: 0, vy: 0, tx: 0, ty: 0, s: 0, vs: 0, on: false, fresh: true };
+  wl.addEventListener('mousemove', function (e) { var r = wl.getBoundingClientRect(); PK.tx = e.clientX - r.left + 28; PK.ty = e.clientY - r.top - 110; if (PK.fresh) { PK.x = PK.tx; PK.y = PK.ty; PK.fresh = false; } });
+  wl.addEventListener('mouseleave', function () { PK.on = false; PK.fresh = true; });
+  var bcaRow = document.getElementById('bca-row'), bcaDrawer = document.getElementById('bca-drawer');
+  bcaDrawer.inert = true;
+  bcaRow.addEventListener('click', function () {
+    var open = bcaRow.getAttribute('aria-expanded') !== 'true';
+    bcaRow.setAttribute('aria-expanded', String(open));
+    bcaDrawer.classList.toggle('open', open);
+    bcaDrawer.inert = !open;
+    if (open) PK.on = false;
+  });
+  bcaDrawer.addEventListener('mouseenter', function () { PK.on = false; });
+  restoreSpot(function () {
+    bcaDrawer.style.transition = 'none';
+    bcaRow.setAttribute('aria-expanded', 'true'); bcaDrawer.classList.add('open'); bcaDrawer.inert = false;
+    void bcaDrawer.offsetHeight; bcaDrawer.style.transition = '';
+  });
+  wl.querySelectorAll('.row').forEach(function (row) {
+    row.addEventListener('mouseenter', function () {
+      if (row.getAttribute('aria-expanded') === 'true') return;
+      PK.on = true;
+      var img = row.getAttribute('data-img');
+      peekIn.style.backgroundColor = row.getAttribute('data-tint');
+      peekIn.style.backgroundImage = img ? 'url("' + img + '")' : 'none';
+      peekLabel.hidden = !!img;
+    });
+    var img = row.getAttribute('data-img');
+    if (img) { var th = row.querySelector('.thumb'); th.style.backgroundImage = 'url("' + img + '")'; th.querySelector('span').hidden = true; }
+  });
+  function peekStep(dt) {
+    var k = 170, c = 17;
+    PK.vx += (k * (PK.tx - PK.x) - c * PK.vx) * dt; PK.vy += (k * (PK.ty - PK.y) - c * PK.vy) * dt;
+    PK.vs += (260 * ((PK.on ? 1 : 0) - PK.s) - 22 * PK.vs) * dt;
+    PK.x += PK.vx * dt; PK.y += PK.vy * dt; PK.s += PK.vs * dt;
+    var tilt = Math.max(-14, Math.min(14, PK.vx * 0.02));
+    peek.style.transform = 'translate(' + PK.x.toFixed(1) + 'px,' + PK.y.toFixed(1) + 'px) rotate(' + tilt.toFixed(2) + 'deg) scale(' + Math.max(0, PK.s).toFixed(3) + ')';
+  }
+
+  /* ---------- canvas helpers (clay look, theme-aware) ---------- */
+  var C = {};
+  function readTokens() {
+    var cs = getComputedStyle(document.documentElement);
+    ['accent', 'clay', 'rust', 'ochre', 'sage', 'teal', 'pink', 'sand', 'string', 'tint', 'bg', 'fg', 'muted'].forEach(function (k) { C[k] = cs.getPropertyValue('--' + k).trim(); });
+  }
+  readTokens();
+  if (window.matchMedia) window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', function () { readTokens(); drawRays(lastT); });
+  new MutationObserver(function () { readTokens(); drawRays(lastT); }).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+  function hex(c) { c = c.replace('#', ''); return [parseInt(c.substr(0, 2), 16), parseInt(c.substr(2, 2), 16), parseInt(c.substr(4, 2), 16)]; }
+  function mix(c, to, amt) { var a = hex(c); return 'rgb(' + a.map(function (v) { return Math.round(v + (to - v) * amt); }).join(',') + ')'; }
+  function mixA(c, to, amt, al) { var a = hex(c).map(function (v) { return Math.round(v + (to - v) * amt); }); return 'rgba(' + a.join(',') + ',' + al + ')'; }
+  function rgba(c, al) { var a = hex(c); return 'rgba(' + a[0] + ',' + a[1] + ',' + a[2] + ',' + al + ')'; }
+  function setup(cv) {
+    var dpr = Math.min(window.devicePixelRatio || 1, 2), w = cv.clientWidth, h = cv.clientHeight;
+    if (cv.width !== Math.round(w * dpr) || cv.height !== Math.round(h * dpr)) { cv.width = Math.round(w * dpr); cv.height = Math.round(h * dpr); }
+    var ctx = cv.getContext('2d'); ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.clearRect(0, 0, w, h);
+    return ctx;
+  }
+  function bead(ctx, x, y, r, col, al) {
+    ctx.save(); ctx.globalAlpha = al == null ? 1 : al;
+    ctx.fillStyle = col; ctx.beginPath(); ctx.arc(x, y, r, 0, Math.PI * 2); ctx.fill(); ctx.restore();
+  }
+
+  /* ---------- hero: a flat grid of contour lines that your cursor bends ----------
+     The cursor acts like a mass: grid lines (and everything in the hero) are pulled toward it,
+     and what sits right under it is magnified. Far from the cursor nothing moves.
+     The lines fade from almost nothing on the left to visible on the right. */
+  var heroEl = document.getElementById('hero'), wormCv = document.getElementById('worm'), perspEl = document.querySelector('.persp');
+  function splitText(root, chars) {
+    var walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, null), nodes = [], n;
+    while ((n = walker.nextNode())) {
+      if (!n.nodeValue.trim()) continue;
+      if (n.parentElement.closest('.drum, .sr, .spin-btn, canvas')) continue;
+      nodes.push(n);
+    }
+    nodes.forEach(function (node) {
+      var frag = document.createDocumentFragment();
+      node.nodeValue.split(chars ? /()/ : /(\s+)/).forEach(function (tok) {
+        if (!tok) return;
+        if (/^\s+$/.test(tok)) { frag.appendChild(document.createTextNode(tok)); return; }
+        var sp = document.createElement('span'); sp.className = 'w'; sp.textContent = tok; frag.appendChild(sp);
+      });
+      node.parentNode.replaceChild(frag, node);
+    });
+  }
+  var howdyEl = document.getElementById('howdy-title');
+  howdyEl.setAttribute('aria-label', howdyEl.textContent);
+  splitText(howdyEl, true);
+  howdyEl.querySelectorAll('.w').forEach(function (x) { x.setAttribute('aria-hidden', 'true'); });
+  perspEl.setAttribute('aria-label', 'perspective');
+  splitText(perspEl, true);
+  perspEl.querySelectorAll('.w').forEach(function (x) { x.setAttribute('aria-hidden', 'true'); });
+  heroEl.querySelectorAll('.status, .intro, .creds').forEach(function (el) { splitText(el, false); });
+  var targets = Array.prototype.slice.call(heroEl.querySelectorAll('.w, .drum, .sw-btn, .hat, .btn, .status')).filter(function (el) { return !(el.classList.contains('w') && el.closest('.btn, .status')); });
+  var bases = [];
+  function measure() {
+    targets.forEach(function (el) { el.style.translate = ''; el.style.scale = ''; el.style.rotate = ''; el.style.opacity = ''; });
+    if (typeof BD !== 'undefined') BD.forEach(function (b) { b.ox = b.oy = b.vx = b.vy = b.rot = 0; b.s = 1; b.gone = false; });
+    var hr = heroEl.getBoundingClientRect();
+    bases = targets.map(function (el) { var r = el.getBoundingClientRect(); return { x: r.left - hr.left + r.width / 2, y: r.top - hr.top + r.height / 2, amp: 0.36 * Math.min(1, 110 / Math.max(1, r.width)) }; });
+  }
+  measure();
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(measure);
+  window.addEventListener('resize', measure);
+
+  var F = { x: 0, y: 0, tx: 0, ty: 0, m: 0, mt: 0, live: false };
+  heroEl.addEventListener('pointermove', function (e) {
+    if (e.pointerType !== 'mouse' || reduced) return;
+    var r = heroEl.getBoundingClientRect(); F.tx = e.clientX - r.left; F.ty = e.clientY - r.top;
+    if (F.m < 0.02) { F.x = F.tx; F.y = F.ty; }
+    F.mt = mode === 'hole' ? F.mt : (mode === 'gravity' ? 1.4 : 1);
+    massdot.classList.toggle('on', mode === 'gravity');
+  });
+  heroEl.addEventListener('pointerleave', function () { if (mode !== 'hole') F.mt = 0; massdot.classList.remove('on'); });
+
+  /* ---------- gravity mode: the cursor becomes a mass; click to collapse it into a black hole ---------- */
+  var mode = 'lens', gBtn = document.getElementById('gmode'), gHint = document.getElementById('ghint');
+  var massdot = document.getElementById('massdot'), bhEl = document.getElementById('bh'), hz = { r: 0, rt: 0, t: 0 };
+  var BD = targets.map(function () { return { ox: 0, oy: 0, vx: 0, vy: 0, rot: 0, s: 1, gone: false }; });
+  gBtn.addEventListener('click', function () {
+    var on = gBtn.getAttribute('aria-pressed') !== 'true';
+    gBtn.setAttribute('aria-pressed', String(on));
+    gHint.hidden = !on;
+    heroEl.classList.toggle('grav', on);
+    if (on) { mode = 'gravity'; flatDrums(true); } else { if (mode === 'hole') evaporate(); mode = 'lens'; F.mt = 0; massdot.classList.remove('on'); flatDrums(false); }
+  });
+  heroEl.addEventListener('click', function (e) {
+    if (mode === 'lens' || e.target.closest('a, button')) return;
+    if (mode === 'hole') return;
+    mode = 'hole'; hz.rt = 46; hz.t = 0; F.mt = 2.6; massdot.classList.remove('on');
+  });
+  function flatDrums(on) {
+    [d1, d2].forEach(function (d) { var f = front(d.rotation); d.faces.forEach(function (el, i) { el.style.visibility = on && i !== f ? 'hidden' : ''; }); });
+  }
+  function evaporate() {
+    hz.rt = 0; bhEl.classList.remove('flash'); void bhEl.offsetWidth; bhEl.classList.add('flash');
+    BD.forEach(function (b) { if (b.gone) { b.ox = b.oy = b.vx = b.vy = 0; b.rot = 0; b.s = 0; b.gone = false; } });
+    BD.forEach(function (b) { b.ox = b.oy = b.vx = b.vy = 0; b.rot = 0; b.s = Math.min(b.s, 0.001); });
+    /* the hole is done: switch gravity off so everything rests where it started */
+    mode = 'lens'; F.mt = 0; gBtn.setAttribute('aria-pressed', 'false'); gHint.hidden = true; heroEl.classList.remove('grav'); massdot.classList.remove('on');
+    flatDrums(false);
+  }
+  function physics(dt) {
+    var cx = F.x, cy = F.y, pulling = mode === 'gravity' && F.mt > 0, hole = mode === 'hole';
+    if (hole) { hz.t += dt; if (BD.every(function (b, i) { return b.gone || !bases[i]; })) { evaporate(); hole = false; } }
+    hz.r += (hz.rt - hz.r) * Math.min(1, dt * 6);
+    bhEl.style.transform = 'translate(' + cx.toFixed(1) + 'px,' + cy.toFixed(1) + 'px)';
+    bhEl.style.width = bhEl.style.height = (hz.r * 2).toFixed(1) + 'px';
+    bhEl.style.marginLeft = bhEl.style.marginTop = (-hz.r).toFixed(1) + 'px';
+    bhEl.firstElementChild.style.opacity = hz.r > 1 ? 1 : 0;
+    massdot.style.transform = 'translate(' + cx.toFixed(1) + 'px,' + cy.toFixed(1) + 'px)';
+    var resting = true;
+    BD.forEach(function (b, i) {
+      var base = bases[i], el = targets[i]; if (!base) return;
+      var px = base.x + b.ox, py = base.y + b.oy, dx = cx - px, dy = cy - py, r = Math.sqrt(dx * dx + dy * dy) + 0.001, ax, ay, st = 0;
+      if (pulling) {
+        var g = Math.min(6000, 2.6e6 / (r * r + 5000) + 420);
+        ax = dx / r * g; ay = dy / r * g;
+      } else if (hole && b.gone) {
+        ax = 0; ay = 0; b.vx = b.vy = 0; b.ox = cx - base.x; b.oy = cy - base.y;
+      } else if (hole && !b.gone) {
+        var grow = 1 + hz.t * 2.6, swirl = 0.5 * Math.max(0, 1 - hz.t / 1.1);
+        var g2 = Math.min(26000, (8e6 / (r * r + 2500) + 2600) * grow);
+        ax = dx / r * g2 - dy / r * g2 * swirl; ay = dy / r * g2 + dx / r * g2 * swirl;
+        st = Math.max(0, Math.min(1.6, 900 / (r * r) * 40));
+      } else {
+        ax = -b.ox * 42 - b.vx * 9; ay = -b.oy * 42 - b.vy * 9;
+      }
+      b.vx = (b.vx + ax * dt) * 0.985; b.vy = (b.vy + ay * dt) * 0.985;
+      var sp = Math.hypot(b.vx, b.vy), cap = hole ? 5200 : 2600; if (sp > cap) { b.vx *= cap / sp; b.vy *= cap / sp; }
+      b.ox += b.vx * dt; b.oy += b.vy * dt;
+      if (pulling) {
+        var nx = base.x + b.ox - cx, ny = base.y + b.oy - cy, nr = Math.hypot(nx, ny) + 0.001, rmin = 30 + (i % 9) * 9;
+        if (nr < rmin) { b.ox += nx / nr * (rmin - nr); b.oy += ny / nr * (rmin - nr); var vr = (b.vx * nx + b.vy * ny) / nr; if (vr < 0) { b.vx -= vr * nx / nr; b.vy -= vr * ny / nr; } b.vx *= 0.92; b.vy *= 0.92; }
+        b.rot += b.vx * dt * 0.08;
+      } else if (hole) {
+        if (!b.gone && r < Math.max(hz.r, 24)) { b.gone = true; b.vx = b.vy = 0; }
+        b.rot = Math.atan2(dy, dx) * 180 / Math.PI;
+      } else {
+        b.rot += (0 - b.rot) * Math.min(1, dt * 8);
+      }
+      b.s += ((b.gone ? 0 : 1) - b.s) * Math.min(1, dt * (b.gone ? 10 : 6));
+      if (Math.abs(b.ox) > 0.3 || Math.abs(b.oy) > 0.3 || Math.abs(b.rot) > 0.3 || b.s < 0.99) resting = false;
+      el.style.translate = b.ox.toFixed(1) + 'px ' + b.oy.toFixed(1) + 'px';
+      if (hole && !b.gone && st > 0.02) { el.style.rotate = b.rot.toFixed(1) + 'deg'; el.style.scale = ((1 + st) * b.s).toFixed(3) + ' ' + (b.s / (1 + st)).toFixed(3); }
+      else { el.style.rotate = (pulling ? b.rot : (hole ? 0 : b.rot)).toFixed(1) + 'deg'; el.style.scale = b.s.toFixed(3); }
+    });
+    return resting;
+  }
+  var MASS = 5200, SOFT = 3600, LENS = 95, REACH = 110, physicsLive = false;
+  var WX = 0, WY = 0;
+  function warp(x, y, m) { var dx = x - WX, dy = y - WY, k = m * MASS / (dx * dx + dy * dy + SOFT); return [x - dx * k, y - dy * k]; }
+  function drawWorm(t, dt) {
+    var ctx = setup(wormCv), w = wormCv.clientWidth, h = wormCv.clientHeight;
+    if (!w || !h) return;
+    var a = Math.min(1, (dt || 0.016) * 9);
+    F.x += (F.tx - F.x) * a; F.y += (F.ty - F.y) * a;
+    F.m += (F.mt - F.m) * Math.min(1, (dt || 0.016) * 3.5);
+    if (F.m < 0.002 && F.mt === 0) F.m = 0;
+    var m = F.m, crr = wormCv.getBoundingClientRect(), hrr = heroEl.getBoundingClientRect();
+    WX = F.x - (crr.left - hrr.left); WY = F.y - (crr.top - hrr.top);
+    var g = ctx.createLinearGradient(0, 0, w, 0);
+    g.addColorStop(0, rgba(C.string, 0.03)); g.addColorStop(0.35, rgba(C.string, 0.08)); g.addColorStop(0.7, rgba(C.string, 0.36)); g.addColorStop(1, rgba(C.string, 0.6));
+    ctx.strokeStyle = g; ctx.lineWidth = 1;
+    var step = 34, sample = 8, x, y, p;
+    for (x = 0; x <= w + step; x += step) {
+      ctx.beginPath();
+      for (y = -sample; y <= h + sample; y += sample) { p = warp(x, y, m); if (y < 0) ctx.moveTo(p[0], p[1]); else ctx.lineTo(p[0], p[1]); }
+      ctx.stroke();
+    }
+    for (y = 0; y <= h + step; y += step) {
+      ctx.beginPath();
+      for (x = -sample; x <= w + sample; x += sample) { p = warp(x, y, m); if (x < 0) ctx.moveTo(p[0], p[1]); else ctx.lineTo(p[0], p[1]); }
+      ctx.stroke();
+    }
+    /* gravity mode and black hole: objects are bodies; otherwise a gentle lens */
+    if (mode !== 'lens' || physicsLive) { physicsLive = !physics(Math.min(0.033, dt || 0.016)) || mode !== 'lens'; if (physicsLive) return; targets.forEach(function (el) { el.style.rotate = ''; }); }
+    /* the hero's own text and controls feel the same pull, gently */
+    if (m > 0 || F.live) {
+      targets.forEach(function (el, i) {
+        var b = bases[i]; if (!b) return;
+        var dx = b.x - F.x, dy = b.y - F.y, r2 = dx * dx + dy * dy;
+        var fall = Math.exp(-r2 / (REACH * REACH)), k = 0.2 * m * fall, sc = 1 + b.amp * m * Math.exp(-r2 / (LENS * LENS));
+        if (k < 0.002 && sc < 1.002) { el.style.translate = ''; el.style.scale = ''; el.style.zIndex = ''; return; }
+        el.style.translate = (-dx * k).toFixed(1) + 'px ' + (-dy * k).toFixed(1) + 'px';
+        el.style.scale = sc.toFixed(3);
+        el.style.zIndex = sc > 1.03 ? 4 : '';
+      });
+      F.live = m > 0;
+    }
+  }
+
+  /* ---------- lab: white light through a clay prism, split into one ray per experiment ---------- */
+  var rayCv = document.getElementById('rays'), stage = document.getElementById('stage');
+  var exps = Array.prototype.slice.call(labEl.querySelectorAll('.exp'));
+  var RAY = ['pink', 'ochre', 'teal', 'clay'], hot = -1, lastT = 0;
+  exps.forEach(function (el, i) {
+    function on() { hot = i; if (reduced) drawRays(0); }
+    function off() { hot = -1; if (reduced) drawRays(0); }
+    el.addEventListener('mouseenter', on); el.addEventListener('focus', on);
+    el.addEventListener('mouseleave', off); el.addEventListener('blur', off);
+  });
+  function lerp(a, b, t) { return { x: a.x + (b.x - a.x) * t, y: a.y + (b.y - a.y) * t }; }
+  function drawRays(t) {
+    lastT = t;
+    var ctx = setup(rayCv), wr = labEl.getBoundingClientRect(), sr = stage.getBoundingClientRect();
+    var s = { x: sr.left - wr.left, y: sr.top - wr.top, w: sr.width, h: sr.height };
+    var dots = exps.map(function (el) { var d = el.querySelector('.dot').getBoundingClientRect(); return { x: d.left - wr.left + d.width / 2, y: d.top - wr.top + d.height / 2, top: el.getBoundingClientRect().top - wr.top }; });
+    var stacked = dots[0].top > s.y + s.h - 4;
+    var L = stacked ? Math.min(s.w * 0.4, s.h * 0.55, 170) : Math.min(s.w * 0.5, s.h * 0.62, 230), hh = L * Math.sqrt(3) / 2;
+    var cx = s.x + s.w * (stacked ? 0.3 : 0.5), cy = s.y + s.h * (stacked ? 0.42 : 0.5) + hh * 0.08;
+    var A = { x: cx, y: cy - hh * 2 / 3 }, Bv = { x: cx - L / 2, y: cy + hh / 3 }, Cv = { x: cx + L / 2, y: cy + hh / 3 };
+    if (prismSpin.on) {
+      var u = Math.min(1, (performance.now() - prismSpin.t0) / 1300), ang = Math.PI * 2 / 3 * (1 - Math.pow(1 - u, 3));
+      var rot = function (p) { var dx = p.x - cx, dy = p.y - cy; return { x: cx + dx * Math.cos(ang) - dy * Math.sin(ang), y: cy + dx * Math.sin(ang) + dy * Math.cos(ang) }; };
+      A = rot(A); Bv = rot(Bv); Cv = rot(Cv);
+      if (u >= 1) prismSpin.on = false;
+    }
+    var P = lerp(A, Bv, 0.56), S = { x: s.x - 8, y: P.y + 26 };
+    var E = RAY.map(function (c, i) { return lerp(A, Cv, 0.4 + 0.1 * i); });
+    var T = dots.map(function (d, i) { if (!stacked) return d; return { x: s.x + s.w - 2, y: s.y + s.h * (0.3 + 0.18 * i) }; });
+
+    /* incoming white light */
+    ctx.lineCap = 'round';
+    ctx.strokeStyle = rgba(C.string, 0.9); ctx.lineWidth = 3;
+    ctx.beginPath(); ctx.moveTo(S.x, S.y); ctx.lineTo(P.x, P.y); ctx.stroke();
+    /* inside the glass: the beam fans out */
+    RAY.forEach(function (c, i) {
+      ctx.strokeStyle = rgba(C[c], 0.35); ctx.lineWidth = 2;
+      ctx.beginPath(); ctx.moveTo(P.x, P.y); ctx.lineTo(E[i].x, E[i].y); ctx.stroke();
+    });
+    /* the outgoing rays, one per experiment */
+    RAY.forEach(function (c, i) {
+      var on = hot === -1 || hot === i;
+      ctx.strokeStyle = rgba(C[c], on ? 0.95 : 0.22); ctx.lineWidth = hot === i ? 7 : 4.5;
+      ctx.beginPath(); ctx.moveTo(E[i].x, E[i].y); ctx.lineTo(T[i].x, T[i].y); ctx.stroke();
+    });
+    /* clay-glass prism */
+    ctx.save();
+    ctx.fillStyle = rgba(C.teal, 0.35);
+    ctx.beginPath(); ctx.moveTo(A.x + 6, A.y + 6); ctx.lineTo(Cv.x + 6, Cv.y + 6); ctx.lineTo(Bv.x + 6, Bv.y + 6); ctx.closePath(); ctx.fill();
+    ctx.fillStyle = rgba(C.clay, 0.16);
+    ctx.beginPath(); ctx.moveTo(A.x, A.y); ctx.lineTo(Cv.x, Cv.y); ctx.lineTo(Bv.x, Bv.y); ctx.closePath(); ctx.fill();
+    ctx.save(); ctx.clip();
+    ctx.strokeStyle = rgba(C.accent, 0.28); ctx.lineWidth = 1;
+    for (var hx = Bv.x - hh; hx < Cv.x; hx += 7) { ctx.beginPath(); ctx.moveTo(hx, Bv.y); ctx.lineTo(hx + hh * 0.9, A.y); ctx.stroke(); }
+    ctx.restore();
+    ctx.beginPath(); ctx.moveTo(A.x, A.y); ctx.lineTo(Cv.x, Cv.y); ctx.lineTo(Bv.x, Bv.y); ctx.closePath();
+    ctx.strokeStyle = C.accent; ctx.lineWidth = 2; ctx.lineJoin = 'round'; ctx.stroke();
+    ctx.restore();
+    /* photons travelling along the light */
+    if (!reduced) {
+      for (var k = 0; k < 3; k++) {
+        var u = (t * 0.45 + k / 3) % 1;
+        bead(ctx, S.x + (P.x - S.x) * u, S.y + (P.y - S.y) * u, 4, C.string, 0.9);
+      }
+      RAY.forEach(function (c, i) {
+        if (hot !== -1 && hot !== i) return;
+        for (var k = 0; k < 2; k++) {
+          var u = (t * 0.4 + k / 2 + i * 0.13) % 1;
+          bead(ctx, E[i].x + (T[i].x - E[i].x) * u, E[i].y + (T[i].y - E[i].y) * u, hot === i ? 5.5 : 4, C[c]);
+        }
+      });
+    }
+  }
+  window.addEventListener('resize', function () { drawRays(lastT); });
+  /* easter egg: the prism turns a third of a turn (back to the same shape) and the page itself disperses */
+  var prismSpin = { on: false, t0: 0 };
+  stage.addEventListener('click', function () {
+    if (!reduced) { prismSpin.on = true; prismSpin.t0 = performance.now(); }
+    document.body.classList.remove('disperse'); void document.body.offsetWidth; document.body.classList.add('disperse');
+    clearTimeout(stage._dsp); stage._dsp = setTimeout(function () { document.body.classList.remove('disperse'); }, 1700);
+  });
+
+  /* ---------- desert as a physics diagram: a ball rolling in a potential well between two hills ---------- */
+  var pball = document.getElementById('pball'), eline = document.getElementById('eline'), elabel = document.getElementById('elabel');
+  function hillY(x) { return 230 - 118 * Math.exp(-Math.pow((x - 800) / 70, 2)) - 150 * Math.exp(-Math.pow((x - 1090) / 76, 2)); }
+  var EY = 168, xMin = 945, xL = 945, xR = 945, xx;
+  for (xx = 860; xx < 1060; xx += 0.5) if (hillY(xx) > hillY(xMin)) xMin = xx;
+  for (xx = xMin; xx > 800 && hillY(xx) > EY; xx -= 0.5) xL = xx;
+  for (xx = xMin; xx < 1090 && hillY(xx) > EY; xx += 0.5) xR = xx;
+  eline.setAttribute('d', 'M' + (xL - 24).toFixed(1) + ' ' + EY + ' H' + (xR + 24).toFixed(1));
+  elabel.setAttribute('x', (xR + 30).toFixed(1)); elabel.setAttribute('y', EY + 7);
+  function drawTumble(t) {
+    var mid = (xL + xR) / 2, amp = (xR - xL) / 2 - 10, x = mid + amp * Math.sin(t * 2.4);
+    pball.setAttribute('cx', x.toFixed(1)); pball.setAttribute('cy', (hillY(x) - 17).toFixed(1));
+  }
+  drawTumble(0);
+  (function spines() {
+    var path = document.getElementById('cactus'), g = document.getElementById('spines'), L = path.getTotalLength(), NS = 'http://www.w3.org/2000/svg';
+    for (var d = 4; d < L; d += 15) {
+      var a = path.getPointAtLength(d), b = path.getPointAtLength(Math.min(L, d + 1));
+      if (a.y > 226) continue;
+      var tx = b.x - a.x, ty = b.y - a.y, tl = Math.hypot(tx, ty) || 1, nx = ty / tl, ny = -tx / tl;
+      if (ny > 0.6) continue;
+      var hit = false, probe = path.ownerSVGElement.createSVGPoint();
+      for (var q = 4; q <= 30 && !hit; q += 3) { probe.x = a.x + nx * q; probe.y = a.y + ny * q; hit = path.isPointInFill && path.isPointInFill(probe); }
+      if (hit) continue;
+      var ln = document.createElementNS(NS, 'line');
+      ln.setAttribute('class', 'spine');
+      ln.setAttribute('x1', a.x.toFixed(1)); ln.setAttribute('y1', a.y.toFixed(1));
+      ln.setAttribute('x2', (a.x + nx * 11).toFixed(1)); ln.setAttribute('y2', (a.y + ny * 11).toFixed(1));
+      ln.setAttribute('marker-end', 'url(#ahy)');
+      g.appendChild(ln);
+    }
+  })();
+  /* the block slides down the incline: s = a t^2 / 2, then reappears at the top */
+  var blockG = document.getElementById('blockg'), SL = { ux: -0.9423, uy: 0.3348, len: 230, dur: 9 };
+  function drawBlock(t) {
+    var k = (t % (SL.dur + 1.2)), s = Math.min(1, k / SL.dur), d = SL.len * s * s;
+    blockG.setAttribute('transform', 'translate(' + (SL.ux * d).toFixed(1) + ' ' + (SL.uy * d).toFixed(1) + ')');
+    blockG.style.opacity = k > SL.dur ? Math.max(0, 1 - (k - SL.dur) / 0.5) : Math.min(1, k / 0.5);
+  }
+
+  var t0 = performance.now(), prev = t0;
+  function frame(now) {
+    var t = (now - t0) / 1000, dt = Math.min(0.033, (now - prev) / 1000); prev = now;
+    if (!document.hidden) {
+      if (visible.lab) drawRays(t);
+      if (visible.hero) drawWorm(t, dt);
+      if (visible.work && canHover) peekStep(dt);
+      if (visible.dio) { drawTumble(t); drawBlock(t); }
+    }
+    requestAnimationFrame(frame);
+  }
+  drawRays(0);
+  drawWorm(0);
+  window.addEventListener('resize', function () { drawWorm(0); });
+  setTimeout(drawHat, 500);
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(function () { drawRays(lastT); });
+  if (!reduced) requestAnimationFrame(frame);
+
+  /* ---------- let's ___ together: words drive the sunset ---------- */
+  var panel = document.getElementById('panel');
+  document.querySelectorAll('.trail').forEach(function (a) {
+    function on() { a.textContent = a.getAttribute('data-dest') + ' ↗'; a.classList.add('on'); panel.setAttribute('data-trail', a.getAttribute('data-i')); }
+    function off() { a.textContent = a.getAttribute('data-word'); a.classList.remove('on'); panel.removeAttribute('data-trail'); }
+    a.addEventListener('mouseenter', on); a.addEventListener('focus', on);
+    a.addEventListener('mouseleave', off); a.addEventListener('blur', off);
+  });
+})();
+</script>
+
+</body>
+</html>

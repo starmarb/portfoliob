@@ -1,0 +1,482 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<script>(function(){try{if("scrollRestoration" in history)history.scrollRestoration="manual"}catch(e){}if(location.hash)return;var top=function(){window.scrollTo(0,0)};top();document.addEventListener("DOMContentLoaded",top);window.addEventListener("load",top);})();</script>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>About · Sammi Kwon</title>
+<meta name="description" content="How Sammi Kwon got into UI/UX: physics demos in PowerPoint, an interdisciplinary path, and a practice in art.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Sans:ital,wght@0,400..700;1,400..600&family=JetBrains+Mono:wght@400..700&display=swap">
+<style>
+/* Layout: same system as the home page. A story told in four scenes, each with a visual that does work:
+   a PowerPoint slide with a live magnet demo, a School of Athens arch in one-point perspective,
+   a drifting art gallery, and three small free-time vignettes. */
+:root {
+  --bg: #FFFFFF;
+  --fg: #1B1726;
+  --muted: #645E73;
+  --line: #ECE8F3;
+  --tint: #F4EEFF;
+  --accent: #6B3DF0;
+  --clay: #A77BFF;
+  --rust: #4DA3FF;
+  --ochre: #FFD23F;
+  --sage: #3CCB7F;
+  --teal: #2ED3C6;
+  --pink: #FF7EB6;
+  --sand: #FFD6E7;
+  --string: #A69FB8;
+  --mis: rgba(255, 126, 182, 0.5);
+  --ink: #1B1726;
+  --slide: #FFFFFF;
+  --chrome: #F3F1F7;
+  --grain: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='140' height='140'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 .1 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+  --sans: 'Instrument Sans', 'Helvetica Neue', Arial, sans-serif;
+  --mono: 'JetBrains Mono', ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #14121C; --fg: #F1EEF8; --muted: #A7A0B9; --line: #2B2738; --tint: #1E1A2B;
+    --accent: #C7B0FF; --sand: #6B3D5A; --string: #6F6882; --mis: rgba(255, 126, 182, 0.4);
+    --slide: #1B1826; --chrome: #24202F;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #14121C; --fg: #F1EEF8; --muted: #A7A0B9; --line: #2B2738; --tint: #1E1A2B;
+  --accent: #C7B0FF; --sand: #6B3D5A; --string: #6F6882; --mis: rgba(255, 126, 182, 0.4);
+  --slide: #1B1826; --chrome: #24202F;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+html, body { overflow-x: clip; }
+body { margin: 0; background: var(--bg); color: var(--fg); font-family: var(--sans); font-size: 17px; line-height: 1.6; -webkit-font-smoothing: antialiased; }
+:root { padding-top: env(safe-area-inset-top, 0px); padding-bottom: env(safe-area-inset-bottom, 0px); }
+a { color: inherit; text-decoration: none; }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; border-radius: 4px; }
+h1, h2, h3 { margin: 0; text-wrap: balance; }
+p { margin: 0; }
+img { max-width: 100%; }
+.sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+.wrap { max-width: 1440px; margin: 0 auto; padding-left: max(clamp(16px, 3vw, 40px), env(safe-area-inset-left, 0px)); padding-right: max(clamp(16px, 3vw, 40px), env(safe-area-inset-right, 0px)); }
+
+/* nav, same as home */
+.top { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 20; background: var(--bg); border-bottom: 1px solid var(--line); }
+.top-in { max-width: 1440px; margin: 0 auto; display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 0 24px; padding: 10px max(16px, 2vw, env(safe-area-inset-right, 0px)) 10px max(16px, 2vw, env(safe-area-inset-left, 0px)); font-size: 16px; }
+.top a { display: inline-flex; align-items: center; min-height: 44px; }
+.brand { font-weight: 700; font-size: 17px; gap: 8px; letter-spacing: -0.01em; }
+.star { color: var(--accent); }
+.top nav { display: flex; flex-wrap: wrap; gap: 4px; font-weight: 600; }
+.top nav a { padding: 0 14px; border-radius: 999px; transition: background-color 0.2s; }
+.top nav a:hover, .top nav a[aria-current="page"] { background: var(--tint); }
+
+/* section rhythm */
+.scene { padding-block: clamp(56px, 8vw, 104px); border-top: 1px solid var(--line); }
+.scene:first-of-type { border-top: 0; }
+.kicker { font: 600 13px var(--mono); letter-spacing: 0.06em; text-transform: uppercase; color: var(--accent); }
+.h2 { font-size: clamp(32px, 4.2vw, 56px); font-weight: 600; letter-spacing: -0.035em; line-height: 1.04; }
+.read { max-width: 62ch; display: flex; flex-direction: column; gap: 18px; color: var(--muted); font-size: 18px; }
+.read b { color: var(--fg); font-weight: 600; }
+
+/* 1. hero: the story starts with a slide */
+.hero { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: 40px 64px; align-items: center; }
+.hero h1 { font-size: clamp(40px, 5.6vw, 80px); font-weight: 600; letter-spacing: -0.045em; line-height: 1; margin-top: 16px; }
+.hero h1 em { font-style: italic; font-weight: 500; }
+.hero .lede { margin-top: 24px; font-size: clamp(18px, 1.6vw, 21px); color: var(--muted); max-width: 46ch; }
+
+.ppt { border-radius: 16px; overflow: hidden; background: var(--chrome); box-shadow: 6px 6px 0 var(--mis); border: 1px solid var(--line); }
+.ppt-bar { display: flex; align-items: center; gap: 10px; padding: 10px 14px; font: 500 12px var(--mono); color: var(--muted); border-bottom: 1px solid var(--line); }
+.ppt-bar .dots { display: flex; gap: 6px; }
+.ppt-bar .dots i { width: 10px; height: 10px; border-radius: 50%; background: var(--line); }
+.ppt-bar .dots i:nth-child(1) { background: var(--pink); } .ppt-bar .dots i:nth-child(2) { background: var(--ochre); } .ppt-bar .dots i:nth-child(3) { background: var(--sage); }
+.ppt-bar .name { flex: 1; text-align: center; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.ppt-body { display: grid; grid-template-columns: 74px minmax(0, 1fr); gap: 12px; padding: 12px; }
+.rail { display: flex; flex-direction: column; gap: 8px; }
+.rail span { position: relative; aspect-ratio: 16 / 10; border-radius: 4px; background: var(--slide); border: 1px solid var(--line); }
+.rail span::before { content: attr(data-n); position: absolute; left: -2px; top: 2px; transform: translateX(-100%); font: 500 9px var(--mono); color: var(--muted); }
+.rail span.on { outline: 2px solid var(--accent); outline-offset: 1px; }
+.rail span i { position: absolute; left: 14%; right: 14%; top: 22%; height: 10%; border-radius: 2px; background: var(--line); }
+.rail span i + i { top: 44%; right: 36%; }
+.slide { position: relative; aspect-ratio: 16 / 10; border-radius: 6px; background: var(--slide); overflow: hidden; touch-action: none; }
+.slide canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+.slide-title { position: absolute; left: 5%; top: 6%; font-size: clamp(16px, 2vw, 26px); font-weight: 600; letter-spacing: -0.02em; pointer-events: none; }
+.slide-note { position: absolute; right: 4%; bottom: 6%; max-width: 46%; padding: 8px 12px; border: 1.5px dashed var(--string); border-radius: 6px; font-size: clamp(11px, 1.05vw, 14px); line-height: 1.4; color: var(--muted); background: var(--slide); pointer-events: none; }
+.slide-note b { color: var(--fg); }
+.ppt-foot { display: flex; justify-content: space-between; padding: 0 14px 10px 100px; font: 500 11px var(--mono); color: var(--muted); }
+
+/* 2. story */
+.story { display: grid; grid-template-columns: minmax(0, 4fr) minmax(0, 7fr); gap: 32px 64px; align-items: start; }
+.pull { font-size: clamp(26px, 3vw, 40px); font-weight: 600; letter-spacing: -0.03em; line-height: 1.15; color: var(--fg); }
+.pull mark { background: linear-gradient(transparent 58%, var(--sand) 58%); color: inherit; padding: 0 2px; }
+.tags { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 4px; }
+.tags span { font-size: 14px; font-weight: 500; padding: 5px 14px; border-radius: 999px; background: var(--tint); color: var(--fg); }
+
+/* 3. School of Athens */
+.athens-head { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 6fr); gap: 24px 64px; align-items: end; }
+.athens { position: relative; margin-top: 48px; max-width: 1100px; margin-inline: auto; }
+.athens svg { display: block; width: 100%; height: auto; overflow: visible; }
+.athens .vault { fill: none; stroke: var(--string); stroke-width: 1.4; }
+.athens .vault-fill { fill: var(--tint); }
+.athens .persp { stroke: var(--string); stroke-width: 1; opacity: 0.55; }
+.athens .step { fill: var(--sand); }
+.athens .step2 { fill: color-mix(in srgb, var(--sand) 70%, var(--bg)); }
+.fig { cursor: pointer; outline: none; }
+.fig .robe, .fig .head { transition: transform 0.35s cubic-bezier(.2, 1.4, .4, 1); transform-box: fill-box; transform-origin: 50% 100%; }
+.fig .shadow { fill: var(--mis); }
+.fig text { font: 600 12.5px var(--mono); fill: var(--fg); text-anchor: middle; transform-box: fill-box; }
+.fig:hover .robe, .fig:focus-visible .robe, .fig.on .robe { transform: translateY(-8px); }
+.fig:hover .head, .fig:focus-visible .head, .fig.on .head { transform: translateY(-8px); }
+.fig:focus-visible text, .fig.on text { fill: var(--accent); }
+.fig .arm { stroke-width: 7; stroke-linecap: round; fill: none; }
+.athens-cap { display: flex; flex-wrap: wrap; align-items: baseline; gap: 6px 14px; min-height: 64px; margin-top: 20px; padding: 16px 20px; border-radius: 14px; background: var(--tint); }
+.athens-cap b { font-size: 18px; font-weight: 600; }
+.athens-cap span { color: var(--muted); }
+.credit { margin-top: 10px; font-size: 13px; color: var(--muted); }
+.credit i { font-style: italic; }
+
+/* 4. art gallery */
+.art-head { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: end; gap: 16px 40px; }
+.gallery { margin-top: 36px; display: flex; gap: 20px; overflow-x: auto; scroll-snap-type: x proximity; padding-bottom: 14px; scrollbar-width: thin; cursor: grab; }
+.gallery:active { cursor: grabbing; }
+.gallery::-webkit-scrollbar { height: 6px; } .gallery::-webkit-scrollbar-thumb { background: var(--line); border-radius: 3px; }
+.art { flex: none; margin: 0; scroll-snap-align: start; display: flex; flex-direction: column; gap: 10px; }
+.art-img { height: clamp(240px, 32vw, 380px); border-radius: 14px; background-color: var(--c); background-image: var(--grain); background-size: cover; background-position: center; display: flex; align-items: center; justify-content: center; box-shadow: 4px 4px 0 var(--mis); }
+.art-img img { width: 100%; height: 100%; object-fit: cover; border-radius: 14px; }
+.art-img .ph { font: 500 12px var(--mono); color: var(--ink); background: rgba(255, 255, 255, 0.75); padding: 4px 10px; border-radius: 999px; }
+.art figcaption { font-size: 14px; color: var(--muted); }
+.art figcaption b { color: var(--fg); font-weight: 600; }
+
+/* 5. free time */
+.free { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 20px; margin-top: 36px; }
+.vig { display: flex; flex-direction: column; gap: 14px; padding: 20px; border-radius: 18px; background: var(--tint); }
+.vig svg { width: 100%; height: auto; aspect-ratio: 16 / 10; display: block; border-radius: 12px; background: var(--bg); }
+.vig h3 { font-size: 19px; font-weight: 600; letter-spacing: -0.01em; }
+.vig p { font-size: 15px; color: var(--muted); }
+.wheel-top { transform-box: fill-box; transform-origin: center; }
+.vig:hover .spin, .vig:focus-within .spin { animation: wheel 0.9s linear infinite; }
+.spin { transform-box: fill-box; transform-origin: center; }
+@keyframes wheel { to { transform: rotate(360deg); } }
+.mtn { transform-box: fill-box; transform-origin: 50% 100%; transform: scaleY(0.04); transition: transform 0.9s cubic-bezier(.2, 1.3, .4, 1); }
+.mtn.m2 { transition-delay: 0.08s; } .mtn.m3 { transition-delay: 0.16s; }
+.vig:hover .mtn, .vig:focus-within .mtn { transform: scaleY(1); }
+.stroke-draw { stroke-dasharray: 260; stroke-dashoffset: 260; transition: stroke-dashoffset 1.2s ease; }
+.vig:hover .stroke-draw, .vig:focus-within .stroke-draw { stroke-dashoffset: 0; }
+
+/* closing */
+.close { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 20px; padding: clamp(28px, 4vw, 48px); border-radius: 24px; background: linear-gradient(120deg, #C7B0FF 0%, #F6B3D6 55%, #FFE29A 100%); color: var(--ink); }
+.close h2 { font-size: clamp(28px, 3.4vw, 44px); font-weight: 600; letter-spacing: -0.03em; }
+.close a { display: inline-flex; align-items: center; gap: 8px; min-height: 48px; padding: 0 22px; border-radius: 999px; background: var(--ink); color: #fff; font-weight: 600; }
+.close a:hover { background: #3a2f63; }
+footer { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 4px 24px; padding-block: 12px 32px; margin-top: 56px; border-top: 1px solid var(--line); font-size: 14px; color: var(--muted); }
+footer a { display: inline-flex; align-items: center; min-height: 44px; }
+footer a:hover { color: var(--accent); }
+
+@media (max-width: 960px) {
+  .hero, .story, .athens-head { grid-template-columns: minmax(0, 1fr); }
+  .free { grid-template-columns: minmax(0, 1fr); }
+}
+@media (max-width: 560px) {
+  .ppt-body { grid-template-columns: minmax(0, 1fr); }
+  .rail { display: none; }
+  .ppt-foot { padding-left: 14px; }
+  .slide-note { max-width: 60%; }
+  .fig text { font-size: 24px; }
+  .fig text.alt { transform: translateY(26px); }
+}
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { transition: none !important; animation: none !important; }
+  .mtn { transform: scaleY(1); } .stroke-draw { stroke-dashoffset: 0; }
+}
+</style>
+</head>
+<body>
+<header class="top">
+  <div class="top-in">
+    <a class="brand" href="../index.html">Sammi Kwon <span class="star" aria-hidden="true">★</span></a>
+    <nav aria-label="Main">
+      <a href="../index.html#work">Work</a>
+      <a href="../index.html#lab">Lab</a>
+      <a href="index.html" aria-current="page">About</a>
+      <a href="../index.html#contact">Contact</a>
+    </nav>
+  </div>
+</header>
+
+<main class="wrap">
+
+  <!-- 1. where it started -->
+  <section class="scene" aria-labelledby="about-title">
+    <div class="hero">
+      <div>
+        <span class="kicker">About</span>
+        <h1 id="about-title">My UI/UX journey started in high school <em>Physics II</em>.</h1>
+        <p class="lede">Physics explains the world through math, which asks for intuition in a lot of places at once. Most classes lead with the equations, but I noticed my friends understood things faster when they could see them.</p>
+      </div>
+      <figure class="ppt" style="margin: 0">
+        <div class="ppt-bar"><span class="dots" aria-hidden="true"><i></i><i></i><i></i></span><span class="name">Physics II · Magnetism.pptx</span><span aria-hidden="true">▶</span></div>
+        <div class="ppt-body">
+          <div class="rail" aria-hidden="true"><span data-n="1"><i></i><i></i></span><span data-n="2"><i></i><i></i></span><span data-n="3" class="on"><i></i><i></i></span><span data-n="4"><i></i><i></i></span></div>
+          <div class="slide" id="slide" role="img" aria-label="Interactive slide: a bar magnet surrounded by compass needles that turn to follow its magnetic field. Drag the magnet to move it.">
+            <canvas id="field" aria-hidden="true"></canvas>
+            <div class="slide-title">Magnetic fields</div>
+            <div class="slide-note"><b>Try it:</b> drag the magnet. Every compass needle turns to point along the field, from N to S.</div>
+          </div>
+        </div>
+        <figcaption class="ppt-foot"><span>Slide 3 of 4</span><span>a remake of the demos I made in PowerPoint</span></figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <!-- 2. the story -->
+  <section class="scene" aria-labelledby="story-title">
+    <div class="story">
+      <div>
+        <h2 class="sr" id="story-title">How it started</h2>
+        <p class="pull">That kicked off my passion for <mark>interactive products that help people do things more easily</mark>.</p>
+      </div>
+      <div class="read">
+        <p>So I started making demos. In <b>Microsoft PowerPoint</b>, I animated simple, interactive slides about electromagnetism, with instructions to guide you through each step. They were only for a couple of friends, but I loved watching them enjoy the demos and understand the physics more intuitively than a formula sheet ever let them.</p>
+        <p>Since then I've worked across <b>creative technology, UI/UX design, human-computer interaction</b> and art, chasing the same fun I had in PowerPoint.</p>
+        <p>Along the way I've grown more interested in <b>accessibility and usability</b>: how to make technology enjoyable and usable by everyone, without discrimination.</p>
+        <div class="tags" aria-label="Areas"><span>Creative technology</span><span>UI/UX design</span><span>Human-computer interaction</span><span>Accessibility</span><span>Art</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 3. a modern School of Athens -->
+  <section class="scene" aria-labelledby="athens-title">
+    <div class="athens-head">
+      <h2 class="h2" id="athens-title">UI/UX is a modern School of Athens.</h2>
+      <div class="read">
+        <p>In Raphael's fresco, thinkers from every field share one hall. UI/UX works the same way. It brings together people with different backgrounds, curiosities and passions, and treats those differences as new perspectives that make an experience richer.</p>
+        <p>That's where my interdisciplinary background becomes a strength. Knowing how different fields approach a problem shapes my ideas, and makes me eager to try new approaches.</p>
+      </div>
+    </div>
+    <div class="athens">
+      <svg viewBox="0 -150 1000 640" role="group" aria-label="An arched hall drawn in one-point perspective, with figures for different fields standing on the steps">
+        <!-- receding arches and floor converge on one vanishing point -->
+        <path class="vault-fill" d="M120 470 V250 A380 380 0 0 1 880 250 V470 Z"></path>
+        <path class="vault" d="M120 470 V250 A380 380 0 0 1 880 250 V470"></path>
+        <path class="vault" d="M235 400 V262 A265 265 0 0 1 765 262 V400"></path>
+        <path class="vault" d="M326 360 V272 A174 174 0 0 1 674 272 V360"></path>
+        <path class="vault" d="M392 330 V280 A108 108 0 0 1 608 280 V330"></path>
+        <g class="persp">
+          <path d="M120 250 L500 300 M880 250 L500 300 M120 470 L500 300 M880 470 L500 300 M300 470 L500 300 M700 470 L500 300 M420 470 L500 300 M580 470 L500 300"></path>
+        </g>
+        <rect class="step2" x="150" y="402" width="700" height="22" rx="4"></rect>
+        <rect class="step" x="110" y="424" width="780" height="46" rx="4"></rect>
+        <g id="figs"></g>
+      </svg>
+      <p class="athens-cap" id="athens-cap" aria-live="polite"><b>Hover or tap a figure</b><span>to see what each field brings to design.</span></p>
+      <p class="credit">After Raphael, <i>The School of Athens</i> (1509–1511).</p>
+    </div>
+  </section>
+
+  <!-- 4. art -->
+  <section class="scene" aria-labelledby="art-title">
+    <div class="art-head">
+      <div style="display: flex; flex-direction: column; gap: 16px; max-width: 760px">
+        <h2 class="h2" id="art-title">I'm also an artist.</h2>
+        <p class="read" style="display: block">My work draws on <b>Korean Minhwa</b>, painting, pottery and technology to explore the spiritual side of human experience.</p>
+      </div>
+    </div>
+    <div class="gallery" id="gallery" tabindex="0" aria-label="Artworks, scrolls sideways">
+      <figure class="art"><div class="art-img" style="--c: #FFD6E7; width: clamp(200px, 22vw, 300px)"><span class="ph">add artwork</span></div><figcaption><b>[Title]</b> · Minhwa, [year]</figcaption></figure>
+      <figure class="art"><div class="art-img" style="--c: #FFF1B8; width: clamp(280px, 34vw, 460px)"><span class="ph">add artwork</span></div><figcaption><b>[Title]</b> · Painting, [year]</figcaption></figure>
+      <figure class="art"><div class="art-img" style="--c: #D9F6EF; width: clamp(200px, 24vw, 320px)"><span class="ph">add artwork</span></div><figcaption><b>[Title]</b> · Pottery, [year]</figcaption></figure>
+      <figure class="art"><div class="art-img" style="--c: #E6DCFF; width: clamp(240px, 28vw, 380px)"><span class="ph">add artwork</span></div><figcaption><b>[Title]</b> · Technology, [year]</figcaption></figure>
+      <figure class="art"><div class="art-img" style="--c: #DCEBFF; width: clamp(200px, 22vw, 300px)"><span class="ph">add artwork</span></div><figcaption><b>[Title]</b> · Minhwa, [year]</figcaption></figure>
+      <figure class="art"><div class="art-img" style="--c: #FFE2CF; width: clamp(280px, 34vw, 460px)"><span class="ph">add artwork</span></div><figcaption><b>[Title]</b> · Painting, [year]</figcaption></figure>
+      <figure class="art"><div class="art-img" style="--c: #E8F7D9; width: clamp(200px, 24vw, 320px)"><span class="ph">add artwork</span></div><figcaption><b>[Title]</b> · Pottery, [year]</figcaption></figure>
+    </div>
+  </section>
+
+  <!-- 5. free time -->
+  <section class="scene" aria-labelledby="free-title">
+    <h2 class="h2" id="free-title">In my free time</h2>
+    <div class="free">
+      <div class="vig" tabindex="0">
+        <svg viewBox="0 0 320 200" aria-hidden="true">
+          <rect x="80" y="30" width="160" height="130" rx="6" fill="var(--sand)"></rect>
+          <path class="stroke-draw" d="M100 120 C130 60, 170 150, 200 80 S 230 110, 222 60" fill="none" stroke="var(--accent)" stroke-width="5" stroke-linecap="round"></path>
+          <circle cx="132" cy="70" r="12" fill="var(--ochre)"></circle>
+          <path d="M240 168 L292 52" stroke="var(--fg)" stroke-width="6" stroke-linecap="round"></path>
+          <path d="M240 168 l-6 14 l14 -8 z" fill="var(--pink)"></path>
+          <rect x="70" y="160" width="180" height="10" rx="5" fill="var(--string)" opacity="0.5"></rect>
+        </svg>
+        <h3>Making artworks</h3>
+        <p>Minhwa, painting and whatever new medium I'm curious about that month.</p>
+      </div>
+      <div class="vig" tabindex="0">
+        <svg viewBox="0 0 320 200" aria-hidden="true">
+          <ellipse cx="160" cy="168" rx="120" ry="18" fill="var(--string)" opacity="0.35"></ellipse>
+          <ellipse cx="160" cy="150" rx="96" ry="16" fill="var(--rust)"></ellipse>
+          <g class="spin"><ellipse cx="160" cy="146" rx="84" ry="13" fill="var(--teal)"></ellipse><path d="M100 146 h120" stroke="var(--bg)" stroke-width="3" opacity="0.7"></path></g>
+          <path d="M122 142 C116 104, 126 80, 140 70 H180 C194 80, 204 104, 198 142 Z" fill="var(--pink)"></path>
+          <g class="spin" style="transform-origin: 160px 106px"><path d="M128 100 h64 M126 118 h68" stroke="var(--bg)" stroke-width="2.5" opacity="0.6" stroke-linecap="round"></path></g>
+          <ellipse cx="160" cy="70" rx="20" ry="5" fill="var(--sand)"></ellipse>
+        </svg>
+        <h3>Throwing pottery on the wheel</h3>
+        <p>Centering clay is the most physics-y meditation I know.</p>
+      </div>
+      <div class="vig" tabindex="0">
+        <svg viewBox="0 0 320 200" aria-hidden="true">
+          <circle cx="250" cy="52" r="18" fill="var(--ochre)"></circle>
+          <path class="mtn" d="M20 170 L110 60 L170 130 Z" fill="var(--clay)"></path>
+          <path class="mtn m2" d="M120 170 L200 76 L280 170 Z" fill="var(--rust)"></path>
+          <path class="mtn m3" d="M210 170 L262 112 L310 170 Z" fill="var(--sage)"></path>
+          <path d="M96 74 l14 -14 l14 16 l-10 -2 z" fill="var(--bg)" opacity="0.85" class="mtn"></path>
+          <rect x="0" y="168" width="320" height="32" fill="var(--sand)"></rect>
+          <path d="M40 182 h240" stroke="var(--fg)" stroke-width="2" stroke-dasharray="6 6" opacity="0.4"></path>
+          <text x="20" y="160" font-family="JetBrains Mono, monospace" font-size="12" fill="var(--muted)">TX ★</text>
+        </svg>
+        <h3>Hiking</h3>
+        <p>If I'm out of Texas, that is. The mountains only show up once I leave.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="scene">
+    <div class="close">
+      <h2>Howdy back?</h2>
+      <a href="../index.html#contact">Let's work together →</a>
+    </div>
+  </section>
+
+  <footer>
+    <span>© 2026 Sammi Kwon</span>
+    <a href="../index.html">← Back to home</a>
+  </footer>
+</main>
+
+<script>
+(function () {
+  var reduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  function css(n) { return getComputedStyle(document.documentElement).getPropertyValue('--' + n).trim(); }
+
+  /* ---------- slide: a draggable bar magnet and a grid of compass needles ---------- */
+  var slide = document.getElementById('slide'), cv = document.getElementById('field');
+  var M = { x: 0.42, y: 0.58, ang: -0.18, dragging: false, ox: 0, oy: 0, vx: 0.0006 };
+  function draw() {
+    var dpr = Math.min(window.devicePixelRatio || 1, 2), w = cv.clientWidth, h = cv.clientHeight;
+    if (!w) return;
+    if (cv.width !== Math.round(w * dpr)) { cv.width = Math.round(w * dpr); cv.height = Math.round(h * dpr); }
+    var ctx = cv.getContext('2d'); ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.clearRect(0, 0, w, h);
+    var cx = M.x * w, cy = M.y * h, L = Math.min(w, h) * 0.34, T = L * 0.32;
+    var ux = Math.cos(M.ang), uy = Math.sin(M.ang);
+    var N = { x: cx + ux * L * 0.42, y: cy + uy * L * 0.42 }, S = { x: cx - ux * L * 0.42, y: cy - uy * L * 0.42 };
+    var pink = css('pink'), blue = css('rust'), muted = css('string'), fg = css('fg');
+    var step = Math.max(26, w / 18), nl = step * 0.36;
+    for (var y = step * 0.9; y < h; y += step) {
+      for (var x = step * 0.6; x < w; x += step) {
+        var dx = x - cx, dy = y - cy, along = dx * ux + dy * uy, across = -dx * uy + dy * ux;
+        if (Math.abs(along) < L * 0.62 && Math.abs(across) < T * 0.9) continue;
+        var nx = x - N.x, ny = y - N.y, sx = x - S.x, sy = y - S.y;
+        var rn = Math.pow(nx * nx + ny * ny, 1.5) + 1, rs = Math.pow(sx * sx + sy * sy, 1.5) + 1;
+        var bx = nx / rn - sx / rs, by = ny / rn - sy / rs, a = Math.atan2(by, bx);
+        var str = Math.min(1, Math.hypot(bx, by) * 9000);
+        var ex = Math.cos(a) * nl, ey = Math.sin(a) * nl;
+        ctx.lineCap = 'round'; ctx.lineWidth = 3;
+        ctx.globalAlpha = 0.35 + 0.65 * str;
+        ctx.strokeStyle = pink; ctx.beginPath(); ctx.moveTo(x, y); ctx.lineTo(x + ex, y + ey); ctx.stroke();
+        ctx.strokeStyle = blue; ctx.beginPath(); ctx.moveTo(x, y); ctx.lineTo(x - ex, y - ey); ctx.stroke();
+        ctx.globalAlpha = 1; ctx.fillStyle = muted; ctx.beginPath(); ctx.arc(x, y, 1.6, 0, Math.PI * 2); ctx.fill();
+      }
+    }
+    /* the magnet */
+    ctx.save(); ctx.translate(cx, cy); ctx.rotate(M.ang);
+    ctx.fillStyle = css('mis'); ctx.fillRect(-L / 2 + 5, -T / 2 + 5, L, T);
+    ctx.fillStyle = blue; ctx.fillRect(-L / 2, -T / 2, L / 2, T);
+    ctx.fillStyle = pink; ctx.fillRect(0, -T / 2, L / 2, T);
+    ctx.fillStyle = '#1B1726'; ctx.font = '700 ' + Math.round(T * 0.5) + 'px Instrument Sans, sans-serif'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+    ctx.fillText('S', -L / 4, 1); ctx.fillText('N', L / 4, 1);
+    ctx.restore();
+    M.hit = { cx: cx, cy: cy, L: L, T: T };
+  }
+  function local(e) { var r = slide.getBoundingClientRect(); return { x: (e.clientX - r.left) / r.width, y: (e.clientY - r.top) / r.height, px: e.clientX - r.left, py: e.clientY - r.top }; }
+  slide.addEventListener('pointerdown', function (e) {
+    var p = local(e); M.dragging = true; M.ox = p.x - M.x; M.oy = p.y - M.y;
+    if (M.hit && Math.hypot(p.px - M.hit.cx, p.py - M.hit.cy) > M.hit.L * 0.7) { M.ox = 0; M.oy = 0; M.x = p.x; M.y = p.y; }
+    try { slide.setPointerCapture(e.pointerId); } catch (err) {}
+    draw();
+  });
+  slide.addEventListener('pointermove', function (e) {
+    if (!M.dragging) return; var p = local(e);
+    var nx = Math.min(0.9, Math.max(0.1, p.x - M.ox)), ny = Math.min(0.88, Math.max(0.22, p.y - M.oy));
+    M.x = nx; M.y = ny; draw();
+  });
+  function end() { M.dragging = false; }
+  slide.addEventListener('pointerup', end); slide.addEventListener('pointercancel', end);
+  slide.addEventListener('wheel', function (e) { if (!e.shiftKey && !M.dragging) return; e.preventDefault(); M.ang += e.deltaY * 0.004; draw(); }, { passive: false });
+  slide.addEventListener('dblclick', function () { M.ang += Math.PI; draw(); });
+  window.addEventListener('resize', draw);
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(draw);
+  draw();
+  /* a gentle idle turn so it reads as live before anyone touches it */
+  if (!reduced) {
+    var idle = true, t0 = performance.now();
+    slide.addEventListener('pointerdown', function () { idle = false; }, { once: true });
+    (function loop(now) { if (idle) { M.ang = -0.18 + 0.35 * Math.sin((now - t0) / 1600); draw(); requestAnimationFrame(loop); } })(t0);
+  }
+
+  /* ---------- School of Athens: figures for each field ---------- */
+  var FIELDS = [
+    { n: 'Physics', c: 'rust', arm: 'up', d: 'Starting from first principles, and building intuition for how a system behaves before touching the details.' },
+    { n: 'Art', c: 'pink', arm: 'out', d: 'Paying attention to feeling, composition and color, and to what makes something worth looking at twice.' },
+    { n: 'Computing', c: 'clay', d: 'Knowing what can actually be built, and where a system is likely to break.' },
+    { n: 'Psychology', c: 'teal', d: 'How people perceive, learn and make decisions, so the interface meets them where they are.' },
+    { n: 'Accessibility', c: 'sage', d: 'Designing for everyone from the start, so a tool is usable without discrimination.' },
+    { n: 'Teaching', c: 'ochre', d: 'Explaining one idea clearly, with a demo instead of a formula sheet. Where this all began.' },
+    { n: 'Business', c: 'rust', d: 'Why a product needs to exist, who it serves, and how it keeps going.' },
+    { n: 'Writing', c: 'pink', d: 'Finding the plain words for a complicated idea, on screen and in a case study.' }
+  ];
+  var order = [6, 3, 5, 0, 1, 2, 4, 7];  /* Physics and Art in the middle, like Plato and Aristotle */
+  var xs = [160, 258, 356, 452, 548, 644, 742, 840];
+  var g = document.getElementById('figs'), NS = 'http://www.w3.org/2000/svg', cap = document.getElementById('athens-cap');
+  function el(tag, attrs, parent) { var e = document.createElementNS(NS, tag); for (var k in attrs) e.setAttribute(k, attrs[k]); (parent || g).appendChild(e); return e; }
+  order.forEach(function (fi, slot) {
+    var f = FIELDS[fi], x = xs[slot], big = slot === 3 || slot === 4, s = big ? 1.12 : 1, base = big ? 402 : 402;
+    var fig = el('g', { class: 'fig', tabindex: '0', role: 'button', 'aria-label': f.n + ': ' + f.d });
+    var h = 96 * s, wTop = 22 * s, wBot = 40 * s;
+    el('ellipse', { class: 'shadow', cx: x + 5, cy: base + 2, rx: wBot * 0.9, ry: 5 }, fig);
+    var robe = el('path', { class: 'robe', d: 'M' + (x - wTop / 2) + ' ' + (base - h) + ' Q' + x + ' ' + (base - h - 10 * s) + ' ' + (x + wTop / 2) + ' ' + (base - h) + ' L' + (x + wBot / 2) + ' ' + base + ' L' + (x - wBot / 2) + ' ' + base + ' Z', fill: 'var(--' + f.c + ')' }, fig);
+    if (f.arm === 'up') el('path', { class: 'arm robe', d: 'M' + (x + 6) + ' ' + (base - h + 14) + ' L' + (x + 16) + ' ' + (base - h - 34), stroke: 'var(--' + f.c + ')' }, fig);
+    if (f.arm === 'out') el('path', { class: 'arm robe', d: 'M' + (x - 6) + ' ' + (base - h + 22) + ' Q' + (x - 30) + ' ' + (base - h + 20) + ' ' + (x - 40) + ' ' + (base - h + 34), stroke: 'var(--' + f.c + ')' }, fig);
+    el('circle', { class: 'head', cx: x, cy: base - h - 20 * s, r: 14 * s, fill: 'var(--sand)' }, fig);
+    var t = el('text', { x: x, y: base + 52, class: slot % 2 ? 'alt' : '' }, fig); t.textContent = f.n;
+    function show() {
+      g.querySelectorAll('.fig').forEach(function (o) { o.classList.toggle('on', o === fig); });
+      cap.innerHTML = ''; var b = document.createElement('b'); b.textContent = f.n; var sp = document.createElement('span'); sp.textContent = f.d; cap.appendChild(b); cap.appendChild(sp);
+    }
+    fig.addEventListener('mouseenter', show); fig.addEventListener('focus', show); fig.addEventListener('click', show);
+    fig.addEventListener('keydown', function (e) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); show(); } });
+  });
+
+  /* ---------- gallery: drifts slowly; pauses when someone is looking or scrolling ---------- */
+  var gal = document.getElementById('gallery'), hold = false, dir = 1, last = performance.now();
+  ['mouseenter', 'focusin', 'touchstart', 'pointerdown'].forEach(function (ev) { gal.addEventListener(ev, function () { hold = true; }, { passive: true }); });
+  ['mouseleave', 'focusout'].forEach(function (ev) { gal.addEventListener(ev, function () { hold = false; }); });
+  var drag = null;
+  gal.addEventListener('pointerdown', function (e) { if (e.pointerType !== 'mouse') return; drag = { x: e.clientX, s: gal.scrollLeft }; });
+  window.addEventListener('pointermove', function (e) { if (drag) gal.scrollLeft = drag.s - (e.clientX - drag.x); });
+  window.addEventListener('pointerup', function () { drag = null; });
+  var pos = 0;
+  gal.addEventListener('scroll', function () { if (hold || drag) pos = gal.scrollLeft; }, { passive: true });
+  if (!reduced) (function tick(now) {
+    var dt = Math.min(50, now - last); last = now;
+    if (!hold && !drag && !document.hidden) {
+      pos += dir * dt * 0.035;
+      var max = gal.scrollWidth - gal.clientWidth;
+      if (pos >= max) { pos = max; dir = -1; }
+      if (pos <= 0) { pos = 0; dir = 1; }
+      gal.scrollLeft = pos;
+    }
+    requestAnimationFrame(tick);
+  })(last);
+})();
+</script>
+</body>
+</html>
