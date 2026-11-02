@@ -123,14 +123,13 @@ img { max-width: 100%; }
 .athens .persp { stroke: var(--string); stroke-width: 1; opacity: 0.55; }
 .athens .step { fill: var(--sand); }
 .athens .step2 { fill: color-mix(in srgb, var(--sand) 70%, var(--bg)); }
+.athens .floor { fill: color-mix(in srgb, var(--sand) 35%, var(--bg)); }
 .fig { cursor: pointer; outline: none; }
-.fig .robe, .fig .head { transition: transform 0.35s cubic-bezier(.2, 1.4, .4, 1); transform-box: fill-box; transform-origin: 50% 100%; }
+.fig .ico { transition: transform 0.35s cubic-bezier(.2, 1.4, .4, 1); }
 .fig .shadow { fill: var(--mis); }
-.fig text { font: 600 12.5px var(--mono); fill: var(--fg); text-anchor: middle; transform-box: fill-box; }
-.fig:hover .robe, .fig:focus-visible .robe, .fig.on .robe { transform: translateY(-8px); }
-.fig:hover .head, .fig:focus-visible .head, .fig.on .head { transform: translateY(-8px); }
+.fig text { font: 600 12.5px var(--mono); fill: var(--fg); text-anchor: middle; }
+.fig:hover .ico, .fig:focus-visible .ico, .fig.on .ico { transform: translateY(-8px); }
 .fig:focus-visible text, .fig.on text { fill: var(--accent); }
-.fig .arm { stroke-width: 7; stroke-linecap: round; fill: none; }
 .athens-cap { display: flex; flex-wrap: wrap; align-items: baseline; gap: 6px 14px; min-height: 64px; margin-top: 20px; padding: 16px 20px; border-radius: 14px; background: var(--tint); }
 .athens-cap b { font-size: 18px; font-weight: 600; }
 .athens-cap span { color: var(--muted); }
@@ -143,10 +142,10 @@ img { max-width: 100%; }
 .gallery:active { cursor: grabbing; }
 .gallery::-webkit-scrollbar { height: 6px; } .gallery::-webkit-scrollbar-thumb { background: var(--line); border-radius: 3px; }
 .art { flex: none; margin: 0; scroll-snap-align: start; display: flex; flex-direction: column; gap: 10px; }
-.art-img { height: clamp(240px, 32vw, 380px); border-radius: 14px; background-color: var(--c); background-image: var(--grain); background-size: cover; background-position: center; display: flex; align-items: center; justify-content: center; box-shadow: 4px 4px 0 var(--mis); }
-.art-img img { width: 100%; height: 100%; object-fit: cover; border-radius: 14px; }
+.art-img { --h: clamp(240px, 32vw, 380px); height: var(--h); width: calc(var(--h) * var(--r, 1)); overflow: hidden; border-radius: 14px; background-color: var(--c); background-image: var(--grain); background-size: cover; background-position: center; display: flex; align-items: center; justify-content: center; box-shadow: 4px 4px 0 var(--mis); }
+.art-img img { width: 100%; height: 100%; object-fit: cover; border-radius: 14px; user-select: none; -webkit-user-drag: none; }
 .art-img .ph { font: 500 12px var(--mono); color: var(--ink); background: rgba(255, 255, 255, 0.75); padding: 4px 10px; border-radius: 999px; }
-.art figcaption { font-size: 14px; color: var(--muted); }
+.art figcaption { font-size: 14px; color: var(--muted); max-width: calc(var(--h, 300px) * 1); }
 .art figcaption b { color: var(--fg); font-weight: 600; }
 
 /* 5. free time */
@@ -156,7 +155,14 @@ img { max-width: 100%; }
 .vig h3 { font-size: 19px; font-weight: 600; letter-spacing: -0.01em; }
 .vig p { font-size: 15px; color: var(--muted); }
 .wheel-top { transform-box: fill-box; transform-origin: center; }
-.vig:hover .spin, .vig:focus-within .spin { animation: wheel 0.9s linear infinite; }
+.vig:hover .wheel-mark, .vig:focus-within .wheel-mark { animation: wheelspin 0.5s linear infinite; }
+.vig:hover .wheel-mark.slow, .vig:focus-within .wheel-mark.slow { animation: wheelspin2 0.8s linear infinite; }
+@keyframes wheelspin { to { stroke-dashoffset: -112; } }
+@keyframes wheelspin2 { to { stroke-dashoffset: -100; } }
+.flip { transform-box: view-box; transform-origin: 160px 100px; }
+.vig:hover .flip, .vig:focus-within .flip { animation: flip 1.6s cubic-bezier(.5, 0, .3, 1) infinite; }
+.vig:hover .flip.f2, .vig:focus-within .flip.f2 { animation-delay: 0.8s; }
+@keyframes flip { 0% { transform: scaleX(1); } 60%, 100% { transform: scaleX(-1); opacity: 0; } 55% { opacity: 1; } }
 .spin { transform-box: fill-box; transform-origin: center; }
 @keyframes wheel { to { transform: rotate(360deg); } }
 .mtn { transform-box: fill-box; transform-origin: 50% 100%; transform: scaleY(0.04); transition: transform 0.9s cubic-bezier(.2, 1.3, .4, 1); }
@@ -184,11 +190,10 @@ footer a:hover { color: var(--accent); }
   .ppt-foot { padding-left: 14px; }
   .slide-note { max-width: 60%; }
   .fig text { font-size: 24px; }
-  .fig text.alt { transform: translateY(26px); }
 }
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { transition: none !important; animation: none !important; }
-  .mtn { transform: scaleY(1); } .stroke-draw { stroke-dashoffset: 0; }
+  .mtn { transform: scaleY(1); }
 }
 </style>
 </head>
@@ -213,7 +218,7 @@ footer a:hover { color: var(--accent); }
       <div>
         <span class="kicker">About</span>
         <h1 id="about-title">My UI/UX journey started in high school <em>Physics II</em>.</h1>
-        <p class="lede">Physics explains the world through math, which asks for intuition in a lot of places at once. Most classes lead with the equations, but I noticed my friends understood things faster when they could see them.</p>
+        <p class="lede">Physics uses math to describe the world, and a lot of it takes intuition to follow. My classmates understood concepts faster when they could see them than when they started from the equations.</p>
       </div>
       <figure class="ppt" style="margin: 0">
         <div class="ppt-bar"><span class="dots" aria-hidden="true"><i></i><i></i><i></i></span><span class="name">Physics II · Magnetism.pptx</span><span aria-hidden="true">▶</span></div>
@@ -235,12 +240,12 @@ footer a:hover { color: var(--accent); }
     <div class="story">
       <div>
         <h2 class="sr" id="story-title">How it started</h2>
-        <p class="pull">That kicked off my passion for <mark>interactive products that help people do things more easily</mark>.</p>
+        <p class="pull">I build <mark>interactive products that help people do things more easily</mark>.</p>
       </div>
       <div class="read">
-        <p>So I started making demos. In <b>Microsoft PowerPoint</b>, I animated simple, interactive slides about electromagnetism, with instructions to guide you through each step. They were only for a couple of friends, but I loved watching them enjoy the demos and understand the physics more intuitively than a formula sheet ever let them.</p>
-        <p>Since then I've worked across <b>creative technology, UI/UX design, human-computer interaction</b> and art, chasing the same fun I had in PowerPoint.</p>
-        <p>Along the way I've grown more interested in <b>accessibility and usability</b>: how to make technology enjoyable and usable by everyone, without discrimination.</p>
+        <p>In Physics II, I made interactive slides about electromagnetism in <b>Microsoft PowerPoint</b>, with animations and step-by-step instructions. I made them for a few friends, and the slides helped them understand the material.</p>
+        <p>Since then I've worked in <b>creative technology, UI/UX design, human-computer interaction</b> and art.</p>
+        <p>I'm especially interested in <b>accessibility and usability</b>: making technology enjoyable and usable by everyone, without discrimination.</p>
         <div class="tags" aria-label="Areas"><span>Creative technology</span><span>UI/UX design</span><span>Human-computer interaction</span><span>Accessibility</span><span>Art</span></div>
       </div>
     </div>
@@ -251,12 +256,12 @@ footer a:hover { color: var(--accent); }
     <div class="athens-head">
       <h2 class="h2" id="athens-title">UI/UX is a modern School of Athens.</h2>
       <div class="read">
-        <p>In Raphael's fresco, thinkers from every field share one hall. UI/UX works the same way. It brings together people with different backgrounds, curiosities and passions, and treats those differences as new perspectives that make an experience richer.</p>
-        <p>That's where my interdisciplinary background becomes a strength. Knowing how different fields approach a problem shapes my ideas, and makes me eager to try new approaches.</p>
+        <p>Raphael's fresco shows thinkers from many fields in one hall. UI/UX also brings together people with different backgrounds, curiosities and passions, and their different perspectives make the experience better.</p>
+        <p>My background spans physics, computing and art, and I draw on all three when I work on a design problem.</p>
       </div>
     </div>
     <div class="athens">
-      <svg viewBox="0 -150 1000 640" role="group" aria-label="An arched hall drawn in one-point perspective, with figures for different fields standing on the steps">
+      <svg viewBox="0 -150 1000 700" role="group" aria-label="An arched hall in one-point perspective, with a symbol for each field placed where the philosophers stand in Raphael's School of Athens">
         <!-- receding arches and floor converge on one vanishing point -->
         <path class="vault-fill" d="M120 470 V250 A380 380 0 0 1 880 250 V470 Z"></path>
         <path class="vault" d="M120 470 V250 A380 380 0 0 1 880 250 V470"></path>
@@ -268,9 +273,10 @@ footer a:hover { color: var(--accent); }
         </g>
         <rect class="step2" x="150" y="402" width="700" height="22" rx="4"></rect>
         <rect class="step" x="110" y="424" width="780" height="46" rx="4"></rect>
+        <rect class="floor" x="60" y="470" width="880" height="72" rx="4"></rect>
         <g id="figs"></g>
       </svg>
-      <p class="athens-cap" id="athens-cap" aria-live="polite"><b>Hover or tap a figure</b><span>to see what each field brings to design.</span></p>
+      <p class="athens-cap" id="athens-cap" aria-live="polite"><b>Hover or tap a symbol</b><span>to see what each field brings to design.</span></p>
       <p class="credit">After Raphael, <i>The School of Athens</i> (1509–1511).</p>
     </div>
   </section>
@@ -279,18 +285,21 @@ footer a:hover { color: var(--accent); }
   <section class="scene" aria-labelledby="art-title">
     <div class="art-head">
       <div style="display: flex; flex-direction: column; gap: 16px; max-width: 760px">
-        <h2 class="h2" id="art-title">I'm also an artist.</h2>
-        <p class="read" style="display: block">My work draws on <b>Korean Minhwa</b>, painting, pottery and technology to explore the spiritual side of human experience.</p>
+        <h2 class="h2" id="art-title">When I'm not designing, I'm still creating!</h2>
+        <p class="read" style="display: block">My work draws on painting, pottery and technology to explore the spiritual side of the human experience.</p>
       </div>
     </div>
     <div class="gallery" id="gallery" tabindex="0" aria-label="Artworks, scrolls sideways">
-      <figure class="art"><div class="art-img" style="--c: #FFD6E7; width: clamp(200px, 22vw, 300px)"><span class="ph">add artwork</span></div><figcaption><b>[Title]</b> · Minhwa, [year]</figcaption></figure>
-      <figure class="art"><div class="art-img" style="--c: #FFF1B8; width: clamp(280px, 34vw, 460px)"><span class="ph">add artwork</span></div><figcaption><b>[Title]</b> · Painting, [year]</figcaption></figure>
-      <figure class="art"><div class="art-img" style="--c: #D9F6EF; width: clamp(200px, 24vw, 320px)"><span class="ph">add artwork</span></div><figcaption><b>[Title]</b> · Pottery, [year]</figcaption></figure>
-      <figure class="art"><div class="art-img" style="--c: #E6DCFF; width: clamp(240px, 28vw, 380px)"><span class="ph">add artwork</span></div><figcaption><b>[Title]</b> · Technology, [year]</figcaption></figure>
-      <figure class="art"><div class="art-img" style="--c: #DCEBFF; width: clamp(200px, 22vw, 300px)"><span class="ph">add artwork</span></div><figcaption><b>[Title]</b> · Minhwa, [year]</figcaption></figure>
-      <figure class="art"><div class="art-img" style="--c: #FFE2CF; width: clamp(280px, 34vw, 460px)"><span class="ph">add artwork</span></div><figcaption><b>[Title]</b> · Painting, [year]</figcaption></figure>
-      <figure class="art"><div class="art-img" style="--c: #E8F7D9; width: clamp(200px, 24vw, 320px)"><span class="ph">add artwork</span></div><figcaption><b>[Title]</b> · Pottery, [year]</figcaption></figure>
+      <figure class="art"><div class="art-img" style="--r: 0.731"><img src="art/meditation.webp" alt="Oil pastel drawing of a man sitting cross-legged on a folding chair on a yellow floor" loading="lazy" draggable="false"></div><figcaption>Oil pastel</figcaption></figure>
+      <figure class="art"><div class="art-img" style="--r: 0.967"><img src="art/bagel.webp" alt="A bagel painted with a blue face on one half and glossy white paint on the other" loading="lazy" draggable="false"></div><figcaption>Mixed media</figcaption></figure>
+      <figure class="art"><div class="art-img" style="--r: 1.407"><img src="art/window.webp" alt="Painting of a green window with a carved panel of a pine tree, deer and crane" loading="lazy" draggable="false"></div><figcaption>Painting</figcaption></figure>
+      <figure class="art"><div class="art-img" style="--r: 1.569"><img src="art/vases.webp" alt="Two small white porcelain moon jars joined at the side and stitched together with red thread" loading="lazy" draggable="false"></div><figcaption>Pottery</figcaption></figure>
+      <figure class="art"><div class="art-img" style="--r: 0.864"><img src="art/minhwa.webp" alt="Painting of three robed figures with tall hats and halos above pink and blue lotus flowers" loading="lazy" draggable="false"></div><figcaption>Painting</figcaption></figure>
+      <figure class="art"><div class="art-img" style="--r: 1.414"><img src="art/shapes.webp" alt="Digital render of a red torus, blue sphere, yellow hemisphere and green cylinder floating among the word bob" loading="lazy" draggable="false"></div><figcaption>Digital</figcaption></figure>
+      <figure class="art"><div class="art-img" style="--r: 0.838"><img src="art/bathroom.webp" alt="Painting of a blue bathroom with a sink and a mirror reflecting a yellow-lit stall" loading="lazy" draggable="false"></div><figcaption>Painting</figcaption></figure>
+      <figure class="art"><div class="art-img" style="--r: 0.800"><img src="art/buddha.webp" alt="Painting of a dark stone Buddha head against an ochre ground" loading="lazy" draggable="false"></div><figcaption>Painting</figcaption></figure>
+      <figure class="art"><div class="art-img" style="--r: 1.276"><img src="art/shoe.webp" alt="Painting of a brown shoe with a red apple and three yellow fruits on a striped cloth" loading="lazy" draggable="false"></div><figcaption>Painting</figcaption></figure>
+      <figure class="art"><div class="art-img" style="--r: 1.333"><img src="art/still-life-pencil.webp" alt="Colored pencil still life of grapes and lemons in a metal bowl beside a yellow tulip in a bottle" loading="lazy" draggable="false"></div><figcaption>Colored pencil</figcaption></figure>
     </div>
   </section>
 
@@ -300,27 +309,34 @@ footer a:hover { color: var(--accent); }
     <div class="free">
       <div class="vig" tabindex="0">
         <svg viewBox="0 0 320 200" aria-hidden="true">
-          <rect x="80" y="30" width="160" height="130" rx="6" fill="var(--sand)"></rect>
-          <path class="stroke-draw" d="M100 120 C130 60, 170 150, 200 80 S 230 110, 222 60" fill="none" stroke="var(--accent)" stroke-width="5" stroke-linecap="round"></path>
-          <circle cx="132" cy="70" r="12" fill="var(--ochre)"></circle>
-          <path d="M240 168 L292 52" stroke="var(--fg)" stroke-width="6" stroke-linecap="round"></path>
-          <path d="M240 168 l-6 14 l14 -8 z" fill="var(--pink)"></path>
-          <rect x="70" y="160" width="180" height="10" rx="5" fill="var(--string)" opacity="0.5"></rect>
+          <ellipse cx="160" cy="166" rx="120" ry="10" fill="var(--string)" opacity="0.25"></ellipse>
+          <path d="M160 156 C130 144, 92 144, 62 154 V58 C92 48, 130 48, 160 60 Z" fill="var(--sand)"></path>
+          <path d="M160 156 C190 144, 228 144, 258 154 V58 C228 48, 190 48, 160 60 Z" fill="var(--sand)"></path>
+          <path d="M160 152 C132 140, 96 140, 70 148 V62 C96 54, 132 54, 160 64 Z" fill="#FFFFFF"></path>
+          <path d="M84 80 C104 74, 128 76, 146 82 M84 96 C104 90, 128 92, 146 98 M84 112 C104 106, 128 108, 146 114 M84 128 C100 124, 116 125, 128 128" stroke="var(--string)" stroke-width="3" stroke-linecap="round" fill="none" opacity="0.6"></path>
+          <path class="flip" d="M160 152 C188 140, 224 140, 250 148 V62 C224 54, 188 54, 160 64 Z" fill="#FFFFFF" stroke="var(--line)" stroke-width="1"></path>
+          <path class="flip f2" d="M160 152 C188 140, 224 140, 250 148 V62 C224 54, 188 54, 160 64 Z" fill="#FFF8EC" stroke="var(--line)" stroke-width="1"></path>
+          <path d="M174 82 C192 76, 216 76, 236 80 M174 98 C192 92, 216 92, 236 96 M174 114 C192 108, 216 108, 236 112" stroke="var(--clay)" stroke-width="3" stroke-linecap="round" fill="none" opacity="0.55"></path>
+          <path d="M160 60 V156" stroke="var(--string)" stroke-width="2" opacity="0.6"></path>
+          <path d="M214 56 V96 l8 -7 l8 7 V58" fill="var(--pink)"></path>
         </svg>
-        <h3>Making artworks</h3>
-        <p>Minhwa, painting and whatever new medium I'm curious about that month.</p>
+        <h3>Reading</h3>
+        <p>Mostly classic fiction and nonfiction science books. My favorite is <i>East of Eden</i> by John Steinbeck.</p>
       </div>
       <div class="vig" tabindex="0">
         <svg viewBox="0 0 320 200" aria-hidden="true">
-          <ellipse cx="160" cy="168" rx="120" ry="18" fill="var(--string)" opacity="0.35"></ellipse>
-          <ellipse cx="160" cy="150" rx="96" ry="16" fill="var(--rust)"></ellipse>
-          <g class="spin"><ellipse cx="160" cy="146" rx="84" ry="13" fill="var(--teal)"></ellipse><path d="M100 146 h120" stroke="var(--bg)" stroke-width="3" opacity="0.7"></path></g>
-          <path d="M122 142 C116 104, 126 80, 140 70 H180 C194 80, 204 104, 198 142 Z" fill="var(--pink)"></path>
-          <g class="spin" style="transform-origin: 160px 106px"><path d="M128 100 h64 M126 118 h68" stroke="var(--bg)" stroke-width="2.5" opacity="0.6" stroke-linecap="round"></path></g>
-          <ellipse cx="160" cy="70" rx="20" ry="5" fill="var(--sand)"></ellipse>
+          <ellipse cx="160" cy="170" rx="122" ry="16" fill="var(--string)" opacity="0.3"></ellipse>
+          <ellipse cx="160" cy="154" rx="104" ry="20" fill="var(--rust)"></ellipse>
+          <ellipse cx="160" cy="147" rx="82" ry="14" fill="var(--teal)"></ellipse>
+          <ellipse class="wheel-mark" cx="160" cy="147" rx="66" ry="10" fill="none" stroke="#FFFFFF" stroke-width="3" stroke-dasharray="12 16" stroke-linecap="round" opacity="0.75"></ellipse>
+          <ellipse class="wheel-mark slow" cx="160" cy="147" rx="40" ry="6" fill="none" stroke="#FFFFFF" stroke-width="2.5" stroke-dasharray="8 12" stroke-linecap="round" opacity="0.6"></ellipse>
+          <path d="M144 146 C118 142, 102 122, 102 98 C102 72, 124 56, 146 52 V45 H174 V52 C196 56, 218 72, 218 98 C218 122, 202 142, 176 146 Z" fill="#FFF8EC" stroke="var(--string)" stroke-width="2"></path>
+          <path d="M104 97 C140 102, 180 102, 216 97" stroke="var(--string)" stroke-width="1.5" fill="none" opacity="0.5"></path>
+          <path d="M120 76 C126 66, 136 60, 146 58" stroke="#FFFFFF" stroke-width="5" stroke-linecap="round" fill="none"></path>
+          <ellipse cx="160" cy="45" rx="14" ry="3.5" fill="var(--string)" opacity="0.55"></ellipse>
         </svg>
-        <h3>Throwing pottery on the wheel</h3>
-        <p>Centering clay is the most physics-y meditation I know.</p>
+        <h3>Pottery</h3>
+        <p>Throwing on the wheel.</p>
       </div>
       <div class="vig" tabindex="0">
         <svg viewBox="0 0 320 200" aria-hidden="true">
@@ -334,7 +350,7 @@ footer a:hover { color: var(--accent); }
           <text x="20" y="160" font-family="JetBrains Mono, monospace" font-size="12" fill="var(--muted)">TX ★</text>
         </svg>
         <h3>Hiking</h3>
-        <p>If I'm out of Texas, that is. The mountains only show up once I leave.</p>
+        <p>Mostly when I'm not in Texas!</p>
       </div>
     </div>
   </section>
@@ -422,31 +438,67 @@ footer a:hover { color: var(--accent); }
     (function loop(now) { if (idle) { M.ang = -0.18 + 0.35 * Math.sin((now - t0) / 1600); draw(); requestAnimationFrame(loop); } })(t0);
   }
 
-  /* ---------- School of Athens: figures for each field ---------- */
+  /* ---------- School of Athens: a symbol for each field, placed where the philosophers stand in the fresco ---------- */
+  var W = '#FFFFFF';
+  var ICONS = {
+    /* Plato, centre, pointing up */
+    atom: '<ellipse cx="0" cy="-36" rx="32" ry="12" fill="none" stroke="var(--clay)" stroke-width="5"/>' +
+          '<ellipse cx="0" cy="-36" rx="32" ry="12" fill="none" stroke="var(--clay)" stroke-width="5" transform="rotate(60 0 -36)"/>' +
+          '<ellipse cx="0" cy="-36" rx="32" ry="12" fill="none" stroke="var(--clay)" stroke-width="5" transform="rotate(-60 0 -36)"/>' +
+          '<circle cx="0" cy="-36" r="7" fill="var(--accent)"/>',
+    /* Aristotle, centre */
+    palette: '<path d="M-32 -24 C-40 -52 -12 -72 14 -66 C40 -60 40 -34 22 -32 C10 -31 12 -16 0 -10 C-12 -4 -28 -10 -32 -24 Z" fill="var(--pink)"/>' +
+             '<circle cx="18" cy="-46" r="5" fill="var(--tint)"/>' +
+             '<circle cx="-20" cy="-28" r="5.5" fill="var(--ochre)"/><circle cx="-18" cy="-46" r="5.5" fill="var(--teal)"/>' +
+             '<circle cx="-2" cy="-56" r="5.5" fill="var(--clay)"/><circle cx="-4" cy="-24" r="5.5" fill="var(--sage)"/>' +
+             '<path d="M8 -6 L34 -68" stroke="var(--fg)" stroke-width="4" stroke-linecap="round"/><path d="M8 -6 l-3 8 l8 -5 z" fill="var(--rust)"/>',
+    /* Socrates, upper left, counting points off to his listeners */
+    board: '<path d="M-22 0 L-14 -40 M22 0 L14 -40" stroke="var(--ochre)" stroke-width="5" stroke-linecap="round"/>' +
+           '<rect x="-32" y="-70" width="64" height="42" rx="4" fill="var(--ink)" stroke="var(--ochre)" stroke-width="4"/>' +
+           '<path d="M-22 -58 h14 M-22 -49 h22 M-22 -40 h10" stroke="' + W + '" stroke-width="2.5" stroke-linecap="round"/>' +
+           '<circle cx="16" cy="-50" r="7" fill="none" stroke="' + W + '" stroke-width="2.5"/>',
+    /* Pythagoras, front left, writing in a book */
+    book: '<path d="M0 -6 C-12 -14 -26 -14 -38 -8 V-44 C-26 -50 -12 -50 0 -42 Z" fill="' + W + '" stroke="var(--rust)" stroke-width="3" stroke-linejoin="round"/>' +
+          '<path d="M0 -6 C12 -14 26 -14 38 -8 V-44 C26 -50 12 -50 0 -42 Z" fill="' + W + '" stroke="var(--rust)" stroke-width="3" stroke-linejoin="round"/>' +
+          '<path d="M-30 -34 C-22 -38 -12 -38 -6 -34 M-30 -25 C-22 -29 -12 -29 -6 -25 M8 -34 C14 -38 22 -38 28 -36" stroke="var(--string)" stroke-width="2.5" stroke-linecap="round" fill="none"/>' +
+          '<path d="M34 -80 C46 -72 36 -50 16 -30 L13 -27 C17 -46 24 -66 34 -80 Z" fill="var(--rust)"/>',
+    /* Heraclitus, front centre, brooding, leaning on a block */
+    brain: '<rect x="-30" y="-16" width="60" height="16" rx="3" fill="var(--sand)"/>' +
+           '<path d="M-32 -38 C-36 -54 -24 -70 -6 -68 C4 -76 24 -72 30 -60 C40 -56 40 -40 32 -34 C32 -26 22 -22 14 -25 L12 -17 H5 L4 -24 C-8 -22 -28 -24 -32 -38 Z" fill="var(--teal)"/>' +
+           '<path d="M-22 -50 c4 -8 14 -8 16 0 M-2 -60 c6 -4 14 -2 14 6 M4 -44 c4 -6 14 -6 18 2 M-24 -36 c6 -2 12 2 14 6 M-8 -46 v10" stroke="' + W + '" stroke-width="3" stroke-linecap="round" fill="none"/>',
+    /* Diogenes, sprawled on the steps, open to anyone */
+    access: '<circle cx="0" cy="-30" r="28" fill="var(--sage)"/>' +
+            '<circle cx="0" cy="-47" r="5" fill="' + W + '"/>' +
+            '<path d="M-15 -38 H15 M0 -38 V-24 M0 -24 L-9 -11 M0 -24 L9 -11" stroke="' + W + '" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" fill="none"/>',
+    /* Euclid, front right, demonstrating on a slate */
+    laptop: '<rect x="-28" y="-58" width="56" height="38" rx="4" fill="var(--accent)"/>' +
+            '<rect x="-23" y="-53" width="46" height="28" rx="2" fill="' + W + '"/>' +
+            '<path d="M-7 -45 l-7 6 l7 6 M7 -45 l7 6 l-7 6 M3 -47 l-6 16" stroke="var(--accent)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>' +
+            '<path d="M-36 -18 H36 L42 -8 H-42 Z" fill="var(--clay)"/>',
+    /* Ptolemy and Zoroaster, far right, holding their globes */
+    chart: '<path d="M-36 -4 H36" stroke="var(--fg)" stroke-width="3" stroke-linecap="round"/>' +
+           '<rect x="-30" y="-24" width="14" height="20" rx="2" fill="var(--ochre)"/><rect x="-10" y="-38" width="14" height="34" rx="2" fill="var(--pink)"/><rect x="10" y="-52" width="14" height="48" rx="2" fill="var(--sage)"/>' +
+           '<path d="M-32 -40 L-12 -54 L4 -48 L28 -72" stroke="var(--fg)" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/><path d="M28 -72 l-11 1 l9 8 z" fill="var(--fg)"/>'
+  };
   var FIELDS = [
-    { n: 'Physics', c: 'rust', arm: 'up', d: 'Starting from first principles, and building intuition for how a system behaves before touching the details.' },
-    { n: 'Art', c: 'pink', arm: 'out', d: 'Paying attention to feeling, composition and color, and to what makes something worth looking at twice.' },
-    { n: 'Computing', c: 'clay', d: 'Knowing what can actually be built, and where a system is likely to break.' },
-    { n: 'Psychology', c: 'teal', d: 'How people perceive, learn and make decisions, so the interface meets them where they are.' },
-    { n: 'Accessibility', c: 'sage', d: 'Designing for everyone from the start, so a tool is usable without discrimination.' },
-    { n: 'Teaching', c: 'ochre', d: 'Explaining one idea clearly, with a demo instead of a formula sheet. Where this all began.' },
-    { n: 'Business', c: 'rust', d: 'Why a product needs to exist, who it serves, and how it keeps going.' },
-    { n: 'Writing', c: 'pink', d: 'Finding the plain words for a complicated idea, on screen and in a case study.' }
+    { n: 'Physics',       i: 'atom',    x: 455, y: 402, s: 1.0,  d: 'Breaking a system down to first principles to understand how it behaves.' },
+    { n: 'Art',           i: 'palette', x: 545, y: 402, s: 1.0,  d: 'Composition, color, and how a piece makes people feel.' },
+    { n: 'Teaching',      i: 'board',   x: 300, y: 402, s: 0.85, d: 'Explaining an idea clearly, often with a demo.' },
+    { n: 'Accessibility', i: 'access',  x: 610, y: 448, s: 0.85, d: 'Designing so that everyone can use the product.' },
+    { n: 'Writing',       i: 'book',    x: 175, y: 512, s: 1.1,  d: 'Explaining complex ideas in plain language.' },
+    { n: 'Psychology',    i: 'brain',   x: 430, y: 512, s: 1.1,  d: 'How people perceive, learn and make decisions.' },
+    { n: 'Computing',     i: 'laptop',  x: 740, y: 512, s: 1.1,  d: 'Knowing what can be built and where it might break.' },
+    { n: 'Business',      i: 'chart',   x: 885, y: 512, s: 1.1,  d: 'Why the product exists, who it serves and how it stays viable.' }
   ];
-  var order = [6, 3, 5, 0, 1, 2, 4, 7];  /* Physics and Art in the middle, like Plato and Aristotle */
-  var xs = [160, 258, 356, 452, 548, 644, 742, 840];
   var g = document.getElementById('figs'), NS = 'http://www.w3.org/2000/svg', cap = document.getElementById('athens-cap');
   function el(tag, attrs, parent) { var e = document.createElementNS(NS, tag); for (var k in attrs) e.setAttribute(k, attrs[k]); (parent || g).appendChild(e); return e; }
-  order.forEach(function (fi, slot) {
-    var f = FIELDS[fi], x = xs[slot], big = slot === 3 || slot === 4, s = big ? 1.12 : 1, base = big ? 402 : 402;
-    var fig = el('g', { class: 'fig', tabindex: '0', role: 'button', 'aria-label': f.n + ': ' + f.d });
-    var h = 96 * s, wTop = 22 * s, wBot = 40 * s;
-    el('ellipse', { class: 'shadow', cx: x + 5, cy: base + 2, rx: wBot * 0.9, ry: 5 }, fig);
-    var robe = el('path', { class: 'robe', d: 'M' + (x - wTop / 2) + ' ' + (base - h) + ' Q' + x + ' ' + (base - h - 10 * s) + ' ' + (x + wTop / 2) + ' ' + (base - h) + ' L' + (x + wBot / 2) + ' ' + base + ' L' + (x - wBot / 2) + ' ' + base + ' Z', fill: 'var(--' + f.c + ')' }, fig);
-    if (f.arm === 'up') el('path', { class: 'arm robe', d: 'M' + (x + 6) + ' ' + (base - h + 14) + ' L' + (x + 16) + ' ' + (base - h - 34), stroke: 'var(--' + f.c + ')' }, fig);
-    if (f.arm === 'out') el('path', { class: 'arm robe', d: 'M' + (x - 6) + ' ' + (base - h + 22) + ' Q' + (x - 30) + ' ' + (base - h + 20) + ' ' + (x - 40) + ' ' + (base - h + 34), stroke: 'var(--' + f.c + ')' }, fig);
-    el('circle', { class: 'head', cx: x, cy: base - h - 20 * s, r: 14 * s, fill: 'var(--sand)' }, fig);
-    var t = el('text', { x: x, y: base + 52, class: slot % 2 ? 'alt' : '' }, fig); t.textContent = f.n;
+  FIELDS.forEach(function (f) {
+    var fig = el('g', { class: 'fig', tabindex: '0', role: 'button', 'aria-label': f.n + ': ' + f.d, transform: 'translate(' + f.x + ' ' + f.y + ')' });
+    el('ellipse', { class: 'shadow', cx: 3, cy: 1, rx: 34 * f.s, ry: 4.5 * f.s }, fig);
+    var ico = el('g', { class: 'ico' }, fig);
+    var inner = el('g', { transform: 'scale(' + f.s + ')' }, ico);
+    inner.innerHTML = ICONS[f.i];
+    var t = el('text', { x: 0, y: f.y === 512 ? 22 : 18 }, fig); t.textContent = f.n;
     function show() {
       g.querySelectorAll('.fig').forEach(function (o) { o.classList.toggle('on', o === fig); });
       cap.innerHTML = ''; var b = document.createElement('b'); b.textContent = f.n; var sp = document.createElement('span'); sp.textContent = f.d; cap.appendChild(b); cap.appendChild(sp);
