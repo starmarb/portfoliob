@@ -1,0 +1,1631 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Meditate</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<script src="https://cdn.jsdelivr.net/npm/qrcode-generator@1.4.4/qrcode.js"></script>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Gowun+Batang:wght@400;700&family=IBM+Plex+Mono:wght@400&display=swap">
+<style>
+/* Layout: a sheet of hanji, then a dark room with a still hall, then hanji again. One deliberate look, the same in light and dark mode. */
+:root{
+  --paper:#EEE7D7; --paper2:#F7F2E7; --sumi:#2A2620; --sumi2:#6B6355; --green:#2F7A62; --green2:#256250; --rule:rgba(42,38,32,.2);
+  --night:#0D0F16; --line-roof:#F4F2EC; --line-ridge:#F4F2EC; --line-col:#F4F2EC; --line-base:#F4F2EC; --phos:#BFE8CC;
+  --f-body:"Gowun Batang","Apple SD Gothic Neo","Noto Serif KR",Georgia,serif; --f-mono:"IBM Plex Mono",ui-monospace,Menlo,Consolas,monospace;
+}
+html{height:100%}
+body{min-height:100%;background-color:var(--paper);color:var(--sumi);font-family:var(--f-body);font-size:18px;line-height:1.7;margin:0}
+body[data-stage=baseline],body[data-stage=record]{background-color:var(--night)}
+[hidden]{display:none!important}
+h1,h2,h3{font-weight:700;margin:0;text-wrap:balance}
+p{margin:0}
+a{color:inherit;text-underline-offset:3px}
+:focus-visible{outline:2px solid var(--green);outline-offset:3px}
+#room :focus-visible{outline-color:var(--phos)}
+
+/* intro */
+#intro{min-height:100dvh;box-sizing:border-box;display:grid;place-items:center;font-size:17px;line-height:1.62;padding-block:clamp(24px,5vh,56px);padding-left:max(24px,env(safe-area-inset-left,0px));padding-right:max(24px,env(safe-area-inset-right,0px))}
+.sheet{max-width:640px;width:100%;display:flex;flex-direction:column;gap:16px;min-width:0}
+.sheet h1{font-size:clamp(2.6rem,7vw,3.8rem);line-height:1.1;font-weight:400;letter-spacing:-.01em;margin-bottom:8px}
+.choices{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin-top:16px}
+@media (max-width:560px){.choices{grid-template-columns:minmax(0,1fr)}}
+.btn{appearance:none;border:0;border-radius:3px;background:var(--green);color:#FBF8F0;font:700 1.02rem/1.3 var(--f-body);padding:17px 18px;cursor:pointer;transition:background-color .15s ease}
+.btn:hover{background:var(--green2)}
+.btn:disabled{cursor:default;opacity:.8}
+.connect-note{border-left:3px solid var(--green);padding-left:14px;font-size:.95rem;line-height:1.55}
+
+/* the session */
+#room{position:fixed;inset:0;background:var(--night);transition:opacity .9s ease,background-color .9s ease}
+.hall{position:absolute;inset:env(safe-area-inset-top,0px) env(safe-area-inset-right,0px) env(safe-area-inset-bottom,0px) env(safe-area-inset-left,0px)}
+#hallSvg{position:absolute;inset:0;width:100%;height:100%;overflow:visible}
+#hallSvg path{fill:none;stroke-linecap:round;stroke-linejoin:round}
+#hallSvg .t-ridge{stroke:var(--line-ridge)} #hallSvg .t-roof,#hallSvg .t-tile{stroke:var(--line-roof)} #hallSvg .t-col,#hallSvg .t-lat{stroke:var(--line-col)} #hallSvg .t-base{stroke:var(--line-base)}
+#hallSvg .core path{stroke-width:1.4}
+#hallSvg .core .t-tile{stroke-width:.7;opacity:.4}
+#hallSvg .core .t-lat{stroke-width:.7;opacity:.3}
+#hallSvg .glow{opacity:.16}
+#hallSvg .glow path{stroke-width:4}
+#hallSvg .glow .t-tile,#hallSvg .glow .t-lat{stroke-width:1;opacity:.3}
+#hallSvg .end{fill:var(--night);stroke:var(--line-roof);stroke-width:.8;opacity:.6}
+.screen{position:absolute;background:#040a08;overflow:hidden}
+.screen canvas{position:absolute;inset:0;width:100%;height:100%;display:block}
+.instr{position:absolute;inset:0;display:grid;place-items:center;text-align:center;padding:0 12%;margin:0;color:var(--phos);font-family:var(--f-mono);font-weight:400;line-height:1.55;text-shadow:0 0 10px rgba(141,255,176,.35);opacity:0;transition:opacity .7s ease;text-wrap:balance}
+.instr.on{opacity:1}
+@media (prefers-reduced-motion:reduce){.instr{transition:none}}
+.bell{position:absolute;top:8px;right:8px;width:40px;height:40px;display:grid;place-items:center;appearance:none;background:none;border:0;color:#8C90A0;cursor:pointer;padding:0}
+.bell svg{width:22px;height:22px}
+.bell:hover{color:#C4C7D2}
+.bell[aria-pressed=true]{color:#C9C3A6}
+.bell[aria-pressed=true] .mute{display:none}
+#room.dawn{opacity:0;background:var(--paper)}
+
+/* the print */
+#result{min-height:100dvh;box-sizing:border-box;display:flex;flex-direction:column;justify-content:center;gap:16px;padding-block:clamp(16px,4vh,44px);padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));animation:dayIn .9s ease}
+@keyframes dayIn{from{opacity:0}to{opacity:1}}
+@media (prefers-reduced-motion:reduce){#result{animation:none}}
+.flip{perspective:2800px;width:100%;max-width:1280px;margin-inline:auto}
+.flip-in{position:relative;height:clamp(440px,calc(100dvh - 140px),820px);transform-style:preserve-3d;transition:transform .95s cubic-bezier(.45,.05,.2,1)}
+.flip-in.flipped{transform:rotateY(180deg)}
+@media (max-width:700px){.flip-in{height:min(calc(100dvh - 124px),520px)}}
+.face{position:absolute;inset:0;box-sizing:border-box;background-color:var(--paper2);box-shadow:0 1px 2px rgba(60,48,28,.2),0 14px 34px rgba(60,48,28,.16);backface-visibility:hidden;-webkit-backface-visibility:hidden}
+.face.front{display:grid;place-items:center;padding:clamp(14px,2.2vw,30px);overflow:hidden}
+.face.back{transform:rotateY(180deg);padding:clamp(20px,3.4vw,44px);overflow-y:auto;overscroll-behavior:contain;scrollbar-width:thin;scrollbar-color:rgba(42,38,32,.3) transparent}
+@media (prefers-reduced-motion:reduce){.flip-in{transition:none}.flip-in.flipped{transform:none}.face.back{transform:none;visibility:hidden}.flip-in.flipped .face.back{visibility:visible}.flip-in.flipped .face.front{visibility:hidden}}
+.plate{width:100%;min-width:0}
+.chart-title{font-size:clamp(1.35rem,2.5vw,1.95rem);line-height:1.25;font-weight:400;margin-bottom:clamp(10px,1.4vw,16px)}
+.chart-title span{white-space:nowrap}
+.chartframe{border:1px solid var(--sumi);padding:clamp(4px,.7vw,9px);line-height:0}
+#chartCv{display:block;width:100%;height:auto;max-width:100%}
+.focuslabel{display:flex;flex-wrap:wrap;justify-content:space-between;gap:0 14px;font:400 .72rem/1.5 var(--f-mono);margin-top:12px;color:var(--sumi2)}
+#focusStrip{display:block;width:100%;height:44px;margin-top:3px}
+.ticks{position:relative;height:18px;font:400 .72rem/18px var(--f-mono);font-variant-numeric:tabular-nums;color:var(--sumi2)}
+.ticks span{position:absolute;transform:translateX(-50%)}
+.ticks span:first-child{transform:none}.ticks span:last-child{transform:translateX(-100%)}
+.tools{display:flex;justify-content:center;align-items:center;gap:8px;flex-wrap:wrap}
+.again{appearance:none;background:none;border:0;color:var(--sumi);font:400 .95rem/1 var(--f-body);padding:15px 12px;margin-left:6px;cursor:pointer;text-decoration:underline;text-underline-offset:4px}
+.again:hover{color:var(--green2)}
+.icon{appearance:none;width:46px;height:46px;display:grid;place-items:center;background:none;border:0;color:var(--sumi);cursor:pointer;padding:0;border-radius:50%;transition:background-color .15s ease}
+.icon:hover{background:rgba(42,38,32,.09)}
+.icon:disabled{opacity:.4;cursor:default}
+.icon svg{width:25px;height:25px}
+.dlnote{text-align:center;font-size:.88rem}
+.back-grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.1fr);gap:clamp(26px,4.4vw,60px);font-size:.97rem;line-height:1.65}
+@media (max-width:900px){.back-grid{grid-template-columns:minmax(0,1fr)}}
+.back-grid>section{display:flex;flex-direction:column;gap:12px;min-width:0}
+.back-grid h2{font-size:clamp(1.4rem,2.3vw,1.72rem);line-height:1.25;font-weight:400}
+.back-grid h3{font-size:1.04rem;margin-top:14px}
+.legend{display:grid;gap:12px;margin-top:6px}
+.lg{display:grid;grid-template-columns:112px minmax(0,1fr);gap:14px;align-items:center;font-size:.92rem;line-height:1.5;min-width:0}
+.lg canvas{width:112px;height:56px;display:block}
+.lg b{font-weight:700}
+.fine{font-size:.84rem;line-height:1.55;color:var(--sumi2)}
+.terms{margin:0;display:grid;gap:3px}
+.terms dt{font-weight:700;margin-top:9px}
+.terms dt:first-child{margin-top:0}
+.terms dd{margin:0}
+.sources{margin:0;padding-left:18px;font-size:.82rem;line-height:1.45;display:grid;gap:3px;color:var(--sumi2)}
+.qrsheet{position:fixed;inset:0;z-index:20;display:grid;place-items:center;background:rgba(238,231,215,.82);backdrop-filter:blur(3px);-webkit-backdrop-filter:blur(3px);padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.qrcard{background:var(--paper2);box-shadow:0 1px 2px rgba(60,48,28,.2),0 14px 34px rgba(60,48,28,.18);padding:28px 28px 14px;display:grid;justify-items:center;gap:14px;max-width:min(380px,100%);text-align:center;font-size:.98rem;line-height:1.5}
+#qrCv{display:block;max-width:100%;image-rendering:pixelated}
+.qrcard p{max-width:28ch}
+[lang=ko]{word-break:keep-all;white-space:nowrap}
+</style>
+</head>
+<body>
+<main id="intro" data-view="intro">
+  <div class="sheet">
+    <h1>Meditate</h1>
+    <p>This project was developed as the Senior Project for the Computer Science major at Yale University. The goal of the project was to explore ways of cultural preservation towards a more interactive, personalized method, going beyond recreating works with computer graphics. At the final presentation, visitors wore real EEG headsets, and their brainwaves were recorded to create personalized artworks in the form of dancheong, the painted decoration found on Korean Buddhist temples.</p>
+    <p>Try the installation from your browser. You will first sit still for a short baseline recording, and then you will have 60 seconds to find focus and meditation. As you focus, the screen will outline floral motifs found in Korean Buddhist art to show your level of intention. At the end, you will receive a brainwave chart in the form of Korean Buddhist art, where your signals are matched to specific visual motifs.</p>
+    <p>You can use a simulated signal, or connect your own Muse headset in Chrome or Edge. Find a quiet place before you begin.</p>
+    <p class="connect-note" id="connectNote" role="status" hidden></p>
+    <div class="choices">
+      <button class="btn" id="startSim" type="button">Start with simulated EEG</button>
+      <button class="btn" id="startMuse" type="button">Connect my EEG headset</button>
+    </div>
+  </div>
+</main>
+
+<section id="room" data-view="baseline record painting" hidden>
+  <div class="hall" id="hall">
+    <svg id="hallSvg" aria-hidden="true"></svg>
+    <div class="screen" id="screen">
+      <canvas id="comp" aria-hidden="true"></canvas>
+      <canvas id="trace" role="img" aria-label="An oscilloscope beam drawing a flower as focus holds"></canvas>
+      <p class="instr" id="instr" aria-live="polite"></p>
+    </div>
+    <button class="bell" id="bellBtn" type="button" aria-pressed="false" aria-label="Turn sound on" title="Sound">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6.5 17c.6-1.4.9-3.2.9-6a4.6 4.6 0 0 1 9.2 0c0 2.8.3 4.6.9 6z"/><path d="M4.5 17h15"/><path d="M12 5V3.5"/><path d="M10.5 19.6a1.6 1.6 0 0 0 3 0"/><path class="mute" d="M4 4l16 16"/></svg>
+    </button>
+  </div>
+</section>
+
+<section id="result" data-view="result" hidden>
+  <div class="flip" id="flip">
+    <div class="flip-in" id="flipIn">
+      <article class="face front" id="faceFront" aria-label="Your brainwave chart">
+        <div class="plate" id="plate">
+          <h1 class="chart-title">Brainwave Dancheong <span lang="ko">(뇌파 단청)</span></h1>
+          <div class="chartframe"><canvas id="chartCv" role="img" aria-label="A dancheong beam painted from your brainwaves"></canvas></div>
+          <div class="focuslabel"><span>Measured Focus</span><span>Dashed line indicates focus threshold</span></div>
+          <canvas id="focusStrip" role="img" aria-label="Line of the measured focus over the recording"></canvas>
+          <div class="ticks" id="ticks"></div>
+        </div>
+      </article>
+
+      <article class="face back" id="faceBack" aria-label="Legend and context" inert>
+        <div class="back-grid">
+          <section>
+            <h2>Reading your chart</h2>
+            <p>Read your chart from left to right. The diamonds on the inner strips mark every twenty seconds, and the panel is mirrored from top to bottom to stay consistent with traditional dancheong. The legend below shows how your brain activity was mapped to dancheong motifs.</p>
+            <div class="legend" id="fullLegend"></div>
+            <p class="fine">Ribbons and small blossoms fill the space between, colored by whichever band led at that moment. The focus score compares beta with alpha and theta, scaled to your own recording, so treat it as a rough signal from a consumer headset. Motif names follow common dancheong usage, which differs between lineages of artisans.</p>
+            <h3>A personal touch</h3>
+            <p>Dancheong has a strict color system, with an internal grammar that restorers retain in cultural preservation and art creation. This chart is my own artistic reading and reconstruction of the tradition, personalized in my style while retaining the motifs, grammar, and rulesets as closely as possible. I made it as my interpretation of dancheong, so please don't take it for a restoration.</p>
+          </section>
+          <section>
+            <h2>Dancheong and Korean Buddhist art</h2>
+            <p>Dancheong is written with the characters for red and blue. It is the painted decoration on Korea's wooden temples and palaces, where it protects timber from decay and insects and marks a building's authority. In principle, only palaces and Buddhist temples were allowed it. Its colors follow the five elements and their directions, with blue for east, white for west, red for south, black for north and yellow for the center.</p>
+            <p>Its patterns fall into four groups, sorted by where they are painted. <i>Meoricho</i> sits at the ends of beams, <i>byeoljihwa</i> are pictures painted in the space between them, <i>geummun</i> brocade patterns fill the middle of members with treasures and geometry, and ceiling patterns give each panel a single flower, animal or shape. With the rich cultural context and history, I treated dancheong as a grammar and explored how it could be created with code.</p>
+            <h3>Its history</h3>
+            <p>The oldest examples appear in Goguryeo tomb murals. In Anak Tomb No. 3, built in 357, the painted beams carry cloud patterns and the ceiling holds a red lotus. The saw-tooth beam ends in those murals are the earliest form of meoricho, and the pattern can be traced into the Goryeo period, whose dancheong survives at the Geungnakjeon of Bongjeongsa and the Daeungjeon of Sudeoksa.</p>
+            <p>Under the Joseon dynasty, Neo-Confucianism became the state ideology and many temple properties were confiscated. In 1424, the court ordered that only 36 temples be kept. During the Japanese invasions of 1592 to 1598, treasures were plundered from Buddhist monasteries, and most temple buildings older than the sixteenth century were destroyed. The statues found in most temples today were made in the late Joseon period, so much of the work of preservation is relearning how this art functioned.</p>
+            <h3>Preserving it today</h3>
+            <dl class="terms">
+              <dt>Repainting</dt>
+              <dd>Dancheong has to be repainted, either the whole building or only its damaged parts, and each repainting is a decision about what the original looked like.</dd>
+              <dt>Lost methods</dt>
+              <dd>Sungnyemun, Seoul's great south gate, burned in 2008 and reopened in May 2013 after a restoration of about 27.7 billion won. Within months, inspectors found at least 100 major cases of cracking and flaking in the new dancheong. Experts pointed to the handling of a traditional glue, and one professor questioned the pigments imported from Japan.</dd>
+              <dt>Living knowledge</dt>
+              <dd>Dancheong masters are recognized as National Intangible Cultural Heritage. In one study, six apprentices of masters prepared palettes totaling 20 colors, and only 12 appeared in all six. The authors note that the final colors at national heritage sites have no available records.</dd>
+              <dt>Scattered works</dt>
+              <dd>Paintings of the Ten Kings of Hell were taken from Sinheungsa around the end of the Korean War. LACMA returned six of them in 2020 and the Metropolitan Museum returned <cite>The Tenth King of Hell</cite> in November 2025. Seven of the ten are back, and no one knows where the other three are.</dd>
+            </dl>
+            <h3>Sources</h3>
+            <ul class="sources">
+              <li><a href="https://encykorea.aks.ac.kr/Article/E0013680" target="_blank" rel="noopener">Kwak Dong-hae, “Dancheong (단청),” Encyclopedia of Korean Culture, Academy of Korean Studies, 2023</a></li>
+              <li><a href="https://www.koreajoongangdaily.com/lifestyle/a-colorful-way-to-honor-kings-and-deities/11596789" target="_blank" rel="noopener">Chun Su-jin, “A colorful way to honor kings and deities,” Korea JoongAng Daily, 2007</a></li>
+              <li><a href="https://dspace.hansung.ac.kr/bitstream/2024.oak/6869/2/TH_O1A1A1_%e4%b8%b9%e9%9d%91%e6%96%87%e6%a8%a3%ec%9d%84%20%e6%87%89%e7%94%a8%ed%95%9c%20%eb%b0%94%eb%94%94%ed%8e%98%ec%9d%b8%ed%8c%85%20%e4%bd%9c%e5%93%81%e7%a1%8f%e7%a9%b6.pdf" target="_blank" rel="noopener">Hwang Ju-yeon, A Study of Body Painting Works Applying Dancheong Patterns, MA thesis, Hansung University, 2010</a></li>
+              <li><a href="https://contents.nahf.or.kr/goguryeo/mobile/html/03_vod.html" target="_blank" rel="noopener">“Anak Tomb No. 3 Murals,” Goguryeo Tomb Murals Virtual Exhibition, Northeast Asian History Foundation</a></li>
+              <li><a href="https://koreascience.kr/article/JAKO201809253684482.pdf" target="_blank" rel="noopener">Lee Eun-hee, “A Study on the Origin and Change of Moro-Dancheong Meoricho,” Journal of Architectural History 27, no. 1, 2018</a></li>
+              <li><a href="https://www.metmuseum.org/toah/ht/08/eak" target="_blank" rel="noopener">“Korea, 1400–1600,” Heilbrunn Timeline of Art History, The Metropolitan Museum of Art</a></li>
+              <li><a href="https://sillok.history.go.kr/id/kda_10604005_002" target="_blank" rel="noopener">Annals of King Sejong (세종실록), vol. 24, Sejong 6 (1424), 4th month, 5th day, National Institute of Korean History</a></li>
+              <li><a href="https://www.ijkaa.org/assets/pdf/47/jkaa-11-92.pdf" target="_blank" rel="noopener">Song Unsok, “Changes in the Internal Structure of Buddhist Temple Halls and Characteristics of Buddhist Sculpture in the Late Joseon Period,” Journal of Korean Art & Archaeology 11</a></li>
+              <li><a href="https://www.koreajoongangdaily.com/lifestyle/cosmetic-damage-discovered-at-sungnyemun/11041712" target="_blank" rel="noopener">“Cosmetic damage discovered at Sungnyemun,” Korea JoongAng Daily, 2013</a></li>
+              <li><a href="https://doi.org/10.1002/col.22220" target="_blank" rel="noopener">Song, Bang, Oh, Ha and Kwak, “Dancheong colors used for Korean cultural heritage architecture restoration,” Color Research and Application 43, no. 4, 2018</a></li>
+              <li><a href="https://www.koreajoongangdaily.com/lifestyle/the-tenth-king-of-hell-returns-to-korea-after-70-years/12395323" target="_blank" rel="noopener">“The Tenth King of Hell returns to Korea after 70 years,” Korea JoongAng Daily, 2025</a></li>
+              <li><a href="https://archive.artasiapacific.com/news/lacma-repatriates-korean-buddhist-paintings" target="_blank" rel="noopener">“LACMA repatriates Korean Buddhist paintings,” ArtAsiaPacific, 2020</a></li>
+            </ul>
+          </section>
+        </div>
+      </article>
+    </div>
+  </div>
+  <div class="tools">
+    <button class="icon" id="flipBtn" type="button" aria-pressed="false" aria-label="Turn the chart over" title="Turn over">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12a8 8 0 0 1 13.7-5.6L20 8.5"/><path d="M20 4v4.5h-4.5"/><path d="M20 12a8 8 0 0 1-13.7 5.6L4 15.5"/><path d="M4 20v-4.5h4.5"/></svg>
+    </button>
+    <button class="icon" id="dlBtn" type="button" aria-label="Download your chart" title="Download">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4v11"/><path d="M7.5 11 12 15.5 16.5 11"/><path d="M5 19.5h14"/></svg>
+    </button>
+    <button class="icon" id="qrBtn" type="button" aria-label="Take your chart to your phone" title="Take it to your phone" hidden>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="7" y="2.75" width="10" height="18.5" rx="2"/><path d="M10.5 18h3"/></svg>
+    </button>
+    <button class="again" id="againBtn" type="button">Start over</button>
+  </div>
+  <p class="dlnote" id="dlNote" role="status" hidden></p>
+  <div class="qrsheet" id="qrSheet" hidden>
+    <div class="qrcard" role="dialog" aria-modal="true" aria-labelledby="qrText">
+      <canvas id="qrCv" role="img" aria-label="QR code linking to your chart"></canvas>
+      <p id="qrText">Scan with your phone camera to keep your chart and its legend.</p>
+      <button class="again" id="qrClose" type="button">Close</button>
+    </div>
+  </div>
+</section>
+
+<script>
+(() => {
+"use strict";
+const $ = s => document.querySelector(s);
+const TAU = Math.PI * 2;
+const reduceMotion = matchMedia("(prefers-reduced-motion: reduce)").matches;
+const FAST = location.hash === "#fast"; // demo: simulated time runs 12× faster
+const S = { thr: 0.6, bloom: 24, next: 3, grace: 2, unwind: 3, sustain: 6 };
+let src = "sim";
+
+/* ================= geometry helpers (unit coords, y up) ================= */
+function shape(r0, L, W, a, b) { const tp = a / (a + b); return { r0, L, W, a, b, K: 1 / (Math.pow(tp, a) * Math.pow(1 - tp, b)) }; }
+const halfW = (t, P) => P.W * P.K * Math.pow(t, P.a) * Math.pow(1 - t, P.b);
+function circle(cx, cy, r, n, a0 = Math.PI / 2, dir = -1) {
+  const p = []; for (let i = 0; i <= n; i++) { const a = a0 + dir * i / n * TAU; p.push([cx + r * Math.cos(a), cy + r * Math.sin(a)]); } return p;
+}
+function petal(phi, P, n = 60, ox = 0, oy = 0) {
+  const c = Math.cos(phi), s = Math.sin(phi), pts = [];
+  const put = (x, y) => pts.push([ox + x * c - y * s, oy + x * s + y * c]);
+  for (let i = 0; i <= n; i++) { const t = i / n; put(P.r0 + t * P.L, halfW(t, P)); }
+  for (let i = n - 1; i >= 0; i--) { const t = i / n; put(P.r0 + t * P.L, -halfW(t, P)); }
+  return pts;
+}
+function inPetal(x, y, phi, P, grow = 1) {
+  const c = Math.cos(phi), s = Math.sin(phi);
+  const lx = x * c + y * s, ly = -x * s + y * c, t = (lx - P.r0) / P.L;
+  return t > 0 && t < 1 && Math.abs(ly) < halfW(t, P) * grow + 0.008;
+}
+function clip(pts, hidden) {
+  const out = []; let cur = [];
+  for (const p of pts) { if (hidden(p)) { if (cur.length > 1) out.push(cur); cur = []; } else cur.push(p); }
+  if (cur.length > 1) out.push(cur);
+  return out;
+}
+const inDisc = r => ([x, y]) => Math.hypot(x, y) < r;
+const WHITE = "#f6f2ea";
+
+/* ================= focus flowers: each tier is traced, its petals fade in, then it fills ================= */
+function makeFlower(def) {
+  const units = [], fills = [];
+  const st = (pts, key) => ({ pts, key });
+  def.build({ st, unit: (layer, trace, fade = []) => units.push({ layer, trace, fade }), fill: (layer, pts, key) => fills.push({ layer, pts, key }) });
+  let acc = 0;
+  for (const u of units) {
+    let off = 0;
+    for (const s of u.trace) {
+      const cum = [0];
+      for (let i = 1; i < s.pts.length; i++) { const [x0, y0] = s.pts[i - 1], [x1, y1] = s.pts[i]; cum.push(cum[i - 1] + Math.hypot(x1 - x0, y1 - y0)); }
+      s.cum = cum; s.len = cum[cum.length - 1]; s.off = off; off += s.len;
+    }
+    u.len = off; u.start = acc; acc += off;
+  }
+  const keyLayer = {};
+  for (const u of units) for (const s of [...u.trace, ...u.fade]) if (!(s.key in keyLayer)) keyLayer[s.key] = u.layer;
+  for (const F of fills) if (!(F.key in keyLayer)) keyLayer[F.key] = F.layer;
+  const span = def.tiers.map((_, l) => {
+    const us = units.filter(u => u.layer === l), last = us[us.length - 1];
+    return { a: us[0].start / acc, b: (last.start + last.len) / acc };
+  });
+  return Object.assign({}, def, { units, fills, total: acc, keyLayer, span });
+}
+
+// 1 · 연화문: traced from the reference rosette
+const LOTUS = makeFlower({
+  name: "연화문", en: "lotus rosette",
+  tiers: [["화심", "center", "#f2cd38"], ["속꽃잎", "blue petals", "#a2abee"], ["겉꽃잎", "pink petals", "#f3a7a2"], ["잎", "leaves", "#5bb04a"]],
+  keys: {
+    center: { line: "#f2c12e", fill: "#f2cd38", settle: "#2a2210" },
+    blueBand: { line: "#cdc6f7", fill: "#eeebf7", settle: WHITE, outline: true },
+    blue: { line: "#5b7cff", fill: "#a2abee", settle: WHITE },
+    blueMark: { line: "#3a5cf5", fill: "#2b36d4", settle: "#2b36d4" },
+    pink: { line: "#f59fb2", fill: "#f3a7a2", settle: WHITE, outline: true },
+    pinkHun: { line: "#e3402f", fill: "#d0292c", settle: "#d0292c" },
+    leaf: { line: "#5cc25a", fill: "#5bb04a", settle: WHITE, outline: true },
+    leafHun: { line: "#2f8c3c", fill: "#2f7d34", settle: "#2f7d34" }
+  },
+  build({ st, unit, fill }) {
+    const CR = 0.225, pa = i => Math.PI / 2 - i * TAU / 8, ma = i => Math.PI / 2 - TAU / 16 - i * TAU / 8;
+    const BLUE = shape(0.18, 0.29, 0.115, 0.7, 0.4), BLUEC = shape(0.16, 0.335, 0.135, 0.7, 0.4), MARK = shape(0.255, 0.125, 0.065, 0.6, 0.6);
+    const RED = shape(0.45, 0.25, 0.125, 0.35, 1.0), LEAF = shape(0.42, 0.52, 0.19, 1.0, 0.85), LEAFIN = shape(0.50, 0.32, 0.10, 1.0, 0.8);
+    const PK = { r0: 0.2, rs: 0.64, tip: 0.965, ang: 21 * Math.PI / 180 }; PK.hs = PK.rs * Math.tan(PK.ang);
+    const pinkHalf = lx => { if (lx <= PK.rs) return lx * Math.tan(PK.ang); const u = Math.min(1, (lx - PK.rs) / (PK.tip - PK.rs)); return PK.hs * (1 + 0.3 * u) * Math.pow(Math.max(0, 1 - Math.pow(u, 1.8)), 1.15); };
+    const pink = phi => { const c = Math.cos(phi), s = Math.sin(phi), pts = [], n = 110, put = (x, y) => pts.push([x * c - y * s, x * s + y * c]);
+      for (let i = 0; i <= n; i++) { const x = PK.r0 + (PK.tip - PK.r0) * i / n; put(x, -pinkHalf(x)); }
+      for (let i = n - 1; i >= 0; i--) { const x = PK.r0 + (PK.tip - PK.r0) * i / n; put(x, pinkHalf(x)); } return pts; };
+    const inPink = (x, y, phi) => { const c = Math.cos(phi), s = Math.sin(phi), lx = x * c + y * s, ly = -x * s + y * c; return lx > PK.r0 && lx < PK.tip && Math.abs(ly) < pinkHalf(lx) + 0.012; };
+    const behindBlue = p => { if (Math.hypot(p[0], p[1]) < CR + 0.012) return true; for (let j = 0; j < 8; j++) if (inPetal(p[0], p[1], ma(j), BLUEC, 1.02)) return true; return false; };
+    const behindPink = p => { if (behindBlue(p)) return true; for (let j = 0; j < 8; j++) if (inPink(p[0], p[1], pa(j))) return true; return false; };
+    unit(0, [st(circle(0, 0, CR, 160), "center")]);
+    for (let i = 0; i < 8; i++) unit(1, clip(petal(ma(i), BLUEC, 70), inDisc(CR + 0.012)).map(q => st(q, "blueBand")),
+      [...clip(petal(ma(i), BLUE, 60), inDisc(CR + 0.012)).map(q => st(q, "blue")), st(petal(ma(i), MARK, 36), "blueMark")]);
+    for (let i = 0; i < 8; i++) unit(2, clip(pink(pa(i)), behindBlue).map(q => st(q, "pink")), clip(petal(pa(i), RED, 50), behindBlue).map(q => st(q, "pinkHun")));
+    for (let i = 0; i < 8; i++) unit(3, clip(petal(ma(i), LEAF, 90), behindPink).map(q => st(q, "leaf")), clip(petal(ma(i), LEAFIN, 50), behindPink).map(q => st(q, "leafHun")));
+    for (let i = 0; i < 8; i++) { fill(3, petal(ma(i), LEAF, 90), "leaf"); fill(3, petal(ma(i), LEAFIN, 50), "leafHun"); }
+    for (let i = 0; i < 8; i++) { fill(2, pink(pa(i)), "pink"); fill(2, petal(pa(i), RED, 50), "pinkHun"); }
+    for (let i = 0; i < 8; i++) fill(1, petal(ma(i), BLUEC, 70), "blueBand");
+    for (let i = 0; i < 8; i++) { fill(1, petal(ma(i), BLUE, 60), "blue"); fill(1, petal(ma(i), MARK, 36), "blueMark"); }
+    fill(0, circle(0, 0, CR, 160), "center");
+  }
+});
+
+// 2 · 주화관자: the main flower of a 주화관자머리초, ringed 관자 center, four broad petals, diagonal leaves, eight small petals
+const JUHWA = makeFlower({
+  name: "주화관자", en: "ringed rosette",
+  tiers: [["관자", "rings", "#f3cf3a"], ["큰 꽃잎", "petals", "#f3a7a2"], ["잎", "leaves", "#5bb04a"], ["작은 꽃잎", "small petals", "#4f74d6"]],
+  keys: {
+    ringR: { line: "#f0703f", fill: "#d9462b", settle: WHITE, outline: true },
+    ringY: { line: "#f6d64a", fill: "#f3cf3a", settle: WHITE, outline: true },
+    ringG: { line: "#5fd08a", fill: "#2f9a63", settle: WHITE, outline: true },
+    big: { line: "#f59fb2", fill: "#f3a7a2", settle: WHITE, outline: true },
+    bigIn: { line: "#e3402f", fill: "#d0292c", settle: "#d0292c" },
+    leaf: { line: "#5cc25a", fill: "#5bb04a", settle: WHITE, outline: true },
+    leafIn: { line: "#2f8c3c", fill: "#2f7d34", settle: "#2f7d34" },
+    small: { line: "#6d8cff", fill: "#4f74d6", settle: WHITE, outline: true },
+    smallIn: { line: "#d6e2ff", fill: "#c4d4f6", settle: "#c4d4f6" }
+  },
+  build({ st, unit, fill }) {
+    const card = i => Math.PI / 2 - i * TAU / 4, diag = i => Math.PI / 4 - i * TAU / 4, sm = i => Math.PI / 2 - TAU / 16 - i * TAU / 8;
+    const BIG = shape(0.2, 0.62, 0.30, 0.8, 0.55), BIGIN = shape(0.3, 0.38, 0.15, 0.8, 0.6);
+    const LF = shape(0.22, 0.68, 0.24, 1.0, 0.8), LFIN = shape(0.35, 0.42, 0.10, 1.0, 0.8);
+    const SM = shape(0.6, 0.37, 0.12, 0.7, 0.7), SMIN = shape(0.68, 0.22, 0.05, 0.7, 0.7);
+    const behindRings = inDisc(0.262);
+    const behindBig = p => { if (behindRings(p)) return true; for (let j = 0; j < 4; j++) if (inPetal(p[0], p[1], card(j), BIG, 1.04)) return true; return false; };
+    const behindLeaf = p => { if (behindBig(p)) return true; for (let j = 0; j < 4; j++) if (inPetal(p[0], p[1], diag(j), LF, 1.04)) return true; return false; };
+    unit(0, [st(circle(0, 0, 0.10, 90), "ringG"), st(circle(0, 0, 0.17, 110), "ringY"), st(circle(0, 0, 0.25, 140), "ringR")]);
+    for (let i = 0; i < 4; i++) unit(1, clip(petal(card(i), BIG, 90), behindRings).map(q => st(q, "big")), [st(petal(card(i), BIGIN, 60), "bigIn")]);
+    for (let i = 0; i < 4; i++) unit(2, clip(petal(diag(i), LF, 90), behindBig).map(q => st(q, "leaf")), clip(petal(diag(i), LFIN, 60), behindBig).map(q => st(q, "leafIn")));
+    for (let i = 0; i < 8; i++) unit(3, clip(petal(sm(i), SM, 60), behindLeaf).map(q => st(q, "small")), clip(petal(sm(i), SMIN, 40), behindLeaf).map(q => st(q, "smallIn")));
+    for (let i = 0; i < 8; i++) { fill(3, petal(sm(i), SM, 60), "small"); fill(3, petal(sm(i), SMIN, 40), "smallIn"); }
+    for (let i = 0; i < 4; i++) { fill(2, petal(diag(i), LF, 90), "leaf"); fill(2, petal(diag(i), LFIN, 60), "leafIn"); }
+    for (let i = 0; i < 4; i++) { fill(1, petal(card(i), BIG, 90), "big"); fill(1, petal(card(i), BIGIN, 60), "bigIn"); }
+    fill(0, circle(0, 0, 0.25, 140), "ringR"); fill(0, circle(0, 0, 0.17, 110), "ringY"); fill(0, circle(0, 0, 0.10, 90), "ringG");
+  }
+});
+
+// 3 · 보상화: the most intricate, a seeded center, eight inner petals, eight middle petals, sixteen outer petals
+const BOSANG = makeFlower({
+  name: "보상화", en: "treasure flower",
+  tiers: [["꽃술", "stamens", "#f3cf3a"], ["속꽃잎", "inner petals", "#f6b73c"], ["가운데 꽃잎", "middle petals", "#d8462a"], ["바깥 꽃잎", "outer petals", "#3d62cf"]],
+  keys: {
+    core: { line: "#f6d64a", fill: "#f3cf3a", settle: WHITE, outline: true },
+    seed: { line: "#f0703f", fill: "#d9462b", settle: "#d9462b" },
+    inn: { line: "#f6c04a", fill: "#f6b73c", settle: WHITE, outline: true },
+    innIn: { line: "#f08a4a", fill: "#e46b2a", settle: "#e46b2a" },
+    mid: { line: "#f06a48", fill: "#d8462a", settle: WHITE, outline: true },
+    midIn: { line: "#ffd9c4", fill: "#f8c9b0", settle: "#f8c9b0" },
+    out: { line: "#6d8cff", fill: "#3d62cf", settle: WHITE, outline: true },
+    outIn: { line: "#d6e2ff", fill: "#c4d4f6", settle: "#c4d4f6" }
+  },
+  build({ st, unit, fill }) {
+    const a8 = i => Math.PI / 2 - i * TAU / 8, o8 = i => Math.PI / 2 - TAU / 16 - i * TAU / 8, a16 = i => Math.PI / 2 - i * TAU / 16;
+    const IN = shape(0.16, 0.30, 0.10, 0.6, 0.8), INI = shape(0.2, 0.18, 0.045, 0.6, 0.8);
+    const MID = shape(0.22, 0.42, 0.16, 0.7, 0.8), MIDI = shape(0.3, 0.26, 0.07, 0.7, 0.8);
+    const OUT = shape(0.42, 0.54, 0.12, 0.8, 1.1), OUTI = shape(0.52, 0.34, 0.05, 0.8, 1.1);
+    const behindCore = inDisc(0.135);
+    const behindIn = p => { if (behindCore(p)) return true; for (let j = 0; j < 8; j++) if (inPetal(p[0], p[1], a8(j), IN, 1.05)) return true; return false; };
+    const behindMid = p => { if (behindIn(p)) return true; for (let j = 0; j < 8; j++) if (inPetal(p[0], p[1], o8(j), MID, 1.04)) return true; return false; };
+    const seeds = [...Array(8)].map((_, i) => circle(0.17 * Math.cos(a8(i) + TAU / 16), 0.17 * Math.sin(a8(i) + TAU / 16), 0.026, 24));
+    unit(0, [st(circle(0, 0, 0.12, 110), "core"), ...seeds.map(q => st(q, "seed"))]);
+    for (let i = 0; i < 8; i++) unit(1, clip(petal(a8(i), IN, 60), behindCore).map(q => st(q, "inn")), [st(petal(a8(i), INI, 40), "innIn")]);
+    for (let i = 0; i < 8; i++) unit(2, clip(petal(o8(i), MID, 70), behindIn).map(q => st(q, "mid")), clip(petal(o8(i), MIDI, 50), behindIn).map(q => st(q, "midIn")));
+    for (let i = 0; i < 16; i++) unit(3, clip(petal(a16(i), OUT, 70), behindMid).map(q => st(q, "out")), clip(petal(a16(i), OUTI, 50), behindMid).map(q => st(q, "outIn")));
+    for (let i = 0; i < 16; i++) { fill(3, petal(a16(i), OUT, 70), "out"); fill(3, petal(a16(i), OUTI, 50), "outIn"); }
+    for (let i = 0; i < 8; i++) { fill(2, petal(o8(i), MID, 70), "mid"); fill(2, petal(o8(i), MIDI, 50), "midIn"); }
+    for (let i = 0; i < 8; i++) { fill(1, petal(a8(i), IN, 60), "inn"); fill(1, petal(a8(i), INI, 40), "innIn"); }
+    fill(0, circle(0, 0, 0.12, 110), "core"); for (const q of seeds) fill(0, q, "seed");
+  }
+});
+const FLOWERS = [LOTUS, JUHWA, BOSANG];
+const FRAME = circle(0, 0, 0.985, 320);
+
+/* ================= the chart palette: the original 단청 colors, every hue unchanged, each one lifted in lightness and eased in saturation ================= */
+const toHsl = h => { const [r, g, b] = [1, 3, 5].map(i => parseInt(h.slice(i, i + 2), 16) / 255), mx = Math.max(r, g, b), mn = Math.min(r, g, b), l = (mx + mn) / 2, d = mx - mn; if (!d) return [0, 0, l]; const s = d / (1 - Math.abs(2 * l - 1)); let hu = mx === r ? ((g - b) / d + 6) % 6 : mx === g ? (b - r) / d + 2 : (r - g) / d + 4; return [hu * 60, s, l]; };
+const fromHsl = (hu, s, l) => { const c = (1 - Math.abs(2 * l - 1)) * s, x = c * (1 - Math.abs((hu / 60) % 2 - 1)), m = l - c / 2, [r, g, b] = hu < 60 ? [c, x, 0] : hu < 120 ? [x, c, 0] : hu < 180 ? [0, c, x] : hu < 240 ? [0, x, c] : hu < 300 ? [x, 0, c] : [c, 0, x]; return "#" + [r, g, b].map(v => Math.round((v + m) * 255).toString(16).padStart(2, "0")).join(""); };
+const PASTEL = { light: 0.3, sat: 0.84 }, pastelMemo = new Map();
+const pastel = (h, k = PASTEL.light, q = PASTEL.sat) => { const key = h + k + q; if (pastelMemo.has(key)) return pastelMemo.get(key); const [hu, sa, l] = toHsl(h), v = fromHsl(hu, sa * q, l + (1 - l) * k); pastelMemo.set(key, v); return v; };
+const ORIGINAL = {
+  ink: "#1c1a17", pink: "#f4a3a8", base: "#2b8c6b",
+  blue: ["#c4d4f6", "#7f9fe9", "#3d62cf", "#253b8f"], red: ["#f8c9b0", "#f08a5d", "#d8462a", "#962316"],
+  green: ["#c6ecd0", "#6fc98f", "#2f9a63", "#1b6343"], yellow: ["#fff4b8", "#f6dc5a", "#e6b31f", "#a77b0b"],
+  ochre: ["#ecc3b0", "#c47a63", "#8f412e", "#5c2216"],
+  G: { light: "#7fcf8e", mid: "#2f9e6e", deep: "#1c6b44", dark: "#0f4029", ground: "#173f2b" }, maroon: "#6e1420", redn: "#c8402e", dot: "#3fcf98"
+};
+const INK = pastel(ORIGINAL.ink, 0.14, 0.9), BONE = WHITE;
+const fam4 = a => a.map(v => pastel(v));
+const PAL = { ink: INK, white: WHITE, pink: pastel(ORIGINAL.pink), base: pastel(ORIGINAL.base), blue: fam4(ORIGINAL.blue), red: fam4(ORIGINAL.red), green: fam4(ORIGINAL.green), yellow: fam4(ORIGINAL.yellow), ochre: fam4(ORIGINAL.ochre) };
+const G = Object.fromEntries(Object.entries(ORIGINAL.G).map(([k, v]) => [k, pastel(v)]));
+const GF = [G.light, G.mid, G.deep, G.dark], MAROON = pastel(ORIGINAL.maroon), REDN = pastel(ORIGINAL.redn);
+const BANDS = ["delta", "theta", "alpha", "beta", "gamma"];
+const BINFO = {
+  delta: { g: "δ", name: "Delta", hz: "1 to 4 Hz", fam: "ochre", hwi: "석간주", hwiEn: "iron red", hue: "iron red", motif: "번엽", rom: "beonyeop", en: "broad turned leaves", state: "the slowest waves, tied to drowsiness and deep rest" },
+  theta: { g: "θ", name: "Theta", hz: "4 to 8 Hz", fam: "green", hwi: "녹", hwiEn: "green", hue: "green", motif: "녹화", rom: "nokhwa", en: "garlands of curls", state: "drifting, inward attention" },
+  alpha: { g: "α", name: "Alpha", hz: "8 to 13 Hz", fam: "blue", hwi: "청", hwiEn: "blue", hue: "blue", motif: "파련", rom: "paryeon", en: "an undulating vine", state: "relaxed wakefulness" },
+  beta: { g: "β", name: "Beta", hz: "13 to 30 Hz", fam: "red", hwi: "적", hwiEn: "red", hue: "red", motif: "당초", rom: "dangcho", en: "dense paired scrolls", state: "active concentration" },
+  gamma: { g: "γ", name: "Gamma", hz: "30 to 45 Hz", fam: "yellow", hwi: "황", hwiEn: "yellow", hue: "yellow", motif: "매화점", rom: "maehwajeom", en: "a fine lattice with plum dots", state: "the fastest activity, reported in long-term meditators" }
+};
+const TILE_INFO = {
+  gwanja: { ko: "관자", rom: "gwanja", en: "concentric rings", why: "a blink or movement" },
+  gwigap: { ko: "귀갑", rom: "gwigap", en: "tortoise-shell hexagon", why: "a noisy, unfocused signal" },
+  geum: { ko: "금문", rom: "geummun", en: "silk-pattern knot", why: "an ordinary stretch where no band stood out" }
+};
+
+/* ================= timeline: everything the brainwaves did, painted afterwards ================= */
+const TL = {};
+let sessionT = 0, stage = "intro", offline = false, armed = false;
+function resetTL() { Object.assign(TL, { epochs: [], motifs: [], flowers: [], cur: null, window: 60, final: false, t0: null, focusLine: [], focusSec: 0 }); }
+const tlNow = () => TL.t0 == null ? 0 : sessionT - TL.t0;
+
+/* ================= feature engine: epochs (1 per second) → focus, sustain, noise ================= */
+const E = {};
+function resetEngine() {
+  Object.assign(E, { n: 0, hist: Object.fromEntries(BANDS.map(b => [b, []])), idxHist: [], flatHist: [], focus: null, focusEma: 0.3,
+    z: Object.fromEntries(BANDS.map(b => [b, 0])), zs: Object.fromEntries(BANDS.map(b => [b, 0])), cnt: Object.fromEntries(BANDS.map(b => [b, 0])), gap: Object.fromEntries(BANDS.map(b => [b, 0])),
+    ref: {}, last: null, up: {} });
+}
+const median = a => { const s = [...a].sort((x, y) => x - y), m = s.length >> 1; return s.length % 2 ? s[m] : (s[m - 1] + s[m]) / 2; };
+const pct = (a, q) => { const s = [...a].sort((x, y) => x - y); return s[Math.min(s.length - 1, Math.max(0, Math.round(q * (s.length - 1))))]; };
+const CALIB = 15;
+
+function feed(ep) {
+  E.n++; E.last = ep;
+  const abs = ep.t != null ? ep.t : sessionT;
+  if (armed && TL.t0 == null) TL.t0 = abs;
+  const rec = TL.t0 != null && !TL.final, now = abs - (TL.t0 ?? abs); // nothing is painted until the visitor begins
+  const rel = ep.rel, upNow = {};
+  for (const b of BANDS) {
+    const v = Math.log((rel[b] || 0) + 1e-6), h = E.hist[b];
+    if (h.length >= 10) { const md = median(h), mad = median(h.map(x => Math.abs(x - md))) * 1.4826 + 1e-3; E.z[b] = (v - md) / mad; } else E.z[b] = 0;
+    h.push(v); if (h.length > 120) h.shift();
+  }
+  const idx = Math.log((rel.beta + 1e-6) / (rel.alpha + rel.theta + 1e-6));
+  E.idxHist.push(idx); if (E.idxHist.length > 180) E.idxHist.shift();
+  if (E.n >= CALIB) {
+    const lo = pct(E.idxHist, 0.2), hi = pct(E.idxHist, 0.8);
+    const v = hi - lo < 1e-9 ? 0.5 : Math.max(0, Math.min(1, (idx - lo) / (hi - lo)));
+    if (!ep.artifact) E.focusEma += 0.35 * (v - E.focusEma);
+    E.focus = E.focusEma;
+  } else E.focus = null;
+  E.flatHist.push(ep.flat); if (E.flatHist.length > 120) E.flatHist.shift();
+
+  // a band that stays above its own baseline for S.sustain seconds earns its motif; staying longer raises its level
+  const need = Math.max(1, Math.round(S.sustain));
+  for (const b of BANDS) {
+    E.zs[b] = 0.5 * E.zs[b] + 0.5 * E.z[b];
+    const up = !ep.artifact && E.hist[b].length > 10 && E.zs[b] > 0.55;
+    upNow[b] = up;
+    if (up) { E.cnt[b]++; E.gap[b] = 0; } else if (++E.gap[b] > 1) { E.cnt[b] = 0; E.ref[b] = null; }
+    if (rec && E.cnt[b] === need) { E.ref[b] = { band: b, t0: Math.max(0, now - need), t1: now, level: 1 }; TL.motifs.push(E.ref[b]); }
+    else if (rec && E.cnt[b] > need && E.ref[b]) {
+      E.ref[b].t1 = now;
+      E.ref[b].level = E.cnt[b] >= 2 * need ? 3 : E.cnt[b] >= Math.round(1.5 * need) ? 2 : 1;
+    }
+  }
+  if (rec) TL.epochs.push({ t: now, z: { ...E.z }, up: upNow, flat: ep.flat, peak: ep.peak, artifact: ep.artifact });
+  E.up = upNow;
+}
+
+/* ================= simulated source ================= */
+let rngState = 0, seeded = false;
+const rnd = () => { if (!seeded) return Math.random(); rngState = (rngState + 0x6D2B79F5) | 0; let t = Math.imul(rngState ^ (rngState >>> 15), 1 | rngState); t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t; return ((t ^ (t >>> 14)) >>> 0) / 4294967296; };
+const gauss = () => Math.sqrt(-2 * Math.log(rnd() + 1e-12)) * Math.cos(TAU * rnd());
+const REG = {
+  focus: { m: [0.8, 0.8, 0.7, 1.9, 1.2], flat: 0.24, peak: 19, art: 0.02 },
+  calm: { m: [0.9, 1.0, 2.1, 0.8, 0.8], flat: 0.2, peak: 10, art: 0.02 },
+  drowsy: { m: [1.7, 1.9, 0.8, 0.6, 0.7], flat: 0.3, peak: 6, art: 0.03 },
+  noisy: { m: [1.1, 1.0, 1.0, 1.1, 1.6], flat: 0.55, peak: 26, art: 0.35 }
+};
+const SIM = { reg: "calm", left: 6, ar: [0, 0, 0, 0, 0], clock: 0, queue: [] };
+const span = (a, b) => a + rnd() * (b - a);
+function simPlan() { // one minute with an arc to it: settling in, a long hold, a lapse, a second try
+  const lapse = rnd() < 0.5 ? "drowsy" : "calm", settle = rnd() < 0.5 ? "calm" : "drowsy";
+  SIM.queue = [[settle, span(3, 8)], ["focus", span(24, 31)], ["noisy", span(2, 5)], [lapse, span(7, 12)], ["focus", span(6, 12)], [lapse === "calm" ? "drowsy" : "calm", 30]];
+  SIM.reg = SIM.queue[0][0]; SIM.left = SIM.queue.shift()[1];
+}
+function simEpoch() {
+  if (--SIM.left <= 0) {
+    if (SIM.queue.length) { const [r, d] = SIM.queue.shift(); SIM.reg = r; SIM.left = d; }
+    else { const r = rnd(); SIM.reg = r < 0.3 ? "focus" : r < 0.65 ? "calm" : "drowsy"; SIM.left = 3 + rnd() * 4; } // resting drift while the visitor reads
+  }
+  const R = REG[SIM.reg], base = [0.36, 0.2, 0.2, 0.16, 0.08], rel = {}; let tot = 0;
+  BANDS.forEach((b, i) => { SIM.ar[i] = 0.7 * SIM.ar[i] + 0.3 * gauss() * 0.35; rel[b] = base[i] * R.m[i] * Math.exp(SIM.ar[i]); tot += rel[b]; });
+  for (const b of BANDS) rel[b] /= tot;
+  return { rel, flat: Math.max(0.05, R.flat + gauss() * 0.05), peak: Math.max(2, R.peak + gauss() * 2), artifact: rnd() < R.art };
+}
+
+const mu = { dev: null, buf: [[], [], [], []], clock: 0, ptps: [], last: 0, sd: [0, 0, 0, 0], ctrl: null };
+
+// advances the source by one frame, feeding any epochs that came due; returns the session time step
+function tickSources(dt) {
+  if (src === "sim") {
+    const k = FAST ? 12 : 1; SIM.clock += dt * k;
+    while (SIM.clock >= 1) { SIM.clock -= 1; feed(simEpoch()); }
+    return dt * k;
+  }
+  mu.clock += dt;
+  if (mu.clock >= 1) { mu.clock = 0; const ep = museEpoch(); if (ep) feed(ep); }
+  return dt;
+}
+
+/* ================= center flower state ================= */
+let f = 0, fi = 0, p = 0, lost = 0, streak = 0, best = 0, blooms = 0, flash = 0, bloomHold = 0, phase = "rest", focusSampleT = 0;
+let fillA = [0, 0, 0, 0];
+const flower = () => FLOWERS[fi];
+function resetFlower() { f = 0; fi = 0; p = 0; lost = 0; streak = 0; best = 0; blooms = 0; flash = 0; bloomHold = 0; phase = "rest"; fillA = [0, 0, 0, 0]; focusSampleT = 0; }
+
+function step(dt, sdt) {
+  sdt = Math.min(sdt, 2);
+  const recording = stage === "record" || offline;
+  const live = src === "sim" || performance.now() - mu.last < 3000;
+  let target = live && E.focus != null ? E.focus : 0;
+  f += (target - f) * (1 - Math.exp(-sdt / 0.6)); f = Math.min(1, Math.max(0, f));
+  const focused = recording && E.focus != null && f >= S.thr;
+  if (focused) {
+    lost = 0; streak += sdt; p = Math.min(1, p + sdt / S.bloom); TL.focusSec += sdt;
+    phase = p >= 1 ? "bloom" : "drawing";
+  } else {
+    lost += sdt;
+    if (p > 0 && lost <= S.grace) { streak += sdt; phase = "grace"; }
+    else { streak = 0; p = Math.max(0, p - sdt / S.unwind); phase = p > 0 ? "unwinding" : "rest"; }
+  }
+  if (recording && TL.t0 != null && !TL.final) {
+    const tn = tlNow();
+    if (tn >= TL.window && !offline) { finishRecording(); return; }
+    // remember each stretch of drawing so the chart can place a flower there
+    if (p > 0 && !TL.cur && sdt > 0) TL.cur = { t0: tn, t1: tn, fl: fi, maxP: 0, complete: false, samples: [[tn, p]] };
+    if (TL.cur && sdt > 0) {
+      const c = TL.cur; c.maxP = Math.max(c.maxP, p); c.t1 = tn;
+      if (tn - c.samples[c.samples.length - 1][0] >= 0.25) c.samples.push([tn, p]);
+      if (p <= 0) { TL.flowers.push(c); TL.cur = null; }
+    }
+    focusSampleT += sdt; if (focusSampleT >= 0.25) { focusSampleT = 0; TL.focusLine.push([tn, f]); }
+  }
+  best = Math.max(best, streak);
+  if (p >= 1 && focused) { bloomHold += sdt; if (bloomHold >= S.next) advanceFlower(); } else if (p < 1) bloomHold = 0;
+  flash = Math.max(0, flash - dt / 1.4);
+  const F = flower();
+  for (let l = 0; l < F.span.length; l++) { const done = p >= F.span[l].b - 1e-6 ? 1 : 0; fillA[l] += (done - fillA[l]) * (1 - Math.exp(-dt / (reduceMotion ? 0.05 : 0.45))); }
+  sessionT += sdt;
+}
+function advanceFlower() {
+  blooms++;
+  if (TL.cur && !TL.final) { TL.cur.complete = true; TL.cur.maxP = 1; TL.cur.t1 = tlNow(); TL.flowers.push(TL.cur); TL.cur = null; }
+  fi = (fi + 1) % FLOWERS.length; p = 0; bloomHold = 0; fillA = [0, 0, 0, 0];
+  if (!offline) { t.clearRect(0, 0, W, H); drawScreenBg(); buildVoices(); }
+}
+const fmt = s => `${Math.floor(s / 60)}:${String(Math.floor(s % 60)).padStart(2, "0")}`;
+
+/* ================= drawing helpers ================= */
+const pathOf = (pts, close = true) => { const q = new Path2D(); pts.forEach(([x, y], i) => i ? q.lineTo(x, y) : q.moveTo(x, y)); if (close) q.closePath(); return q; };
+const hex = h => [1, 3, 5].map(i => parseInt(h.slice(i, i + 2), 16));
+const mix = (a, b, k) => { const A = hex(a), B = hex(b); return `rgb(${A.map((v, i) => Math.round(v + (B[i] - v) * k)).join(",")})`; };
+const hash = (a, b, c = 0) => { const h = Math.sin(a * 12.9898 + b * 78.233 + c * 37.719) * 43758.5453; return h - Math.floor(h); };
+function ellipse(cx, cy, rx, ry, n = 60, rot = 0) { const pts = [], co = Math.cos(rot), si = Math.sin(rot); for (let i = 0; i < n; i++) { const a = i / n * TAU, x = rx * Math.cos(a), y = ry * Math.sin(a); pts.push([cx + x * co - y * si, cy + x * si + y * co]); } return pts; }
+function paint(ctx, pts, fill, stroke, lw) { const q = pathOf(pts); if (fill) { ctx.fillStyle = fill; ctx.fill(q); } if (stroke) { ctx.strokeStyle = stroke; ctx.lineWidth = lw; ctx.stroke(q); } }
+function strokeLine(ctx, pts, lw, color, edge = INK) { const q = pathOf(pts, false); ctx.lineCap = "round"; ctx.lineJoin = "round"; ctx.strokeStyle = edge; ctx.lineWidth = lw + 1.8; ctx.stroke(q); ctx.strokeStyle = color; ctx.lineWidth = lw; ctx.stroke(q); }
+
+/* a filled flower in unit coords, softened */
+function drawFlowerFilled(ctx, F, upto, lw) {
+  for (const Fl of F.fills) {
+    if (Fl.layer > upto) continue;
+    const k = F.keys[Fl.key], q = pathOf(Fl.pts);
+    ctx.fillStyle = pastel(k.fill); ctx.fill(q);
+    if (k.outline) { ctx.strokeStyle = WHITE; ctx.lineWidth = lw * 1.3; ctx.stroke(q); }
+  }
+}
+// one scroll lobe: green body, comma spiral inside, ink outline
+function curl(ctx, x, y, r, rot = 0, dir = 1, lw = 1, fam = GF) {
+  ctx.save(); ctx.translate(x, y); ctx.rotate(rot); ctx.scale(dir, 1);
+  const lobe = new Path2D(); lobe.arc(0, 0, r - lw * 0.5, 0, TAU);
+  ctx.fillStyle = fam[1]; ctx.fill(lobe);
+  ctx.save(); ctx.clip(lobe); ctx.fillStyle = fam[0]; ctx.globalAlpha *= 0.55; ctx.beginPath(); ctx.ellipse(-r * 0.35, -r * 0.42, r * 0.55, r * 0.35, -0.5, 0, TAU); ctx.fill(); ctx.restore();
+  ctx.lineCap = "round"; ctx.strokeStyle = fam[3];
+  let px = null, py = null;
+  for (let i = 0; i <= 24; i++) {
+    const k = i / 24, a = -Math.PI / 2 + k * 1.35 * TAU, rr = r * (0.08 + 0.58 * k), X = rr * Math.cos(a), Y = rr * Math.sin(a);
+    if (px !== null) { ctx.lineWidth = r * (0.06 + 0.2 * k); ctx.beginPath(); ctx.moveTo(px, py); ctx.lineTo(X, Y); ctx.stroke(); }
+    px = X; py = Y;
+  }
+  ctx.strokeStyle = INK; ctx.lineWidth = lw; ctx.stroke(lobe);
+  ctx.restore();
+}
+// 석류동 nub: small maroon tuft with a red heart, reaching s along ang from (x,y)
+function nub(ctx, x, y, s, ang, lw = 1, outer = MAROON, inner = REDN) {
+  ctx.save(); ctx.translate(x, y); ctx.rotate(ang); ctx.scale(s, s);
+  const q = pathOf(petal(0, shape(0, 1, 0.42, 0.5, 0.9), 30)), q2 = pathOf(petal(0, shape(0.1, 0.62, 0.2, 0.5, 0.9), 24));
+  ctx.fillStyle = outer; ctx.fill(q); ctx.fillStyle = inner; ctx.fill(q2);
+  ctx.strokeStyle = INK; ctx.lineWidth = lw * 1.2 / s; ctx.stroke(q);
+  ctx.restore();
+}
+// 청엽: blue leaf with a pale heart
+function blueLeaf(ctx, x, y, s, ang, lw = 1) {
+  ctx.save(); ctx.translate(x, y); ctx.rotate(ang); ctx.scale(s, s);
+  const q = pathOf(petal(0, shape(0, 1, 0.34, 0.6, 0.8), 30)), q2 = pathOf(petal(0, shape(0.15, 0.6, 0.13, 0.6, 0.8), 24));
+  ctx.fillStyle = PAL.blue[2]; ctx.fill(q); ctx.fillStyle = PAL.blue[0]; ctx.fill(q2);
+  ctx.strokeStyle = INK; ctx.lineWidth = lw * 1.2 / s; ctx.stroke(q);
+  ctx.restore();
+}
+// 매화: five-petal plum blossom, contained in radius r
+function plum(ctx, x, y, r, lw = 1, col = WHITE) {
+  for (let k = 0; k < 5; k++) { const a = k * TAU / 5 - Math.PI / 2; ctx.beginPath(); ctx.arc(x + r * 0.56 * Math.cos(a), y + r * 0.56 * Math.sin(a), r * 0.42, 0, TAU); ctx.fillStyle = col; ctx.fill(); ctx.strokeStyle = INK; ctx.lineWidth = lw * 0.7; ctx.stroke(); }
+  ctx.beginPath(); ctx.arc(x, y, r * 0.26, 0, TAU); ctx.fillStyle = PAL.yellow[1]; ctx.fill(); ctx.strokeStyle = INK; ctx.lineWidth = lw * 0.7; ctx.stroke();
+  ctx.beginPath(); ctx.arc(x, y, r * 0.1, 0, TAU); ctx.fillStyle = REDN; ctx.fill();
+}
+function juhwa(ctx, x, y, r, upto = 1) { ctx.save(); ctx.translate(x, y); ctx.scale(r, -r); drawFlowerFilled(ctx, JUHWA, upto, 1 / r); ctx.restore(); }
+// a ring of curls that touch and never overlap: d is the ring radius, rl each curl's radius
+function curlRing(ctx, cx, cy, d, rl, lw = 1) {
+  const n = Math.max(6, Math.floor(Math.PI / Math.asin(Math.min(0.98, rl / d))));
+  for (let k = 0; k < n; k++) { const a = k / n * TAU - Math.PI / 2; curl(ctx, cx + d * Math.cos(a), cy + d * Math.sin(a), rl, a + Math.PI / 2, 1, lw); }
+}
+// 꽃술 tuft: three fanned petals, each graded dark to light in one color family
+function tuft(ctx, x, y, s, ang, fam, lw = 1) {
+  ctx.save(); ctx.translate(x, y); ctx.rotate(ang);
+  for (const d of [-0.5, 0.5, 0]) {
+    ctx.save(); ctx.rotate(d); const L = d ? s * 0.8 : s;
+    const q = pathOf(petal(0, shape(0, L, s * 0.27, 0.55, 0.75), 24));
+    ctx.fillStyle = fam[3]; ctx.fill(q); ctx.strokeStyle = INK; ctx.lineWidth = lw; ctx.stroke(q);
+    ctx.fillStyle = fam[2]; ctx.fill(pathOf(petal(0, shape(L * 0.2, L * 0.72, s * 0.17, 0.55, 0.75), 20)));
+    ctx.fillStyle = fam[1]; ctx.fill(pathOf(petal(0, shape(L * 0.42, L * 0.48, s * 0.09, 0.55, 0.75), 16)));
+    ctx.restore();
+  }
+  ctx.restore();
+}
+
+/* ---------- the five band motifs. Each stays inside the box it is given: {x0, x1, yc, h} ---------- */
+const FAM = {
+  theta(c, b, lv) { // 녹화: garlands of curls around a small flower
+    const Wd = b.x1 - b.x0; let o = Math.min(b.h / 2, 62); const n = Math.max(1, Math.floor((Wd + 4 + 0.01) / (2 * o + 4)));
+    o = Math.min(o, (Wd - 4 * (n - 1)) / (2 * n)); const stepX = Wd / n;
+    for (let k = 0; k < n; k++) {
+      const cx = b.x0 + stepX * (k + 0.5), rl = o * 0.16, d = o - rl, r = d - rl - 1;
+      curlRing(c, cx, b.yc, d, rl);
+      c.beginPath(); c.arc(cx, b.yc, r, 0, TAU); c.fillStyle = G.dark; c.fill();
+      juhwa(c, cx, b.yc, r * 0.95, lv);
+    }
+  },
+  alpha(c, b, lv) { // 파련: a vine, curls on its crests and leaves in its troughs
+    const Wd = b.x1 - b.x0, rc = Math.min(b.h * 0.15, 18), A = Math.max(4, Math.min(b.h / 2 - 2.2 * rc - 1, b.h * 0.2)), half = Math.max(rc * 2.6, 26), nW = Math.max(1, Math.round(Wd / half)), lam = 2 * Wd / nW, pts = [];
+    for (let i = 0; i <= 80; i++) { const x = b.x0 + 6 + (Wd - 12) * i / 80; pts.push([x, b.yc + A * Math.sin(TAU * (x - b.x0) / lam)]); }
+    strokeLine(c, pts, 4.5, G.deep); strokeLine(c, pts, 1.2, PAL.yellow[1], G.deep);
+    for (let m = 0; m < nW; m++) {
+      const x = b.x0 + lam * 0.25 + m * lam / 2, sg = m % 2 ? 1 : -1;
+      curl(c, x, b.yc + sg * (A + rc + 2.5), rc, 0.4 * sg, sg, 1);
+      if (b.h > 50) blueLeaf(c, x, b.yc + sg * (A - 3), Math.min(rc * 1.25, A + rc), sg > 0 ? -Math.PI / 2 : Math.PI / 2, 1);
+    }
+  },
+  delta(c, b, lv) { // 번엽: broad turned leaves on a band
+    const Wd = b.x1 - b.x0, h = Math.min(b.h, 104), rr = h * 0.34, stepX = rr * 2.1, n = Math.max(1, Math.floor((Wd - 12) / stepX)), s0 = (b.x0 + b.x1) / 2 - (n - 1) * stepX / 2;
+    const band = new Path2D(); band.roundRect(b.x0, b.yc - h / 2, Wd, h, h * 0.28);
+    c.fillStyle = G.dark; c.fill(band); c.strokeStyle = PAL.yellow[1]; c.lineWidth = 2; c.stroke(band);
+    for (let k = 0; k < n; k++) {
+      const x = s0 + k * stepX, sg = k % 2 ? 1 : -1;
+      curl(c, x, b.yc, rr, k * 0.7, sg, 1);
+      if (lv >= 2 && k < n - 1) { const s = h * 0.16; nub(c, x + stepX / 2, b.yc - h / 2 + 2, s, Math.PI / 2, 1, PAL.ochre[3], PAL.ochre[2]); nub(c, x + stepX / 2, b.yc + h / 2 - 2, s, -Math.PI / 2, 1, PAL.ochre[3], PAL.ochre[2]); }
+    }
+  },
+  beta(c, b, lv) { // 당초: paired rows of tight scrolls tied by a ribbon
+    const rb = Math.min(b.h / 5.9, 18), Wd = b.x1 - b.x0, stepX = rb * 2.15, n = Math.max(2, Math.floor((Wd - 2 * rb + 0.01) / stepX) + 1), s0 = (b.x0 + b.x1) / 2 - (n - 1) * stepX / 2, off = rb * 1.2, mid = n >> 1;
+    const heart = lv >= 2 && n >= 5 && b.h >= 70, tie = [];
+    for (let k = 0; k <= (n - 1) * 4; k++) { const x = s0 + k * stepX / 4; tie.push([x, b.yc + off * 0.16 * Math.sin(k * Math.PI / 2)]); }
+    strokeLine(c, tie, 1.8, PAL.yellow[1]);
+    for (let k = 0; k < n; k++) {
+      const x = s0 + k * stepX;
+      if (k % 2 === 0 && k < n - 1 && !(heart && Math.abs(k + 0.5 - mid) < 2)) { const s = rb * 0.82, xn = x + stepX / 2; nub(c, xn, b.yc - off - rb * 0.72, s, -Math.PI / 2); nub(c, xn, b.yc + off + rb * 0.72, s, Math.PI / 2); }
+      if (heart && Math.abs(k - mid) <= 1) continue;
+      curl(c, x, b.yc - off, rb, 0, 1, 1); curl(c, x, b.yc + off, rb, 0, -1, 1);
+    }
+    if (heart) { const r = Math.min(stepX * 1.45, off + rb); c.beginPath(); c.arc(s0 + mid * stepX, b.yc, r, 0, TAU); c.fillStyle = G.dark; c.fill(); juhwa(c, s0 + mid * stepX, b.yc, r * 0.96, lv); }
+  },
+  gamma(c, b, lv) { // 매화점: a fine lattice of tiny curls and plum blossoms
+    const rows = b.h >= 90 ? 5 : b.h >= 50 ? 3 : 2, rg = Math.min(b.h / ((rows + 0.5) * 2.1), 15), dx = rg * 2.15, dy = rg * 2.1, cols = Math.max(1, Math.floor((b.x1 - b.x0 - 2 * rg + 0.01) / dx) + 1), x0 = (b.x0 + b.x1) / 2 - (cols - 1) * dx / 2;
+    for (let i = 0; i < cols; i++) for (let r = 0; r < rows; r++) {
+      const x = x0 + i * dx, y = b.yc - (rows - 1) * dy / 2 + r * dy + (i % 2 ? dy / 4 : -dy / 4);
+      if ((i + r) % 3 === 0) plum(c, x, y, rg * 0.95, 1, (i + r) % 2 ? WHITE : PAL.pink);
+      else curl(c, x, y, rg * 0.95, i * 0.9, (i + r) % 2 ? 1 : -1, 1);
+    }
+  }
+};
+const MINW = { theta: 118, alpha: 110, delta: 110, beta: 110, gamma: 96 };
+// the width a motif really takes in a box, so ribbons meet it instead of stopping short
+function fitWidth(band, Wd, h) {
+  if (band === "theta") { let o = Math.min(h / 2, 62); const n = Math.max(1, Math.floor((Wd + 4 + 0.01) / (2 * o + 4))); o = Math.min(o, (Wd - 4 * (n - 1)) / (2 * n)); return n * 2 * o + (n - 1) * 4; }
+  if (band === "beta") { const rb = Math.min(h / 5.9, 18), st = rb * 2.15, n = Math.max(2, Math.floor((Wd - 2 * rb + 0.01) / st) + 1); return (n - 1) * st + 2 * rb; }
+  if (band === "gamma") { const rows = h >= 90 ? 5 : h >= 50 ? 3 : 2, rg = Math.min(h / ((rows + 0.5) * 2.1), 15), dx = rg * 2.15, cols = Math.max(1, Math.floor((Wd - 2 * rg + 0.01) / dx) + 1); return (cols - 1) * dx + 2 * rg; }
+  return Wd;
+}
+
+/* ---------- noise shapes, all inside a circle of diameter c ---------- */
+function drawTile(ctx, x0, y0, c, type) {
+  ctx.save(); ctx.translate(x0, y0); ctx.scale(c, c);
+  const P = (pts, fl, st, w) => paint(ctx, pts, fl, st, w);
+  if (type === "gwanja") {
+    const rings = [[0.42, PAL.red[2]], [0.33, PAL.yellow[1]], [0.24, G.mid], [0.15, WHITE], [0.08, PAL.blue[2]]];
+    for (const [r, col] of rings) P(ellipse(0.5, 0.5, r, r, 40), col, INK, 0.012);
+    for (let k = 0; k < 8; k++) { const a = k * TAU / 8; P(ellipse(0.5 + 0.455 * Math.cos(a), 0.5 + 0.455 * Math.sin(a), 0.035, 0.035, 12), BONE, INK, 0.01); }
+  } else if (type === "gwigap") {
+    const hx = r => [...Array(6)].map((_, k) => [0.5 + r * Math.cos(k * Math.PI / 3), 0.5 + r * Math.sin(k * Math.PI / 3)]);
+    P(hx(0.48), G.mid, PAL.yellow[1], 0.03); P(hx(0.31), PAL.red[2], WHITE, 0.02); P(ellipse(0.5, 0.5, 0.08, 0.08, 16), PAL.pink);
+  } else {
+    for (const a of [-90, 30, 150]) { const r = a * Math.PI / 180, c2 = Math.cos(r), s2 = Math.sin(r);
+      P([[0.5 - 0.065 * s2, 0.5 + 0.065 * c2], [0.5 + 0.47 * c2 - 0.065 * s2, 0.5 + 0.47 * s2 + 0.065 * c2], [0.5 + 0.47 * c2 + 0.065 * s2, 0.5 + 0.47 * s2 - 0.065 * c2], [0.5 + 0.065 * s2, 0.5 - 0.065 * c2]], PAL.blue[2], INK, 0.012); }
+    for (const a of [90, 210, 330]) { const r = a * Math.PI / 180; P(ellipse(0.5 + 0.3 * Math.cos(r), 0.5 + 0.3 * Math.sin(r), 0.11, 0.045, 20, r + Math.PI / 2), PAL.red[2], INK, 0.01); }
+    for (let k = 0; k < 5; k++) { const r = k * TAU / 5; P(ellipse(0.5 + 0.08 * Math.cos(r), 0.5 + 0.08 * Math.sin(r), 0.06, 0.06, 12), PAL.pink); }
+    P(ellipse(0.5, 0.5, 0.045, 0.045, 12), PAL.yellow[1]);
+  }
+  ctx.restore();
+}
+/* ---------- filler ornaments, each contained in a circle of radius r ---------- */
+function ornament(c, x, y, r, band, h) {
+  const fam = band === "theta" ? PAL.blue : PAL[BINFO[band].fam], alt = band === "alpha" ? PAL.red : PAL.blue, a = h * TAU;
+  if (r >= 18) {
+    if (band === "beta" && h > 0.55) juhwa(c, x, y, r * 0.95, 2);
+    else tuft(c, x - r * 0.88 * Math.cos(a), y - r * 0.88 * Math.sin(a), r * 1.76, a, h < 0.5 ? fam : alt);
+  } else if (r >= 12) {
+    if (h < 0.55) tuft(c, x - r * 0.88 * Math.cos(a), y - r * 0.88 * Math.sin(a), r * 1.76, a, h < 0.3 ? fam : alt);
+    else plum(c, x, y, r * 0.96, 1, h > 0.8 ? WHITE : PAL.pink);
+  } else if (band === "gamma" || h < 0.4) plum(c, x, y, r * 0.96, 1, PAL.yellow[1]);
+  else nub(c, x - r * 0.9 * Math.cos(a), y - r * 0.9 * Math.sin(a), r * 1.8, a, 1, h > 0.7 ? PAL.blue[3] : MAROON, h > 0.7 ? PAL.blue[1] : REDN);
+}
+
+/* ================= chart layout =================
+   Everything on the panel is placed by this function before anything is painted, so nothing can land on anything else.
+   Three lanes. The center lane holds the largest and longest things: focus flowers, then the longest band motifs.
+   A shorter motif that shares its time with something in the center lane goes in the lane above it (mirrored below,
+   as painted beams are). A finished flower takes the full height, so lanes above it stay clear. */
+const CH = { W: 1440, H: 560, yA: 22, yB: 110, ST: 15 };
+CH.yC = CH.H - CH.yB; CH.yM = CH.H / 2; CH.I0 = CH.yB + 6 + CH.ST + 3; CH.I1 = CH.H - CH.I0;
+CH.Ht = 66; CH.HALF = CH.yM - CH.I0 - CH.Ht - 4; // half height of the center lane when the lanes above and below it are in use
+CH.FULL = CH.yM - CH.I0 - 1;
+
+const domOf = e => { let dom = "theta", best = -1e9; for (const b of BANDS) if (e.z[b] > best) { best = e.z[b]; dom = b; } return dom; };
+function freeGaps(blocked, a, b) { // the parts of [a,b] not covered by the blocked intervals
+  const out = []; let x = a;
+  for (const [p0, p1] of [...blocked].sort((u, v) => u[0] - v[0])) { if (p1 <= x) continue; if (p0 >= b) break; if (p0 > x) out.push([x, p0]); x = Math.max(x, p1); }
+  if (x < b) out.push([x, b]); return out;
+}
+function fitInto(gaps, want0, want1, minW) { // best spot for [want0,want1] among the gaps, at least minW wide; null if none exists
+  let bestI = null, bestOv = -1;
+  for (const [a, b] of gaps) { if (b - a < minW) continue; const ov = Math.min(b, want1) - Math.max(a, want0); if (ov > bestOv) { bestOv = ov; bestI = [a, b]; } }
+  if (bestI && bestOv >= minW) return [Math.max(bestI[0], want0), Math.min(bestI[1], want1)];
+  let near = null, nd = 1e9; const mid = (want0 + want1) / 2;
+  for (const [a, b] of gaps) { if (b - a < minW) continue; const c = Math.max(a + minW / 2, Math.min(b - minW / 2, mid)), d = Math.abs(c - mid); if (d < nd) { nd = d; near = [c - minW / 2, c + minW / 2]; } }
+  return near;
+}
+function fitRow(items, Wd, gap) { // slide circles along the row until none touch
+  items.sort((a, b) => a.x - b.x);
+  const sum = items.reduce((a, s) => a + 2 * s.o, 0) + gap * Math.max(0, items.length - 1);
+  if (sum > Wd) { const k = (Wd - gap * (items.length - 1)) / items.reduce((a, s) => a + 2 * s.o, 0); for (const s of items) s.o *= k; }
+  let edge = 0; for (const s of items) { s.x = Math.max(s.x, edge + s.o); edge = s.x + s.o + gap; }
+  edge = Wd; for (let i = items.length - 1; i >= 0; i--) { const s = items[i]; s.x = Math.min(s.x, edge - s.o); edge = s.x - s.o - gap; }
+}
+
+function layoutChart(tl) {
+  const { W: Wd, yM, I0, HALF, FULL, Ht } = CH;
+  tl.epochs = tl.epochs.filter(e => e.t < tl.window); // the last epoch can land just past the end of the minute
+  const T = tl.window, xOf = tt => tt / T * Wd, GAP = 6, OF = FULL;
+  const allFl = [...tl.flowers, ...(tl.cur ? [tl.cur] : [])].filter(fl => fl.complete || fl.t1 - fl.t0 >= 1.2);
+  // 1 · flowers, the largest things, one per stage of each stretch of focus
+  const rowF = [];
+  for (const fl of allFl) {
+    const F = FLOWERS[fl.fl], smp = fl.samples || [[fl.t0, fl.maxP]];
+    const pAt = tt => { let v = smp[0][1]; for (const [ts, pv] of smp) { if (ts > tt) break; v = pv; } return v; };
+    const x0 = xOf(fl.t0), x1 = xOf(fl.t1), stageEnd = fl.complete ? x1 - 2 * OF - GAP : x1, oT = 58, n = Math.floor((stageEnd - x0) / (2 * oT + GAP));
+    if (n >= 1) {
+      const stepX = (stageEnd - x0) / n;
+      for (let k = 0; k < n; k++) {
+        const x = x0 + stepX * (k + 0.5), prog = !fl.complete && k === n - 1 ? fl.maxP : pAt(fl.t0 + (x - x0) / Math.max(1e-6, x1 - x0) * (fl.t1 - fl.t0));
+        rowF.push({ kind: "stage", F, fl, x, o: Math.min(HALF, 40 + 34 * prog), prog });
+      }
+    } else if (!fl.complete) rowF.push({ kind: "stage", F, fl, x: (x0 + x1) / 2, o: Math.min(HALF, 38 + 34 * fl.maxP), prog: fl.maxP });
+    if (fl.complete) rowF.push({ kind: "bloom", F, fl, x: x1 - OF, o: OF, prog: 1 });
+  }
+  fitRow(rowF, Wd, GAP);
+  const center = rowF.map(s => [s.x - s.o - GAP, s.x + s.o + GAP]);
+  const topBlock = rowF.filter(s => s.o > HALF + 0.5).map(s => [s.x - s.o - GAP, s.x + s.o + GAP]);
+  // 2 · sustained bands, longest first: center lane when it is free for most of their time, otherwise the lane above
+  const ms = tl.motifs.map(m => { const a = xOf(m.t0), b = xOf(m.t1), minW = MINW[m.band]; let x0 = a, x1 = b; if (x1 - x0 < minW) { const mid = (a + b) / 2; x0 = mid - minW / 2; x1 = mid + minW / 2; } x0 = Math.max(4, x0); x1 = Math.min(Wd - 4, x1); return { m, x0, x1, len: x1 - x0, minW }; }).sort((u, v) => v.len - u.len);
+  const center0 = center.slice(), topBlock0 = topBlock.slice();
+  let placed = [], omitted = [];
+  // the lane above is shared, so a long stretch gives up width there (its full time stays in the readout); on a crowded minute everyone gives up more, until every motif fits
+  for (const cap of [340, 220, 150, 100, 72]) {
+    placed = []; omitted = []; center.length = 0; center.push(...center0); topBlock.length = 0; topBlock.push(...topBlock0);
+    for (const q of ms) {
+      const cGaps = freeGaps(center, 4, Wd - 4), tGaps = freeGaps(topBlock, 4, Wd - 4), minT = Math.min(q.minW, cap);
+      const covered = cGaps.reduce((a, [u, v]) => a + Math.max(0, Math.min(v, q.x1) - Math.max(u, q.x0)), 0) / q.len;
+      let spot = null, lane = "center";
+      if (covered >= 0.7) { spot = fitInto(cGaps, q.x0, q.x1, q.minW); if (spot && spot[1] - spot[0] < q.len * 0.6) spot = null; }
+      if (!spot) { lane = "top"; const mid = (q.x0 + q.x1) / 2, w = Math.min(q.len, cap); spot = fitInto(tGaps, mid - w / 2, mid + w / 2, minT); }
+      if (!spot) { lane = "center"; spot = fitInto(cGaps, q.x0, q.x1, q.minW); }
+      if (!spot) { omitted.push(q.m); continue; }
+      placed.push({ kind: "motif", band: q.m.band, m: q.m, x0: spot[0], x1: spot[1], lane });
+      (lane === "center" ? center : topBlock).push([spot[0] - GAP, spot[1] + GAP]);
+    }
+    if (!omitted.length) break;
+  }
+  const tops = placed.filter(i => i.lane === "top"), mids = placed.filter(i => i.lane === "center");
+  for (const it of mids) { const shared = tops.some(o => o.x0 < it.x1 + GAP && o.x1 > it.x0 - GAP); it.h = shared ? 2 * HALF : Math.min(2 * FULL, 128); it.yc = yM; }
+  for (const it of tops) { it.h = Ht; it.yc = I0 + Ht / 2; }
+  for (const it of placed) { const w = fitWidth(it.band, it.x1 - it.x0, it.h), mid = (it.x0 + it.x1) / 2; it.x0 = mid - w / 2; it.x1 = mid + w / 2; }
+  // 3 · noise shapes on the center line wherever nothing grew
+  const tiles = [], flat75 = tl.epochs.length > 4 ? pct(tl.epochs.map(e => e.flat), 0.75) : 1;
+  const kindOf = e => e.artifact ? "gwanja" : e.flat > flat75 ? "gwigap" : "geum", PRI = { gwanja: 3, gwigap: 2, geum: 1 }, CELL = 58;
+  for (const [a, b] of freeGaps(center, 0, Wd)) {
+    const w = b - a; if (w < CELL + 6) continue;
+    const n = Math.max(1, Math.floor(w / (CELL + 92)));
+    for (let k = 0; k < n; k++) {
+      const x = a + w * (k + 0.5) / n, ta = (x - CELL) / Wd * T, tb = (x + CELL) / Wd * T;
+      const ev = tl.epochs.filter(e => e.t >= ta && e.t < tb).map(kindOf).sort((u, v) => PRI[v] - PRI[u]);
+      if (!ev.length) continue;
+      tiles.push({ kind: "tile", type: ev[0], x, o: CELL / 2, t: (x / Wd) * T });
+    }
+  }
+  // 4 · everything in the center lane, for the ribbons that connect them
+  const row = [...rowF.map(s => ({ a: s.x - s.o, b: s.x + s.o, circle: s })), ...mids.map(i => ({ a: i.x0, b: i.x1, rect: i })), ...tiles.map(s => ({ a: s.x - s.o, b: s.x + s.o, circle: s }))].sort((u, v) => u.a - v.a);
+  return { T, xOf, rowF, placed, tops, mids, tiles, row, omitted };
+}
+
+/* ================= chart painting: time runs left → right ================= */
+function renderChart(tl, canvas, SC = 3) {
+  const L = layoutChart(tl), { W: Wd, H: Hh, yA, yB, yC, yM, ST, I0, I1 } = CH, { T, xOf } = L, c = canvas.getContext("2d");
+  canvas.width = Math.round(Wd * SC); canvas.height = Math.round(Hh * SC);
+  c.setTransform(SC, 0, 0, SC, 0, 0); c.globalAlpha = 1; c.imageSmoothingQuality = "high"; c.lineJoin = "round";
+  const domAt = es => { let dom = "alpha", best = -1e9; for (const b of BANDS) { const m = es.reduce((a, e) => a + e.z[b], 0) / es.length; if (m > best) { best = m; dom = b; } } return dom; };
+  const epochAtX = x => { const tt = x / Wd * T, ee = tl.epochs; if (!ee.length) return null; let lo = 0, hi = ee.length - 1; while (lo < hi) { const m = (lo + hi) >> 1; if (ee[m].t < tt) lo = m + 1; else hi = m; } return ee[lo]; };
+  c.fillStyle = PAL.base; c.fillRect(0, 0, Wd, Hh);
+
+  // 휘 wave bands along both edges, one block per 10 s: hue is the band that rose most, shades are how long it held, depth is spectral flatness, tightness is peak frequency
+  const BLK = 10, blocks = new Map(); for (const e of tl.epochs) { const k = Math.floor(e.t / BLK); let a = blocks.get(k); if (!a) blocks.set(k, a = []); a.push(e); }
+  const lastK = blocks.size ? Math.max(...blocks.keys()) : 0;
+  for (const [k, es] of blocks) {
+    const dom = domAt(es), up = es.filter(e => e.up[dom]).length / es.length, flat = es.reduce((a, e) => a + e.flat, 0) / es.length, art = es.filter(e => e.artifact).length / es.length, peak = es.reduce((a, e) => a + e.peak, 0) / es.length;
+    const tones = 2 + Math.round(2 * Math.min(1, up * 1.5)), amp = Math.max(0.2, Math.min(0.9, 0.2 + flat * 1.1 + art * 0.6)), lam = Math.max(16, Hh * 0.6 / Math.max(4, peak)), fam = PAL[BINFO[dom].fam];
+    const x0 = xOf(k * BLK), x1 = k === lastK ? Wd : Math.min(Wd, xOf((k + 1) * BLK)), cols = tones === 2 ? [3, 1] : tones === 3 ? [3, 2, 1] : [3, 2, 1, 0], hb = yB - yA;
+    for (const flip of [false, true]) {
+      c.save(); if (flip) { c.translate(0, Hh); c.scale(1, -1); }
+      c.beginPath(); c.rect(x0, yA, x1 - x0 + 0.5, hb); c.clip();
+      for (let j = tones - 1; j >= 0; j--) {
+        const edge = []; for (let x = x0 - 2; x <= x1 + 2; x += 2) edge.push([x, yA + (j + 1) * hb / tones - amp * (hb / tones) * (1 - Math.abs(Math.sin(Math.PI * x / lam)))]);
+        c.fillStyle = fam[cols[j]]; c.fill(pathOf([[x0 - 2, yA], ...edge, [x1 + 2, yA]]));
+        const e2 = pathOf(edge, false); c.strokeStyle = INK; c.lineWidth = 2.2; c.stroke(e2); c.strokeStyle = WHITE; c.lineWidth = 1; c.stroke(e2);
+      }
+      c.restore();
+    }
+  }
+  // the panel, its ground of quiet scale curls: shade follows the band leading at that moment, tightness its peak frequency, raggedness its flatness
+  const pT = yB + 6, pB = yC - 6;
+  c.save(); c.beginPath(); c.rect(0, pT, Wd, pB - pT); c.clip();
+  const GROUND = Object.fromEntries(Object.entries({ theta: ["#3fcf98", "#1f8f68"], alpha: ["#3cc6c0", "#1b7c86"], beta: ["#8bd468", "#47903c"], delta: ["#2fa070", "#155a3c"], gamma: ["#96e6bd", "#4cb487"] }).map(([k, [a, b]]) => [k, [pastel(a, 0.54), pastel(b, 0.54)]]));
+  const gs = 15;
+  for (let row = 0, y = pT + ST - gs * 0.3; y < pB - ST + gs * 1.2; row++, y += gs * 1.02) {
+    for (let x = (row % 2 ? 0 : gs) - gs; x < Wd + gs; x += gs * 2) {
+      const e = epochAtX(Math.max(0, x)), dom = e ? domOf(e) : "alpha", [lite, deep] = GROUND[dom];
+      const strength = e ? Math.max(0, Math.min(1, (e.z[dom] + 0.6) / 2.6)) : 0.3, turns = e ? 0.85 + Math.min(1.3, e.peak / 18) : 1.2, rag = e ? Math.min(0.7, e.flat) * (hash(x, y) - 0.5) * 2.2 : 0;
+      c.beginPath(); c.arc(x, y, gs, 0, TAU); c.fillStyle = mix(deep, lite, 0.35 + 0.65 * strength); c.fill();
+      c.strokeStyle = INK; c.globalAlpha = 0.3; c.lineWidth = 0.8; c.stroke(); c.globalAlpha = 1;
+      c.beginPath();
+      for (let i = 0; i <= 16; i++) { const k = i / 16, a = rag - Math.PI / 2 + k * turns * TAU, rr = gs * (0.08 + 0.55 * k), X = x + rr * Math.cos(a), Y = y - gs * 0.12 + rr * Math.sin(a); i ? c.lineTo(X, Y) : c.moveTo(X, Y); }
+      c.strokeStyle = deep; c.lineWidth = gs * 0.12; c.lineCap = "round"; c.stroke();
+    }
+  }
+  // occupancy: each placed thing reserves its space
+  const occ = [];
+  const addC = (x, y, r) => occ.push([x, y, r]);
+  const occFree = (x, y, r) => { for (const q of occ) { if (q.length === 3) { if (Math.hypot(x - q[0], y - q[1]) < r + q[2]) return false; } else { const dx = Math.max(q[0] - x, 0, x - q[2]), dy = Math.max(q[1] - y, 0, y - q[3]); if (Math.hypot(dx, dy) < r) return false; } } return true; };
+  const clipOut = new Path2D(); clipOut.rect(0, 0, Wd, Hh);
+  const addHole = s => { clipOut.moveTo(s.x + s.o, yM); clipOut.arc(s.x, yM, s.o, 0, TAU); };
+  for (const s of L.rowF) { addC(s.x, yM, s.o); addHole(s); }
+  for (const s of L.tiles) { addC(s.x, yM, s.o); addHole(s); }
+  const motifRect = it => [it.x0, it.yc - it.h / 2, it.x1, it.yc + it.h / 2];
+  for (const it of L.mids) { occ.push(motifRect(it)); const [a, b, d, e] = motifRect(it); clipOut.rect(a, b, d - a, e - b); }
+  for (const it of L.tops) { occ.push(motifRect(it)); const [a, b, d, e] = motifRect(it); occ.push([a, 2 * yM - e, d, 2 * yM - b]); }
+
+  // ribbons sweep from each thing in the center lane to the next, hue from the band that led between them; they arch lower when something sits in the lane above
+  const WR = 24, edgeOf = (n, side) => { // where a ribbon leaves or meets this thing
+    if (!n) return { x: side > 0 ? -18 : Wd + 18, dy: 30 };
+    if (n.circle) { const dy = Math.max(WR / 2 + 3, Math.min(n.circle.o * 0.62, 44)); return { x: n.circle.x + side * Math.sqrt(Math.max(0, n.circle.o ** 2 - dy ** 2)), dy }; }
+    return { x: side > 0 ? n.rect.x1 : n.rect.x0, dy: WR / 2 + 3, taper: true };
+  };
+  c.save(); c.clip(clipOut, "evenodd");
+  const bez = (P, t2) => { const u = 1 - t2; return [u * u * u * P[0][0] + 3 * u * u * t2 * P[1][0] + 3 * u * t2 * t2 * P[2][0] + t2 * t2 * t2 * P[3][0], u * u * u * P[0][1] + 3 * u * u * t2 * P[1][1] + 3 * u * t2 * t2 * P[2][1] + t2 * t2 * t2 * P[3][1]]; };
+  const rowN = [null, ...L.row, null];
+  for (let i = 0; i + 1 < rowN.length; i++) {
+    const A = edgeOf(rowN[i], 1), B = edgeOf(rowN[i + 1], -1), sp = B.x - A.x; if (sp < 22) continue;
+    const blocked = L.tops.some(o => o.x0 < B.x + 8 && o.x1 > A.x - 8), topY = blocked ? I0 + CH.Ht + WR / 2 + 5 : I0 + WR / 2 + Math.min(34, sp * 0.1);
+    const P0 = [A.x - (A.taper ? 0 : 3), yM - A.dy], P3 = [B.x + (B.taper ? 0 : 3), yM - B.dy], lift = Math.min(1, sp / 150), peak = Math.max(topY, Math.min(P0[1], P3[1]) - (Math.min(P0[1], P3[1]) - topY) * lift);
+    const P = [P0, [P0[0] + sp * 0.22, peak], [P3[0] - sp * 0.22, peak], P3], NP = 70, pts = []; for (let k = 0; k <= NP; k++) pts.push(bez(P, k / NP));
+    const midE = epochAtX(Math.max(0, Math.min(Wd - 1, (P0[0] + P3[0]) / 2))), band = midE ? domOf(midE) : "alpha", fam = PAL[BINFO[band].fam];
+    const es = tl.epochs.filter(e => { const x = xOf(e.t); return x >= P0[0] && x <= P3[0]; }), upF = es.length ? es.filter(e => e.up[band]).length / es.length : 0.3, flatF = es.length ? es.reduce((a, e) => a + e.flat, 0) / es.length : 0.3;
+    const tones = 2 + Math.round(2 * Math.min(1, upF * 1.5 + 0.2)), amp = Math.max(0.25, Math.min(0.85, 0.25 + flatF * 1.1)), cols = tones === 2 ? [3, 1] : tones === 3 ? [3, 2, 1] : [3, 2, 1, 0], lamS = 40;
+    const sArr = [0], nrm = [];
+    for (let k = 1; k <= NP; k++) sArr.push(sArr[k - 1] + Math.hypot(pts[k][0] - pts[k - 1][0], pts[k][1] - pts[k - 1][1]));
+    for (let k = 0; k <= NP; k++) { const a = pts[Math.max(0, k - 1)], b = pts[Math.min(NP, k + 1)], dx = b[0] - a[0], dy = b[1] - a[1], LL = Math.hypot(dx, dy) || 1; nrm.push([dy / LL, -dx / LL]); }
+    const tap = k => { let v = 1; if (A.taper) v = Math.min(v, Math.pow(k / 16, 0.7)); if (B.taper) v = Math.min(v, Math.pow((NP - k) / 16, 0.7)); return Math.max(0.02, v); };
+    const off = (k, d) => { const q = tap(k) * d; return [pts[k][0] + nrm[k][0] * q, pts[k][1] + nrm[k][1] * q]; }, inner = pts.map((_, k) => off(k, -WR / 2));
+    const paintOne = () => {
+      for (let j = tones - 1; j >= 0; j--) {
+        const edge = pts.map((_, k) => off(k, -WR / 2 + (j + 1) * WR / tones - amp * (WR / tones) * (1 - Math.abs(Math.sin(Math.PI * sArr[k] / lamS)))));
+        c.fillStyle = fam[cols[j]]; c.fill(pathOf([...inner, ...edge.slice().reverse()]));
+        const eq = pathOf(edge, false); c.strokeStyle = INK; c.lineWidth = 1.6; c.stroke(eq); c.strokeStyle = WHITE; c.lineWidth = 0.7; c.stroke(eq);
+      }
+      const iq = pathOf(inner, false); c.strokeStyle = INK; c.lineWidth = 2.6; c.stroke(iq); c.strokeStyle = PAL.yellow[1]; c.lineWidth = 1.1; c.stroke(iq);
+    };
+    paintOne(); c.save(); c.translate(0, 2 * yM); c.scale(1, -1); paintOne(); c.restore();
+    for (const [x, y] of pts) { addC(x, y, WR / 2 + 1); addC(x, 2 * yM - y, WR / 2 + 1); }
+    (L.ribbons = L.ribbons || []).push(pts);
+  }
+  c.restore();
+
+  // filler ornaments in the space that is left, largest first, mirrored about the center line
+  if (tl.epochs.length) {
+    const orn = [];
+    for (const r of [25, 16, 9]) {
+      const stepO = r * 1.2, cand = [];
+      for (let x = r + 2; x < Wd - r - 2; x += stepO) for (let y = I0 + r + 1; y <= yM - r - 1; y += stepO) { const h = hash(x, y, r); cand.push([x + (h - 0.5) * stepO * 0.5, y + (hash(y, x, r) - 0.5) * stepO * 0.5, h]); }
+      cand.sort((a, b) => a[2] - b[2]);
+      for (const [x, y] of cand) {
+        if (y - r < I0 || y + r > yM || x - r < 0 || x + r > Wd) continue;
+        if (!occFree(x, y, r + 2.5)) continue;
+        const e = epochAtX(x), band = e ? domOf(e) : "alpha", hh = hash(x * 1.7, y * 0.3, 3);
+        addC(x, y, r); addC(x, 2 * yM - y, r); orn.push({ x, y, r, band, hh });
+      }
+    }
+    for (const q of orn) { ornament(c, q.x, q.y, q.r, q.band, q.hh); c.save(); c.translate(0, 2 * yM); c.scale(1, -1); ornament(c, q.x, q.y, q.r, q.band, q.hh); c.restore(); }
+    L.ornaments = orn;
+  }
+  // tiles, then center-lane motifs, then flowers, then the small motifs in the lanes above and below: larger things first, smaller things last and on top
+  for (const s of L.tiles) { drawTile(c, s.x - s.o, yM - s.o, 2 * s.o, s.type); }
+  const drawStage = sg => {
+    const o = sg.o, full = sg.kind === "bloom", ringW = full ? 8 : 0, rl = o * (full ? 0.078 : 0.14), d = o - ringW - (full ? 2 : 0) - rl, r = d - rl - 1.2, done = sg.F.span.filter(sp => sg.prog >= sp.b - 1e-6).length;
+    if (full) { const ring = (rr, w, col) => { c.beginPath(); c.arc(sg.x, yM, rr, 0, TAU); c.strokeStyle = col; c.lineWidth = w; c.stroke(); }; ring(o - 4, 8, INK); ring(o - 4, 6.6, PAL.yellow[1]); ring(o - 4, 3.6, PAL.blue[2]); ring(o - 4, 1, WHITE); }
+    curlRing(c, sg.x, yM, d, rl);
+    c.beginPath(); c.arc(sg.x, yM, r, 0, TAU); c.fillStyle = G.deep; c.fill();
+    c.save(); c.translate(sg.x, yM); c.scale(r * 0.97, -r * 0.97);
+    if (!full) { c.strokeStyle = "rgba(246,242,234,.7)"; c.lineWidth = 1 / r; c.setLineDash([3 / r, 3 / r]); for (const Fl of sg.F.fills) if (Fl.layer >= done) c.stroke(pathOf(Fl.pts)); c.setLineDash([]); }
+    if (done > 0 || full) drawFlowerFilled(c, sg.F, full ? 3 : done - 1, 1 / r);
+    c.restore();
+  };
+  const box = it => ({ x0: it.x0, x1: it.x1, yc: it.yc, h: it.h });
+  const large = [...L.mids.map(i => ({ area: (i.x1 - i.x0) * i.h, i })), ...L.rowF.map(s => ({ area: 4 * s.o * s.o, s }))].sort((u, v) => v.area - u.area);
+  for (const q of large) {
+    if (q.s) drawStage(q.s);
+    else { FAM[q.i.band](c, box(q.i), q.i.m.level); }
+  }
+  for (const it of [...L.tops].sort((u, v) => (v.x1 - v.x0) - (u.x1 - u.x0))) {
+    FAM[it.band](c, box(it), it.m.level);
+    c.save(); c.translate(0, 2 * yM); c.scale(1, -1); FAM[it.band](c, box(it), it.m.level); c.restore();
+  }
+  // thin 금문 lattice strips along the inner edges, with a mark every 20 s
+  for (const y0 of [pT, pB - ST]) {
+    c.fillStyle = G.dark; c.fillRect(0, y0, Wd, ST);
+    c.lineCap = "butt";
+    for (let x = 0; x < Wd; x += ST) {
+      c.strokeStyle = INK; c.lineWidth = ST * 0.26; c.beginPath(); c.moveTo(x, y0); c.lineTo(x + ST, y0 + ST); c.moveTo(x + ST, y0); c.lineTo(x, y0 + ST); c.stroke();
+      c.strokeStyle = PAL.blue[2]; c.lineWidth = ST * 0.16; c.stroke();
+      c.fillStyle = PAL.red[2]; c.fillRect(x + ST * 0.38, y0 + ST * 0.38, ST * 0.24, ST * 0.24);
+      c.fillStyle = pastel(ORIGINAL.dot); c.beginPath(); c.arc(x, y0 + ST / 2, ST * 0.12, 0, TAU); c.fill();
+    }
+    c.fillStyle = PAL.yellow[1]; c.fillRect(0, y0, Wd, 1.5); c.fillRect(0, y0 + ST - 1.5, Wd, 1.5);
+    for (let s = 20; s < T - 2; s += 20) { const x = xOf(s); c.fillStyle = WHITE; c.strokeStyle = INK; c.lineWidth = 1; c.beginPath(); c.moveTo(x, y0 - 1); c.lineTo(x + 8, y0 + ST / 2); c.lineTo(x, y0 + ST + 1); c.lineTo(x - 8, y0 + ST / 2); c.closePath(); c.fill(); c.stroke(); }
+  }
+  c.restore();
+  // beam edges: ink band, white and yellow lines
+  for (const flip of [false, true]) {
+    c.save(); if (flip) { c.translate(0, Hh); c.scale(1, -1); }
+    c.fillStyle = INK; c.fillRect(0, 0, Wd, yA - 6); c.fillStyle = WHITE; c.fillRect(0, yA - 6, Wd, 2.5); c.fillStyle = PAL.yellow[1]; c.fillRect(0, yA - 3.5, Wd, 3.5);
+    c.fillStyle = INK; c.fillRect(0, yB, Wd, 6); c.fillStyle = PAL.yellow[1]; c.fillRect(0, yB + 2, Wd, 2);
+    c.restore();
+  }
+  return L;
+}
+
+/* ================= the scope screen ================= */
+function drawScreenBg() {
+  const ctx = cc; ctx.setTransform(1, 0, 0, 1, 0, 0);
+  ctx.fillStyle = "#040a08"; ctx.fillRect(0, 0, W, H);
+  const div = 8, cw = W / div, ch = H / div, cx = W / 2, cy = H / 2, tick = 5 * DPR;
+  ctx.strokeStyle = "rgba(141,255,176,.10)"; ctx.lineWidth = 1; ctx.beginPath();
+  for (let i = 1; i < div; i++) { ctx.moveTo(Math.round(i * cw) + .5, 0); ctx.lineTo(Math.round(i * cw) + .5, H); ctx.moveTo(0, Math.round(i * ch) + .5); ctx.lineTo(W, Math.round(i * ch) + .5); }
+  ctx.stroke(); ctx.strokeStyle = "rgba(141,255,176,.22)"; ctx.beginPath();
+  for (let i = 0; i <= div * 5; i++) { const x = i * cw / 5, y = i * ch / 5; ctx.moveTo(x, cy - tick); ctx.lineTo(x, cy + tick); ctx.moveTo(cx - tick, y); ctx.lineTo(cx + tick, y); }
+  ctx.stroke();
+  const vg = ctx.createRadialGradient(cx, cy, W * .2, cx, cy, W * .75); vg.addColorStop(0, "rgba(0,0,0,0)"); vg.addColorStop(1, "rgba(0,0,0,.45)");
+  ctx.fillStyle = vg; ctx.fillRect(0, 0, W, H);
+  if (stage === "baseline") return; // only the grid and the instructions until the 60 seconds begin
+  // the target: every contour of the current flower, faint and dashed, so you can see what focus will draw
+  const F = flower(), R = Math.min(W, H) * 0.46, q = new Path2D();
+  for (const u of F.units) for (const st of [...u.trace, ...u.fade]) st.pts.forEach(([x, y], i) => i ? q.lineTo(cx + x * R, cy - y * R) : q.moveTo(cx + x * R, cy - y * R));
+  ctx.save(); ctx.setLineDash([3 * DPR, 5 * DPR]); ctx.lineJoin = "round"; ctx.strokeStyle = "rgba(225,238,230,.24)"; ctx.lineWidth = DPR; ctx.stroke(q); ctx.restore();
+}
+
+/* ---------- the oscilloscope trace in the disc ---------- */
+function visible(F, prog) {
+  const list = [{ pts: FRAME, key: "frame" }], faded = [];
+  const lim = prog * F.total; let head = null;
+  for (const u of F.units) {
+    if (u.start >= lim) break;
+    const need = lim - u.start, a = u.len ? Math.min(1, need / u.len) : 1;
+    for (const s of u.fade) faded.push({ pts: s.pts, key: s.key, a: a * a * (3 - 2 * a) });
+    for (const s of u.trace) {
+      const n = need - s.off;
+      if (n <= 0) break;
+      if (n >= s.len) { list.push(s); continue; }
+      const pts = [s.pts[0]]; let i = 1;
+      while (i < s.pts.length && s.cum[i] <= n) { pts.push(s.pts[i]); i++; }
+      if (i < s.pts.length) { const k = (n - s.cum[i - 1]) / (s.cum[i] - s.cum[i - 1] || 1), [x0, y0] = s.pts[i - 1], [x1, y1] = s.pts[i]; const q = [x0 + (x1 - x0) * k, y0 + (y1 - y0) * k]; pts.push(q); head = q; }
+      list.push({ pts, key: s.key }); break;
+    }
+  }
+  return { list, faded, head };
+}
+function lineColor(F, key) {
+  if (key === "frame") return "#cfc8b8";
+  const k = F.keys[key]; return mix(k.line, k.settle, fillA[F.keyLayer[key]] || 0);
+}
+function drawTrace() {
+  const F = flower(), cx = W / 2, cy = H / 2, R = Math.min(W, H) * 0.46;
+  t.globalCompositeOperation = "destination-out";
+  t.fillStyle = `rgba(0,0,0,${reduceMotion ? 1 : 0.24})`; t.fillRect(0, 0, W, H);
+  t.globalCompositeOperation = "source-over"; t.lineJoin = "round"; t.lineCap = "round";
+  const j = reduceMotion ? 0 : 0.0022 + (1 - f) * 0.0055, boost = 1 + flash * 1.5;
+  const toPath = (pts, jit, close) => { const q = new Path2D(); pts.forEach(([x, y], i) => { const X = cx + (x + (jit ? (Math.random() - .5) * 2 * j : 0)) * R, Y = cy - (y + (jit ? (Math.random() - .5) * 2 * j : 0)) * R; i ? q.lineTo(X, Y) : q.moveTo(X, Y); }); if (close) q.closePath(); return q; };
+  for (const Fl of F.fills) { const a = fillA[Fl.layer]; if (a < 0.01) continue; t.globalAlpha = a; t.fillStyle = F.keys[Fl.key].fill; t.fill(toPath(Fl.pts, false, true)); }
+  const { list, faded, head } = visible(F, p);
+  const byKey = {};
+  for (const s of list) { const q = byKey[s.key] || (byKey[s.key] = new Path2D()); q.addPath(toPath(s.pts, true, false)); }
+  for (const k in byKey) {
+    const filled = k === "frame" ? 0 : fillA[F.keyLayer[k]] || 0;
+    t.strokeStyle = k === "frame" ? "#cfc8b8" : F.keys[k].line; t.globalAlpha = Math.min(1, 0.07 * boost * (1 - filled)); t.lineWidth = 6 * DPR; t.stroke(byKey[k]);
+    t.strokeStyle = lineColor(F, k); t.globalAlpha = Math.min(1, 0.6 * boost); t.lineWidth = 1.5 * DPR; t.stroke(byKey[k]);
+  }
+  for (const s of faded) {
+    if (s.a <= 0.01) continue; const q = toPath(s.pts, false, false);
+    t.strokeStyle = F.keys[s.key].line; t.globalAlpha = Math.min(1, 0.07 * boost * s.a); t.lineWidth = 6 * DPR; t.stroke(q);
+    t.strokeStyle = lineColor(F, s.key); t.globalAlpha = Math.min(1, 0.6 * boost * s.a); t.lineWidth = 1.5 * DPR; t.stroke(q);
+  }
+  t.globalAlpha = 1;
+  if (head && p < 0.999 && phase !== "rest") {
+    const X = cx + head[0] * R, Y = cy - head[1] * R, rr = 9 * DPR, gr = t.createRadialGradient(X, Y, 0, X, Y, rr);
+    gr.addColorStop(0, "rgba(255,255,255,.9)"); gr.addColorStop(0.35, "#ffd9a0"); gr.addColorStop(1, "rgba(0,0,0,0)");
+    t.fillStyle = gr; t.beginPath(); t.arc(X, Y, rr, 0, TAU); t.fill();
+  }
+  updateBell();
+}
+
+/* ================= bell ================= */
+const audio = { ctx: null, bell: null };
+const BELL_BASE = 64, PENTA = [1, 9 / 8, 4 / 3, 3 / 2, 5 / 3];
+function startBell() {
+  const ctx = audio.ctx; if (!ctx || audio.bell) return;
+  const comp = ctx.createDynamicsCompressor(); comp.threshold.value = -10; comp.ratio.value = 6; comp.attack.value = 0.003; comp.release.value = 0.4; comp.connect(ctx.destination);
+  const master = ctx.createGain(); master.gain.value = 0; master.connect(comp);
+  master.gain.setTargetAtTime(0.5, ctx.currentTime, 1.2);
+  const partial = (fq, g) => { const o = ctx.createOscillator(), gn = ctx.createGain(); o.frequency.value = fq; gn.gain.value = g; o.connect(gn).connect(master); o.start(); return o; };
+  const oscs = [partial(BELL_BASE, 0.5), partial(BELL_BASE + 0.33, 0.45), partial(BELL_BASE * 2, 0.22), partial(BELL_BASE * 2 + 0.6, 0.12),
+    partial(BELL_BASE * 2.52, 0.07), partial(BELL_BASE * 3.01, 0.08), partial(BELL_BASE * 4.02, 0.05)];
+  audio.bell = { master, oscs, voices: [], unitVoice: [], done: new Set(), lastStrike: 0 };
+  buildVoices();
+}
+function stopBell() {
+  const B = audio.bell; if (!B || !audio.ctx) return; audio.bell = null;
+  const now = audio.ctx.currentTime; B.master.gain.setTargetAtTime(0, now, 0.3);
+  setTimeout(() => { for (const o of [...B.oscs, ...B.voices.map(v => v.o)]) try { o.stop(); } catch (e) {} }, 1500);
+}
+function buildVoices() {
+  const B = audio.bell; if (!B) return;
+  for (const v of B.voices) { try { v.o.stop(); } catch (e) {} }
+  B.voices = []; B.unitVoice = []; B.done = new Set();
+  const F = flower(), groups = new Map(), cnt = {};
+  F.units.forEach((u, i) => {
+    const k = cnt[u.layer] = (cnt[u.layer] === undefined ? 0 : cnt[u.layer] + 1), key = u.layer + ":" + (k % 5);
+    if (!groups.has(key)) groups.set(key, { fq: BELL_BASE * Math.pow(2, u.layer + 1) * PENTA[k % 5], units: [] });
+    groups.get(key).units.push(i);
+  });
+  for (const g of groups.values()) {
+    const o = audio.ctx.createOscillator(), gn = audio.ctx.createGain(); o.frequency.value = g.fq; gn.gain.value = 0; o.connect(gn).connect(B.master); o.start();
+    const v = { o, g: gn, fq: g.fq, units: g.units }; B.voices.push(v); for (const i of g.units) B.unitVoice[i] = v;
+  }
+}
+function strike(fq) {
+  const ctx = audio.ctx, B = audio.bell, now = ctx.currentTime; if (now - B.lastStrike < 0.12) return; B.lastStrike = now;
+  const o = ctx.createOscillator(), g = ctx.createGain(); o.frequency.value = fq; o.connect(g).connect(B.master);
+  g.gain.setValueAtTime(0, now); g.gain.linearRampToValueAtTime(0.22, now + 0.01); g.gain.exponentialRampToValueAtTime(0.0001, now + 3); o.start(now); o.stop(now + 3.1);
+}
+function bigStrike() {
+  const ctx = audio.ctx, B = audio.bell; if (!ctx || !B) return;
+  const now = ctx.currentTime;
+  // strike partials of a large bronze bell: hum, its beating twin, prime, tierce, quint, nominal; low ones ring longest
+  for (const [m, g, d] of [[1, 1, 10], [1.006, 0.8, 10], [2, 0.55, 7], [2.4, 0.35, 5], [3.01, 0.32, 4], [4.02, 0.24, 3], [5.4, 0.14, 2]]) {
+    const o = ctx.createOscillator(), gn = ctx.createGain(); o.frequency.value = BELL_BASE * m; o.connect(gn).connect(B.master);
+    gn.gain.setValueAtTime(0, now); gn.gain.linearRampToValueAtTime(0.9 * g, now + 0.006); gn.gain.exponentialRampToValueAtTime(0.0001, now + d);
+    o.start(now); o.stop(now + d + 0.1);
+  }
+}
+function updateBell() {
+  const B = audio.bell; if (!B || !audio.ctx) return;
+  const F = flower(), lim = p * F.total, now = audio.ctx.currentTime;
+  const ua = F.units.map(u => u.len ? Math.max(0, Math.min(1, (lim - u.start) / u.len)) : (lim >= u.start ? 1 : 0));
+  for (const v of B.voices) { const a = v.units.reduce((acc, i) => acc + ua[i], 0) / v.units.length; v.g.gain.setTargetAtTime(0.08 * a, now, 0.4); }
+  ua.forEach((a, i) => { if (a >= 1 && !B.done.has(i)) { B.done.add(i); if (B.unitVoice[i]) strike(B.unitVoice[i].fq); } else if (a < 1) B.done.delete(i); });
+}
+
+/* ================= FFT ================= */
+function fft(re, im) {
+  const n = re.length;
+  for (let i = 1, j = 0; i < n; i++) { let bit = n >> 1; for (; j & bit; bit >>= 1) j ^= bit; j ^= bit; if (i < j) { [re[i], re[j]] = [re[j], re[i]]; [im[i], im[j]] = [im[j], im[i]]; } }
+  for (let len = 2; len <= n; len <<= 1) {
+    const a = -TAU / len, wr = Math.cos(a), wi = Math.sin(a);
+    for (let i = 0; i < n; i += len) { let cr = 1, ci = 0;
+      for (let k = 0; k < len / 2; k++) { const ur = re[i + k], ui = im[i + k], vr = re[i + k + len / 2] * cr - im[i + k + len / 2] * ci, vi = re[i + k + len / 2] * ci + im[i + k + len / 2] * cr;
+        re[i + k] = ur + vr; im[i + k] = ui + vi; re[i + k + len / 2] = ur - vr; im[i + k + len / 2] = ui - vi; const nr = cr * wr - ci * wi; ci = cr * wi + ci * wr; cr = nr; } }
+  }
+}
+const RANGES = { delta: [1, 4], theta: [4, 8], alpha: [8, 13], beta: [13, 30], gamma: [30, 45] };
+
+/* ================= Muse over Web Bluetooth: same GATT protocol as muse-js (Muse 2016, Muse 2, Muse S before Athena) =================
+   Four EEG notifications, 12 samples per packet at 256 Hz. Never touched by the simulated path. */
+const MUSE = { service: 0xfe8d, control: "273e0001-4c4d-454d-96be-f03bac821358", eeg: ["273e0003", "273e0004", "273e0005", "273e0006"].map(s => s + "-4c4d-454d-96be-f03bac821358"), athena: "273e0013-4c4d-454d-96be-f03bac821358", names: ["TP9", "AF7", "AF8", "TP10"] };
+const museCommand = cmd => { const e = new TextEncoder().encode(`X${cmd}\n`); e[0] = e.length - 1; return e; };
+function decodeMusePacket(dv) { // 2-byte index, then 12 samples packed into 18 bytes
+  const out = [], b = new Uint8Array(dv.buffer, dv.byteOffset + 2, dv.byteLength - 2);
+  for (let i = 0; i + 2 < b.length; i += 3) { out.push(0.48828125 * (((b[i] << 4) | (b[i + 1] >> 4)) - 0x800), 0.48828125 * ((((b[i + 1] & 0xf) << 8) | b[i + 2]) - 0x800)); }
+  return out;
+}
+const sleep = ms => new Promise(r => setTimeout(r, ms));
+async function connectMuse(onStatus) {
+  if (!navigator.bluetooth) { const e = new Error("no bluetooth"); e.name = "NoBluetooth"; throw e; }
+  const dev = await navigator.bluetooth.requestDevice({ filters: [{ services: [MUSE.service] }, { namePrefix: "Muse" }], optionalServices: [MUSE.service] });
+  onStatus(`Connecting to ${dev.name || "your headset"}…`);
+  dev.addEventListener("gattserverdisconnected", onMuseLost);
+  const gatt = await dev.gatt.connect(), service = await gatt.getPrimaryService(MUSE.service);
+  const uuids = (await service.getCharacteristics()).map(c => c.uuid.toLowerCase());
+  if (uuids.includes(MUSE.athena) && !uuids.includes(MUSE.eeg[0])) { dev.removeEventListener("gattserverdisconnected", onMuseLost); try { gatt.disconnect(); } catch (e) {} const e = new Error("athena"); e.name = "Athena"; throw e; }
+  const ctrl = await service.getCharacteristic(MUSE.control); await ctrl.startNotifications();
+  mu.buf = [[], [], [], []]; mu.clock = 0; mu.ptps = []; mu.last = 0; mu.dev = dev; mu.ctrl = ctrl;
+  for (let c = 0; c < 4; c++) {
+    const ch = await service.getCharacteristic(MUSE.eeg[c]);
+    ch.addEventListener("characteristicvaluechanged", ev => { const a = mu.buf[c]; for (const v of decodeMusePacket(ev.target.value)) a.push(v); if (a.length > 2048) a.splice(0, a.length - 2048); mu.last = performance.now(); });
+    await ch.startNotifications();
+  }
+  const send = c => ctrl.writeValue(museCommand(c));
+  onStatus("Asking the headset to start streaming…");
+  for (const preset of ["p21", "p50"]) { // some firmware only streams on the second preset
+    await send("h"); await send(preset); await send("s"); await send("d");
+    for (let w = 0; w < 2500 && !mu.last; w += 100) await sleep(100);
+    if (mu.last) return dev;
+    await send("d"); for (let w = 0; w < 1500 && !mu.last; w += 100) await sleep(100);
+    if (mu.last) return dev;
+  }
+  dev.removeEventListener("gattserverdisconnected", onMuseLost); try { gatt.disconnect(); } catch (e) {}
+  const e = new Error("silent"); e.name = "Silent"; throw e;
+}
+function disconnectMuse() { if (mu.dev) { mu.dev.removeEventListener("gattserverdisconnected", onMuseLost); try { mu.dev.gatt.disconnect(); } catch (e) {} mu.dev = null; } }
+function museEpoch() {
+  const N = 512; if (mu.buf[0].length < N || performance.now() - mu.last > 2000) return null;
+  const hann = museEpoch.h || (museEpoch.h = Float64Array.from({ length: N }, (_, i) => 0.5 - 0.5 * Math.cos(TAU * i / (N - 1))));
+  const psd = new Float64Array(N / 2 + 1), df = 256 / N; let ptp = 0;
+  mu.buf.forEach((a, c) => {
+    const s = a.slice(-N); if (s.length < N) return; let mean = 0, mn = Infinity, mx = -Infinity; for (const v of s) { mean += v; mn = Math.min(mn, v); mx = Math.max(mx, v); } mean /= N; ptp = Math.max(ptp, mx - mn);
+    const last = s.slice(-256), lm = last.reduce((x, y) => x + y, 0) / 256; mu.sd[c] = Math.sqrt(last.reduce((x, y) => x + (y - lm) ** 2, 0) / 256);
+    const re = new Float64Array(N), im = new Float64Array(N); for (let i = 0; i < N; i++) re[i] = (s[i] - mean) * hann[i];
+    fft(re, im); for (let k = 0; k <= N / 2; k++) psd[k] += re[k] * re[k] + im[k] * im[k];
+  });
+  const rel = {}; let tot = 0;
+  for (const b of BANDS) { const [lo, hi] = RANGES[b]; let s = 0; for (let k = Math.ceil(lo / df); k * df < hi; k++) s += psd[k]; rel[b] = s; tot += s; }
+  for (const b of BANDS) rel[b] /= tot || 1;
+  let lg = 0, ar = 0, m = 0, pk = 10, pv = -1;
+  for (let k = Math.ceil(1 / df); k * df <= 40; k++) { const v = psd[k] + 1e-20; lg += Math.log(v); ar += v; m++; }
+  for (let k = Math.ceil(4 / df); k * df <= 30; k++) if (psd[k] > pv) { pv = psd[k]; pk = k * df; }
+  const hist = mu.ptps.slice(-60), artifact = (hist.length >= 8 && ptp > 3 * median(hist)) || ptp > 400; mu.ptps.push(ptp); if (mu.ptps.length > 120) mu.ptps.shift();
+  return { rel, flat: m ? Math.exp(lg / m) / (ar / m) : 0.3, peak: pk, artifact };
+}
+
+/* ================= the hall: a still three-bay 팔작지붕 elevation drawn to fit whatever space it has. Nothing in it moves. ================= */
+const hall = $("#hall"), hallSvg = $("#hallSvg"), screenEl = $("#screen");
+const n1 = v => v.toFixed(1);
+function buildHall() {
+  const r = hall.getBoundingClientRect(), w = r.width, h = r.height; if (w < 60 || h < 60) return;
+  const m = Math.max(6, Math.min(w, h) * 0.018), portrait = w / h < 1.02, cx = w / 2;
+  const baseH = Math.max(20, h * 0.055);
+  let rw = w / 2 - m - 4, roofH = Math.min(rw * 0.5, h * 0.27), lintel = Math.max(22, roofH * 0.2);
+  let availH = h - 2 * m - roofH - lintel - baseH, sw, sh;
+  if (portrait) { sw = w * 0.8; sh = Math.min(availH, sw * 1.04); }
+  else { sh = availH; sw = Math.min(sh * 1.16, w * 0.6); rw = Math.min(rw, sw * 0.9); roofH = Math.min(rw * 0.5, h * 0.27); lintel = Math.max(22, roofH * 0.2); sh = h - 2 * m - roofH - lintel - baseH; sw = Math.min(sh * 1.16, w * 0.6); rw = Math.min(w / 2 - m - 4, sw * 0.9); }
+  const total = roofH + lintel + sh + baseH, y0 = Math.max(m, (h - total) / 2);
+  const ry = y0 + roofH * 0.1, eaveY = y0 + roofH, lift = roofH * 0.3, th = roofH * 0.075, rr = rw * 0.64;
+  const eave = u => eaveY - lift * Math.pow(Math.abs(u), 3);
+  const P = { ridge: "", roof: "", tile: "", col: "", base: "", lat: "" };
+  // ridge, with upturned finials
+  const rBot = ry + th;
+  P.ridge += `M${n1(cx - rr)} ${n1(rBot)} Q${n1(cx)} ${n1(rBot + roofH * 0.035)} ${n1(cx + rr)} ${n1(rBot)} `;
+  P.ridge += `M${n1(cx - rr * 0.985)} ${n1(ry)} Q${n1(cx)} ${n1(ry + roofH * 0.035)} ${n1(cx + rr * 0.985)} ${n1(ry)} `;
+  for (const sg of [-1, 1]) {
+    const xe = cx + sg * rr;
+    P.ridge += `M${n1(cx + sg * rr * 0.985)} ${n1(ry)} Q${n1(xe + sg * th * 0.2)} ${n1(ry - th * 0.2)} ${n1(xe + sg * th * 0.9)} ${n1(ry - th * 1.1)} Q${n1(xe + sg * th * 1.3)} ${n1(ry + th * 0.4)} ${n1(xe)} ${n1(rBot)} `;
+    // hip ridge down to the eave corner, and the flick of the corner
+    const tx = cx + sg * rw, ty = eave(1);
+    P.roof += `M${n1(xe)} ${n1(rBot)} Q${n1(xe + sg * (rw - rr) * 0.34)} ${n1(rBot + (ty - rBot) * 0.82)} ${n1(tx)} ${n1(ty)} `;
+    P.roof += `M${n1(tx)} ${n1(ty)} Q${n1(tx + sg * rw * 0.018)} ${n1(ty - roofH * 0.01)} ${n1(tx + sg * rw * 0.03)} ${n1(ty - roofH * 0.075)} `;
+  }
+  // eave lines
+  const eaveLine = dy => { let s = ""; for (let i = 0; i <= 80; i++) { const u = -1 + 2 * i / 80; s += `${i ? "L" : "M"}${n1(cx + u * rw)} ${n1(eave(u) + dy)} `; } return s; };
+  const eaveLow = roofH * 0.05; P.roof += eaveLine(0) + eaveLine(eaveLow);
+  // tile ribs
+  const ribs = Math.max(14, Math.min(46, Math.round(2 * rw / 15)));
+  for (let i = 0; i < ribs; i++) { const u = -1 + 2 * (i + 0.5) / ribs, tx = cx + u * rr, ty = rBot + roofH * 0.035 * (1 - u * u), bx = cx + u * rw * 0.99, by = eave(u) - 3; P.tile += `M${n1(tx)} ${n1(ty)} Q${n1(cx + u * (rr + (rw - rr) * 0.34))} ${n1(ty + (by - ty) * 0.82)} ${n1(bx)} ${n1(by)} `; }
+  // columns, lintel and side bays
+  const sx0 = cx - sw / 2, sx1 = cx + sw / 2, syT = eaveY + lintel, syB = syT + sh, cw = Math.max(7, sw * 0.018), bayRoom = rw - sw / 2 - cw, bay = !portrait && bayRoom > 46 ? bayRoom * 0.72 : 0;
+  const colAt = x => { const b = cw * 0.1; P.col += `M${n1(x - cw / 2)} ${n1(syT - lintel * 0.42)} Q${n1(x - cw / 2 - b)} ${n1(syT + sh * 0.4)} ${n1(x - cw / 2)} ${n1(syB)} M${n1(x + cw / 2)} ${n1(syT - lintel * 0.42)} Q${n1(x + cw / 2 + b)} ${n1(syT + sh * 0.4)} ${n1(x + cw / 2)} ${n1(syB)} `; };
+  colAt(sx0 - cw / 2 - 2); colAt(sx1 + cw / 2 + 2);
+  const outerL = bay ? sx0 - cw - 2 - bay : sx0 - cw - 2, outerR = bay ? sx1 + cw + 2 + bay : sx1 + cw + 2;
+  if (bay) {
+    colAt(outerL - cw / 2); colAt(outerR + cw / 2);
+    for (const [a, b] of [[outerL + 3, sx0 - cw - 5], [sx1 + cw + 5, outerR - 3]]) { // 띠살 doors
+      const top = syT + 3, bot = syB - 3, nV = Math.max(3, Math.round((b - a) / 16));
+      P.lat += `M${n1(a)} ${n1(top)} H${n1(b)} V${n1(bot)} H${n1(a)} Z `;
+      for (let i = 1; i < nV; i++) { const x = a + (b - a) * i / nV; P.lat += `M${n1(x)} ${n1(top)} V${n1(bot)} `; }
+      for (const f2 of [0.14, 0.18, 0.22, 0.5, 0.54, 0.58, 0.8, 0.84, 0.88]) { const y = top + (bot - top) * f2; P.lat += `M${n1(a)} ${n1(y)} H${n1(b)} `; }
+    }
+  }
+  const lx0 = outerL - cw - 2, lx1 = outerR + cw + 2, lt = eaveY + eaveLow + lintel * 0.2;
+  P.col += `M${n1(lx0)} ${n1(lt)} H${n1(lx1)} M${n1(lx0)} ${n1(syT - 2)} H${n1(lx1)} M${n1(lx0)} ${n1(lt)} V${n1(syT - 2)} M${n1(lx1)} ${n1(lt)} V${n1(syT - 2)} `;
+  // rafter ends under the eave
+  const raf = Math.max(10, Math.round((lx1 - lx0) / 16));
+  for (let i = 0; i <= raf; i++) { const x = lx0 + (lx1 - lx0) * i / raf, u = (x - cx) / rw, e = eave(u) + eaveLow; if (lt - e > 2) P.tile += `M${n1(x)} ${n1(e)} V${n1(lt)} `; }
+  // the screen edge and the stone platform
+  P.col += `M${n1(sx0)} ${n1(syT)} H${n1(sx1)} V${n1(syB)} H${n1(sx0)} Z `;
+  const b1 = syB + baseH * 0.42, b2 = syB + baseH * 0.92, bx0 = lx0 - 8, bx1 = lx1 + 8, st = Math.min(sw * 0.2, 90);
+  P.base += `M${n1(bx0)} ${n1(syB)} H${n1(bx1)} V${n1(b1)} H${n1(bx0)} Z M${n1(bx0 - 8)} ${n1(b1)} V${n1(b2)} H${n1(bx1 + 8)} V${n1(b1)} `;
+  for (let i = 0; i < 3; i++) { const y = syB + (b2 - syB) * (i + 1) / 3, g = st + i * 8; P.base += `M${n1(cx - g)} ${n1(y)} H${n1(cx + g)} `; }
+  P.base += `M${n1(cx - st)} ${n1(syB)} L${n1(cx - st - 16)} ${n1(b2)} M${n1(cx + st)} ${n1(syB)} L${n1(cx + st + 16)} ${n1(b2)} `;
+  const paths = cls => Object.keys(P).filter(k => P[k]).map(k => `<path class="t-${k}${cls}" d="${P[k]}"/>`).join("");
+  const spacing = 2 * rw / 60, tr = Math.max(1.6, Math.min(3.6, spacing * 0.36));
+  let ends = ""; for (let i = 0; i < 60; i++) { const u = -1 + 2 * (i + 0.5) / 60; ends += `<circle class="end" cx="${n1(cx + u * rw)}" cy="${n1(eave(u) + eaveLow / 2)}" r="${n1(tr)}"/>`; }
+  hallSvg.setAttribute("viewBox", `0 0 ${n1(w)} ${n1(h)}`);
+  hallSvg.innerHTML = `<defs><filter id="neonBlur" x="-10%" y="-10%" width="120%" height="120%"><feGaussianBlur stdDeviation="${n1(Math.max(2.4, Math.min(w, h) * 0.0065))}"/></filter></defs><g class="glow" filter="url(#neonBlur)">${paths("")}</g><g class="core">${paths("")}</g><g class="ends">${ends}</g>`;
+  Object.assign(screenEl.style, { left: `${sx0 + 1}px`, top: `${syT + 1}px`, width: `${sw - 2}px`, height: `${sh - 2}px` });
+  instr.style.fontSize = `${Math.max(14, Math.min(25, sw * 0.033))}px`;
+  resize();
+}
+
+/* ================= scope canvases ================= */
+const compC = $("#comp"), traceC = $("#trace"), cc = compC.getContext("2d"), t = traceC.getContext("2d");
+let W = 0, H = 0, DPR = 1;
+function resize() {
+  DPR = Math.min(2, window.devicePixelRatio || 1);
+  const r = screenEl.getBoundingClientRect();
+  W = Math.max(2, Math.round(r.width * DPR)); H = Math.max(2, Math.round(r.height * DPR));
+  compC.width = traceC.width = W; compC.height = traceC.height = H;
+  drawScreenBg();
+}
+
+/* ================= a session packed into a link: everything the chart needs, about a kilobyte, so a phone can redraw it with no server ================= */
+const SHARE_URL = ""; // optional: the public address of this page, e.g. "https://sammikwon.com/meditate/". Left empty, the page uses its own address when it is hosted.
+function shareBase() {
+  if (SHARE_URL) return SHARE_URL.split("#")[0];
+  if (/^https?:$/.test(location.protocol) && !/claude|anthropic/i.test(location.hostname)) return location.origin + location.pathname;
+  return "";
+}
+/* bit-packed, about 280 bytes for a minute: per second, the leading band and how far it rose, which bands were raised, noise, and peak frequency */
+const BITS = { t: 7, dt: 3, dom: 3, str: 3, flat: 3, peak: 4, foc: 4, p: 4 };
+function bitWriter() { const out = []; let acc = 0, n = 0; return { put(v, bits) { v = Math.max(0, Math.min((1 << bits) - 1, Math.round(v))); for (let i = bits - 1; i >= 0; i--) { acc = (acc << 1) | ((v >> i) & 1); if (++n === 8) { out.push(acc); acc = 0; n = 0; } } }, done() { if (n) out.push(acc << (8 - n)); return Uint8Array.from(out); } }; }
+function bitReader(u) { let i = 0; return { get(bits) { let v = 0; for (let k = 0; k < bits; k++, i++) { if (i >= u.length * 8) throw new Error("short"); v = (v << 1) | ((u[i >> 3] >> (7 - (i & 7))) & 1); } return v; } }; }
+const strOf = z => (z + 0.6) / 2.6 * 7, zOf = s => s / 7 * 2.6 - 0.6;
+function packSession(tl) {
+  const w = bitWriter(), ep = tl.epochs.filter(e => e.t < tl.window).slice(0, 127);
+  w.put(2, 8); w.put(tl.window * 2, 8); w.put(ep.length, 7);
+  let prev = null;
+  for (const e of ep) {
+    if (prev == null) w.put(e.t * 2, BITS.t); else w.put((e.t - prev) * 4 - 1, BITS.dt); // the gap to the last epoch, in quarter seconds
+    prev = prev == null ? Math.round(e.t * 2) / 2 : prev + (Math.max(0, Math.min(7, Math.round((e.t - prev) * 4 - 1))) + 1) / 4;
+    const dom = domOf(e); w.put(BANDS.indexOf(dom), BITS.dom); w.put(strOf(e.z[dom]), BITS.str);
+    for (const k of BANDS) w.put(e.up[k] ? 1 : 0, 1);
+    w.put(e.flat * 7, BITS.flat); w.put(e.peak / 3, BITS.peak); w.put(e.artifact ? 1 : 0, 1);
+  }
+  const ms = tl.motifs.slice(0, 31); w.put(ms.length, 5);
+  for (const m of ms) { w.put(BANDS.indexOf(m.band), 3); w.put(m.level, 2); w.put(m.t0 * 2, BITS.t); w.put(m.t1 * 2, BITS.t); }
+  const fls = [...tl.flowers, ...(tl.cur ? [tl.cur] : [])].slice(0, 31); w.put(fls.length, 5);
+  for (const fl of fls) {
+    const sm = []; for (const s2 of fl.samples || []) if (!sm.length || s2[0] - sm[sm.length - 1][0] >= 2) sm.push(s2);
+    const last = (fl.samples || []).slice(-1)[0]; if (last && sm[sm.length - 1] !== last) sm.push(last);
+    const kept = sm.slice(0, 31);
+    w.put(fl.fl, 2); w.put(fl.complete ? 1 : 0, 1); w.put(fl.t0 * 2, BITS.t); w.put(fl.t1 * 2, BITS.t); w.put(fl.maxP * 15, BITS.p); w.put(kept.length, 5);
+    for (const [t, p] of kept) { w.put(t * 2, BITS.t); w.put(p * 15, BITS.p); }
+  }
+  const fline = tl.focusLine, pts = []; let j = 0;
+  for (let i = 0; i * 0.5 <= (fline.length ? fline[fline.length - 1][0] : -1) && pts.length < 127; i++) { while (j + 1 < fline.length && fline[j + 1][0] <= i * 0.5) j++; pts.push(fline[j][1]); }
+  w.put(pts.length, 7); for (const v of pts) w.put(v * 15, BITS.foc);
+  return w.done();
+}
+function unpackSession(u) {
+  const r = bitReader(u);
+  if (r.get(8) !== 2) throw new Error("version");
+  const tl = { epochs: [], motifs: [], flowers: [], cur: null, window: r.get(8) / 2, final: true, t0: 0, focusLine: [], focusSec: 0 };
+  let t = null;
+  for (let n = r.get(7); n > 0; n--) {
+    t = t == null ? r.get(BITS.t) / 2 : t + (r.get(BITS.dt) + 1) / 4;
+    const dom = BANDS[r.get(BITS.dom)], zd = zOf(r.get(BITS.str)), z = {}, up = {};
+    if (!dom) throw new Error("bad band");
+    for (const k of BANDS) { z[k] = k === dom ? zd : zd - 1.5; }
+    for (const k of BANDS) up[k] = !!r.get(1);
+    tl.epochs.push({ t, z, up, flat: r.get(BITS.flat) / 7, peak: r.get(BITS.peak) * 3, artifact: !!r.get(1) });
+  }
+  for (let n = r.get(5); n > 0; n--) { const band = BANDS[r.get(3)], level = r.get(2); if (!band) throw new Error("bad band"); tl.motifs.push({ band, level, t0: r.get(BITS.t) / 2, t1: r.get(BITS.t) / 2 }); }
+  for (let n = r.get(5); n > 0; n--) {
+    const fl = { fl: r.get(2), complete: !!r.get(1), t0: r.get(BITS.t) / 2, t1: r.get(BITS.t) / 2, maxP: r.get(BITS.p) / 15, samples: [] };
+    if (fl.fl > 2) throw new Error("bad flower");
+    for (let k = r.get(5); k > 0; k--) fl.samples.push([r.get(BITS.t) / 2, r.get(BITS.p) / 15]);
+    if (!fl.samples.length) fl.samples.push([fl.t0, fl.maxP]);
+    tl.flowers.push(fl);
+  }
+  for (let n = r.get(7), k = 0; k < n; k++) tl.focusLine.push([k * 0.5, r.get(BITS.foc) / 15]);
+  if (!(tl.window > 0)) throw new Error("bad data");
+  return tl;
+}
+// base32, so the code can use the QR alphanumeric mode, which packs more into each square than plain text
+const B32 = "ABCDEFGHIJKLMNOPQRSTUVWXYZ234567";
+function encodeSession(u) { let s = "", acc = 0, n = 0; for (const x of u) { acc = (acc << 8) | x; n += 8; while (n >= 5) { s += B32[(acc >> (n - 5)) & 31]; n -= 5; } acc &= (1 << n) - 1; } if (n) s += B32[(acc << (5 - n)) & 31]; return s; }
+function decodeSession(s) {
+  const out = []; let acc = 0, n = 0;
+  for (const ch of s.toUpperCase()) { const v = B32.indexOf(ch); if (v < 0) throw new Error("bad char"); acc = (acc << 5) | v; n += 5; if (n >= 8) { out.push((acc >> (n - 8)) & 255); n -= 8; acc &= (1 << n) - 1; } }
+  return unpackSession(Uint8Array.from(out));
+}
+
+/* ================= hanji: long pale fibers and soft mottling on a transparent tile, so the paper color stays in the CSS ================= */
+function makeHanji() {
+  const N = 720, cv = document.createElement("canvas"); cv.width = cv.height = N;
+  const c = cv.getContext("2d"), r = (a, b) => a + Math.random() * (b - a);
+  const wrapped = fn => { for (const dx of [-N, 0, N]) for (const dy of [-N, 0, N]) { c.save(); c.translate(dx, dy); fn(); c.restore(); } };
+  // cloudy pulp, darker and lighter patches
+  for (let i = 0; i < 90; i++) { const x = r(0, N), y = r(0, N), R = r(60, 240), dark = Math.random() < 0.5; wrapped(() => { const g = c.createRadialGradient(x, y, 0, x, y, R); g.addColorStop(0, dark ? "rgba(120,98,62,.014)" : "rgba(255,252,240,.03)"); g.addColorStop(1, "rgba(0,0,0,0)"); c.fillStyle = g; c.fillRect(x - R, y - R, 2 * R, 2 * R); }); }
+  // fine grain
+  const img = c.getImageData(0, 0, N, N), d = img.data;
+  for (let i = 0; i < d.length; i += 4) { const v = Math.random(); if (v < 0.5) { const a = (Math.random() * Math.random()) * 15, on = v < 0.25 ? 95 : 255; const A = d[i + 3] / 255, B = a / 255, O = A + B * (1 - A) || 1; d[i] = (on * B + d[i] * A * (1 - B)) / O; d[i + 1] = ((on === 95 ? 78 : 252) * B + d[i + 1] * A * (1 - B)) / O; d[i + 2] = ((on === 95 ? 50 : 240) * B + d[i + 2] * A * (1 - B)) / O; d[i + 3] = O * 255; } }
+  c.putImageData(img, 0, 0);
+  // kozo fibers: long, thin, wandering; a few dark, most pale
+  c.lineCap = "round";
+  for (let i = 0; i < 340; i++) {
+    let x = r(0, N), y = r(0, N), a = r(0, TAU); const L = r(40, 260), n = Math.ceil(L / 12), pts = [[x, y]], bend = r(-0.28, 0.28);
+    for (let k = 0; k < n; k++) { a += bend * r(-0.2, 1); x += 12 * Math.cos(a); y += 12 * Math.sin(a); pts.push([x, y]); }
+    const dark = Math.random() < 0.3, col = dark ? `rgba(110,88,54,${r(0.04, 0.13)})` : `rgba(255,253,244,${r(0.16, 0.48)})`, w = r(0.35, dark ? 0.95 : 1.4);
+    wrapped(() => { c.beginPath(); pts.forEach(([X, Y], k) => k ? c.lineTo(X, Y) : c.moveTo(X, Y)); c.strokeStyle = col; c.lineWidth = w; c.stroke(); });
+  }
+  // short flecks of bark
+  for (let i = 0; i < 60; i++) { const x = r(0, N), y = r(0, N), a = r(0, TAU), L = r(2, 7); c.strokeStyle = `rgba(96,74,44,${r(0.12, 0.3)})`; c.lineWidth = r(0.4, 0.9); c.beginPath(); c.moveTo(x, y); c.lineTo(x + L * Math.cos(a), y + L * Math.sin(a)); c.stroke(); }
+  const rule = document.createElement("style"); // a data URL this long is too big for a CSS variable, so it goes straight into a rule
+  rule.textContent = `body:not([data-stage=baseline]):not([data-stage=record]),.face{background-image:url("${cv.toDataURL("image/png")}");background-size:640px 640px}`;
+  document.head.appendChild(rule);
+}
+makeHanji();
+
+/* ================= legend ================= */
+function paintSwatch(cv) {
+  const key = cv.dataset.sw, Wu = 128, Hu = 64, sc = 3; cv.width = Wu * sc; cv.height = Hu * sc;
+  const c = cv.getContext("2d"); c.setTransform(sc, 0, 0, sc, 0, 0); c.lineJoin = "round";
+  c.fillStyle = pastel("#3fcf98", 0.54); c.fillRect(0, 0, Wu, Hu);
+  if (FAM[key]) FAM[key](c, { x0: 5, x1: Wu - 5, yc: Hu / 2, h: Hu - 8 }, 2);
+  else if (TILE_INFO[key]) drawTile(c, Wu / 2 - 26, Hu / 2 - 26, 52, key);
+  else if (key === "flowers") {
+    FLOWERS.forEach((F, i) => { const x = 22 + i * 42, r = 19; c.beginPath(); c.arc(x, Hu / 2, r, 0, TAU); c.fillStyle = G.deep; c.fill(); c.save(); c.translate(x, Hu / 2); c.scale(r * 0.97, -r * 0.97); drawFlowerFilled(c, F, 3, 1 / r); c.restore(); });
+  } else if (key === "wave") {
+    ["red", "blue", "yellow", "ochre"].forEach((nm, i) => { const fam = PAL[nm], x0 = i * 32, x1 = x0 + 32;
+      c.save(); c.beginPath(); c.rect(x0, 0, 32, Hu); c.clip();
+      [[3, 3], [2, 2], [1, 1], [0, 0]].forEach(([j, col]) => { const edge = []; for (let x = x0 - 1; x <= x1 + 1; x += 1) edge.push([x, (j + 1) * Hu / 4 - (0.3 + i * 0.12) * (Hu / 4) * (1 - Math.abs(Math.sin(Math.PI * x / (9 + i * 3))))]); c.fillStyle = fam[3 - col]; c.fill(pathOf([[x0 - 1, 0], ...edge, [x1 + 1, 0]])); c.strokeStyle = INK; c.lineWidth = 0.7; c.stroke(pathOf(edge, false)); });
+      c.restore(); });
+  }
+}
+const ko = t => `<span lang="ko">${t}</span>`;
+const LEGEND = [
+  ["flowers", "Focus", `Holding focus draws a flower, first ${ko("연화문")} (lotus), then ${ko("주화관자")} (ringed rosette), then ${ko("보상화")} (imaginary flower). Dashed lines are tiers not yet reached, and a finished flower gets a full ring.`],
+  ["gamma", "γ Gamma, 30 to 45 Hz", `Fast activity, drawn as ${ko("매화점")} (plum blossom dots) in a lattice of scrolls.`],
+  ["beta", "β Beta, 13 to 30 Hz", `Active concentration, drawn as ${ko("당초")} (scrolling vines) in paired rows.`],
+  ["alpha", "α Alpha, 8 to 13 Hz", `Relaxed wakefulness, drawn as ${ko("파련")} (wave lotus), an undulating vine.`],
+  ["theta", "θ Theta, 4 to 8 Hz", `Drowsy, inward attention, drawn as ${ko("녹화")} (green flowers) in garlands of scrolls.`],
+  ["delta", "δ Delta, 1 to 4 Hz", `Slow waves of drowsiness and deep rest, drawn as ${ko("번엽")} (turned leaves).`],
+  ["wave", `${ko("휘")} (wave bands)`, "One block for every ten seconds, colored by the band that rose most. More shades mean it held longer, and deeper scallops mean a noisier signal."],
+  ["gwanja", `${ko("관자")} (rings)`, "Left by a blink or movement."],
+  ["gwigap", `${ko("귀갑")} (tortoise shell)`, "A hexagon left by a noisy signal."],
+  ["geum", `${ko("금문")} (brocade pattern)`, "An ordinary stretch where no band stood out."]
+];
+$("#fullLegend").innerHTML = LEGEND.map(([k, h, t]) => `<div class="lg"><canvas data-sw="${k}" aria-hidden="true"></canvas><div><b>${h}</b><br>${t}</div></div>`).join("");
+$("#fullLegend").querySelectorAll("canvas[data-sw]").forEach(paintSwatch);
+
+/* ================= stages ================= */
+const views = [...document.querySelectorAll("[data-view]")], room = $("#room"), instr = $("#instr");
+function setStage(s) {
+  stage = s; document.body.dataset.stage = s;
+  for (const v of views) v.hidden = !v.dataset.view.split(" ").includes(s);
+  document.documentElement.style.colorScheme = s === "baseline" || s === "record" ? "dark" : "light";
+}
+function showNote(text) { const n = $("#connectNote"); n.textContent = text; n.hidden = !text; }
+
+/* the baseline is the opening of the session: instructions pass across the scope while the headset learns the resting signal, then the 60 seconds begin on their own */
+const INSTRUCTIONS = [
+  ["Sit still and breathe normally.", 4],
+  ["Your headset is recording your brainwaves at rest.", 4.5],
+  ["In a moment, you will have 60 seconds to find focus and meditation.", 5],
+  ["As you focus, floral motifs from Korean Buddhist art will be drawn to show your level of intention.", 6.5],
+  ["At the end, your brainwaves will become a chart in the form of Korean Buddhist art.", 5.5],
+  ["Begin.", 2.5]
+];
+let instrI = -1, instrLeft = 0, wake = null;
+function nextInstruction() {
+  instrI++;
+  if (instrI >= INSTRUCTIONS.length) {
+    if (E.n >= CALIB) beginRecording(); else instrLeft = 0.5; // a slow headset: hold on the last line until there is enough signal
+    instrI = Math.min(instrI, INSTRUCTIONS.length); return;
+  }
+  instr.classList.remove("on");
+  setTimeout(() => { if (stage === "baseline") { instr.textContent = INSTRUCTIONS[instrI][0]; instr.classList.add("on"); } }, reduceMotion || FAST ? 0 : 450);
+  instrLeft = INSTRUCTIONS[instrI][1];
+}
+function startSession(kind) {
+  src = kind; resetEngine(); resetTL(); resetFlower(); sessionT = 0; armed = false;
+  SIM.reg = "calm"; SIM.left = 4; SIM.queue = []; SIM.clock = 0; mu.clock = 0;
+  room.classList.remove("dawn"); instr.textContent = ""; instr.classList.remove("on"); instrI = -1; instrLeft = 0;
+  setStage("baseline"); window.scrollTo(0, 0);
+  requestAnimationFrame(() => { buildHall(); t.clearRect(0, 0, W, H); });
+  try { wake = null; navigator.wakeLock && navigator.wakeLock.request("screen").then(l => { wake = l; }).catch(() => {}); } catch (e) {}
+}
+function beginRecording() {
+  if (stage !== "baseline") return;
+  armed = true; if (src === "sim") simPlan();
+  instr.classList.remove("on"); instr.textContent = "";
+  setStage("record"); drawScreenBg(); t.clearRect(0, 0, W, H);
+  bigStrike();
+}
+function finishRecording() {
+  if (TL.final || stage !== "record") return;
+  if (TL.cur) { TL.flowers.push(TL.cur); TL.cur = null; }
+  TL.final = true; setStage("painting"); room.classList.add("dawn");
+  try { wake && wake.release(); } catch (e) {}
+  muteBell();
+  setTimeout(() => showResult(), reduceMotion ? 30 : 900);
+}
+function onMuseLost() {
+  if (stage === "record" && tlNow() >= 8) { TL.window = Math.max(5, tlNow()); finishRecording(); return; }
+  if (stage === "record" || stage === "baseline") leaveToIntro("The headset disconnected. Check that it is charged and on, then connect again.");
+}
+function leaveToIntro(msg) {
+  muteBell();
+  room.classList.remove("dawn"); disconnectMuse();
+  setStage("intro"); showNote(msg || ""); window.scrollTo(0, 0);
+}
+
+/* ================= the print ================= */
+let flipped = false, chart = null, OUT = null, shareLink = "", received = false;
+const chartCanvas = $("#chartCv"), flipIn = $("#flipIn"), faceF = $("#faceFront"), faceB = $("#faceBack"), plate = $("#plate");
+function flipTo(b) {
+  flipped = b; flipIn.classList.toggle("flipped", b); faceF.inert = b; faceB.inert = !b; if (b) faceB.scrollTop = 0;
+  const btn = $("#flipBtn"); btn.setAttribute("aria-pressed", String(b)); btn.setAttribute("aria-label", b ? "Turn back to the chart" : "Turn the chart over");
+}
+$("#flipBtn").addEventListener("click", () => flipTo(!flipped));
+// front and back share one fixed size, so the chart scales to fit whatever height the card has
+function fitPlate() {
+  if (stage !== "result" || !chart) return;
+  const cs = getComputedStyle(faceF), availW = faceF.clientWidth - parseFloat(cs.paddingLeft) - parseFloat(cs.paddingRight), availH = faceF.clientHeight - parseFloat(cs.paddingTop) - parseFloat(cs.paddingBottom);
+  plate.style.width = `${availW}px`;
+  const extra = plate.offsetHeight - $("#chartCv").offsetHeight; // title, frame, focus line and ticks
+  plate.style.width = `${Math.min(availW, Math.max(200, (availH - extra) * CH.W / CH.H))}px`;
+  drawFocusStrip(OUT, chart.T);
+}
+new ResizeObserver(fitPlate).observe(faceF);
+
+function drawFocusStrip(tl, T) {
+  const cv = $("#focusStrip"), r = cv.getBoundingClientRect(); if (r.width < 10) return;
+  const d = Math.min(2, devicePixelRatio || 1); cv.width = Math.round(r.width * d); cv.height = Math.round(r.height * d);
+  const c = cv.getContext("2d"), w = cv.width, h = cv.height, y = v => h - 2 * d - v * (h - 4 * d), x = tt => tt / T * w;
+  c.strokeStyle = "rgba(42,38,32,.22)"; c.lineWidth = 1; c.beginPath(); c.moveTo(0, y(0) + .5); c.lineTo(w, y(0) + .5); c.stroke();
+  const L = tl.focusLine; if (L.length > 1) {
+    const line = new Path2D(); L.forEach(([tt, v], i) => i ? line.lineTo(x(tt), y(v)) : line.moveTo(x(tt), y(v)));
+    const area = new Path2D(line); area.lineTo(x(L[L.length - 1][0]), y(0)); area.lineTo(x(L[0][0]), y(0)); area.closePath();
+    c.fillStyle = "rgba(47,122,98,.2)"; c.fill(area);
+    c.strokeStyle = "#2F7A62"; c.lineWidth = 1.5 * d; c.lineJoin = "round"; c.stroke(line);
+  }
+  c.setLineDash([4 * d, 4 * d]); c.strokeStyle = "#A9553E"; c.lineWidth = 1.1 * d; c.beginPath(); c.moveTo(0, y(S.thr)); c.lineTo(w, y(S.thr)); c.stroke(); c.setLineDash([]);
+}
+// the chart is always drawn from the packed session, so the one on screen and the one on a phone are the same picture
+function showResult(fromLink) {
+  received = !!fromLink;
+  let packed = null;
+  if (fromLink) OUT = fromLink;
+  else { packed = packSession(TL); OUT = unpackSession(packed); }
+  chart = renderChart(OUT, chartCanvas, 3);
+  const qb = $("#qrBtn"); qb.hidden = true; shareLink = "";
+  const base = shareBase();
+  if (packed && base && typeof qrcode === "function") { shareLink = { base: `${base}#c=`, code: encodeSession(packed) }; qb.hidden = false; }
+  const T = chart.T;
+  $("#ticks").innerHTML = [0, T / 3, 2 * T / 3, T].map(v => `<span style="left:${v / T * 100}%">${fmt(Math.round(v))}</span>`).join("");
+  $("#dlNote").hidden = true;
+  flipped = false; flipIn.classList.remove("flipped"); faceF.inert = false; faceB.inert = true;
+  room.classList.remove("dawn");
+  setStage("result"); window.scrollTo(0, 0);
+  requestAnimationFrame(fitPlate);
+}
+
+/* ================= download ================= */
+let dlReady = null;
+function getDownloads() {
+  if (dlReady) return dlReady;
+  if (!(window.claude && typeof window.claude.use === "function")) return (dlReady = Promise.resolve(null));
+  dlReady = Promise.race([Promise.resolve(window.claude.use("downloads")).catch(() => null), new Promise(r => setTimeout(() => r(null), 10000))]);
+  return dlReady;
+}
+getDownloads();
+function chartFile() {
+  return new Promise(res => chartCanvas.toBlob(b => {
+    if (b) return res(b);
+    const bin = atob(chartCanvas.toDataURL("image/png").split(",")[1]), u = new Uint8Array(bin.length); for (let i = 0; i < bin.length; i++) u[i] = bin.charCodeAt(i);
+    res(new Blob([u], { type: "image/png" }));
+  }, "image/png"));
+}
+async function downloadPNG() {
+  if (!chart) return;
+  const note = $("#dlNote"), btn = $("#dlBtn"), name = "meditate-dancheong.png"; note.hidden = true; btn.disabled = true;
+  try {
+    const blob = await chartFile(), ns = await getDownloads();
+    if (ns) {
+      try { await ns.save({ filename: name, data: await blob.arrayBuffer() }); }
+      catch (e) { const code = e && e.code; if (code !== "declined") { note.textContent = code === "rate_limited" ? "A save prompt is already open." : "Saving isn't available in this view."; note.hidden = false; } }
+    } else {
+      const a = document.createElement("a"), url = URL.createObjectURL(blob);
+      a.href = url; a.download = name; document.body.appendChild(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(url), 10000);
+    }
+  } finally { btn.disabled = false; }
+}
+$("#dlBtn").addEventListener("click", downloadPNG);
+$("#againBtn").addEventListener("click", () => { chart = null; OUT = null; if (location.hash.startsWith("#c=")) history.replaceState(null, "", location.pathname + location.search); leaveToIntro(); });
+
+/* ================= QR ================= */
+function drawQR(link) { // the address as text, then the chart in the denser alphanumeric mode
+  const qr = qrcode(0, "L"); qr.addData(link.base, "Byte"); qr.addData(link.code, "Alphanumeric"); qr.make();
+  // every square lands on whole screen pixels; a QR scaled by an uneven amount blurs and stops scanning
+  const n = qr.getModuleCount(), quiet = 4, cells = n + 2 * quiet, dpr = Math.max(1, Math.round(devicePixelRatio || 1)), css = Math.max(2, Math.floor(Math.min(340, innerWidth * 0.74) / cells)), px = css * dpr, cv = $("#qrCv"), c = cv.getContext("2d");
+  cv.width = cv.height = cells * px; cv.style.width = cv.style.height = `${cells * css}px`;
+  c.fillStyle = "#F7F2E7"; c.fillRect(0, 0, cv.width, cv.height); c.fillStyle = "#2A2620";
+  for (let r = 0; r < n; r++) for (let k = 0; k < n; k++) if (qr.isDark(r, k)) c.fillRect((k + quiet) * px, (r + quiet) * px, px, px);
+  return n;
+}
+const qrSheet = $("#qrSheet");
+function closeQR() { if (qrSheet.hidden) return; qrSheet.hidden = true; $("#qrBtn").focus(); }
+$("#qrBtn").addEventListener("click", () => {
+  if (!shareLink) return;
+  try { drawQR(shareLink); } catch (e) { $("#dlNote").textContent = "This chart is too detailed to fit in a QR code. Use the download button instead."; $("#dlNote").hidden = false; return; }
+  qrSheet.hidden = false; $("#qrClose").focus();
+});
+$("#qrClose").addEventListener("click", closeQR);
+qrSheet.addEventListener("click", e => { if (e.target === qrSheet) closeQR(); });
+addEventListener("keydown", e => { if (e.key === "Escape") closeQR(); });
+
+/* ================= entry ================= */
+$("#startSim").addEventListener("click", () => { showNote(""); startSession("sim"); });
+$("#startMuse").addEventListener("click", async () => {
+  const btn = $("#startMuse"), label = btn.textContent; showNote("");
+  if (!navigator.bluetooth) { showNote("This browser can't reach Bluetooth. Open this page in Chrome or Edge on a computer or Android phone, or start with simulated EEG."); return; }
+  btn.disabled = true; btn.textContent = "Choose your headset…";
+  try { await connectMuse(s => { btn.textContent = s; }); startSession("muse"); }
+  catch (e) {
+    const n = e && e.name;
+    if (n === "NotFoundError") { /* the visitor closed the picker */ }
+    else if (n === "SecurityError") showNote("This copy of the page is running somewhere that blocks Bluetooth, as embedded previews do. Connecting works from a regular web page in Chrome or Edge. For now, you can start with simulated EEG.");
+    else if (n === "Athena") showNote("This looks like a Muse S Athena, which uses a newer Bluetooth format that this page doesn't read yet. Earlier Muse headbands work.");
+    else if (n === "Silent") showNote("The headset connected but sent no signal. Turn it off and on again, close the Muse app on any phone it is paired with, and try once more.");
+    else showNote("The headset didn't connect. Make sure it is on, charged and not connected to the Muse app on a phone, then try again.");
+  } finally { btn.disabled = false; btn.textContent = label; }
+});
+function muteBell() { // fades out, closes the audio and resets the icon, so the next session starts silent
+  const b = $("#bellBtn"); b.setAttribute("aria-pressed", "false"); b.setAttribute("aria-label", "Turn sound on");
+  if (!audio.ctx) return;
+  stopBell(); const old = audio.ctx; audio.ctx = null; setTimeout(() => { try { old.close(); } catch (e) {} }, 1600);
+}
+$("#bellBtn").addEventListener("click", () => {
+  const b = $("#bellBtn");
+  if (audio.ctx) { muteBell(); return; }
+  try { audio.ctx = new (window.AudioContext || window.webkitAudioContext)(); startBell(); b.setAttribute("aria-pressed", "true"); b.setAttribute("aria-label", "Turn sound off"); } catch (err) {}
+});
+addEventListener("keydown", e => { if (e.key === "Escape" && (stage === "record" || stage === "baseline")) leaveToIntro(); });
+new ResizeObserver(() => { if (stage === "baseline" || stage === "record") buildHall(); }).observe($("#hall"));
+
+/* ================= main loop ================= */
+let lastT = performance.now();
+function frame(now) {
+  const raw = Math.min(1, (now - lastT) / 1000), dt = Math.min(0.1, raw); lastT = now;
+  if (stage === "baseline" || stage === "record") {
+    const sdt = tickSources(raw);
+    if (stage === "baseline" || stage === "record") step(dt, sdt);
+    if (stage === "baseline") { instrLeft -= FAST ? raw * 12 : raw; if (instrLeft <= 0) nextInstruction(); }
+    else if (stage === "record" && W > 2) drawTrace();
+  }
+  requestAnimationFrame(frame);
+}
+
+/* ================= start ================= */
+resetEngine(); resetTL(); resetFlower();
+if (location.hash.startsWith("#c=")) { // opened from a QR code: show that chart, nothing else
+  for (const v of views) v.hidden = true;
+  try { const tl = decodeSession(decodeURIComponent(location.hash.slice(3))); requestAnimationFrame(() => showResult(tl)); } catch (e) { setStage("intro"); showNote("This link to a chart is incomplete. Try scanning the code again."); }
+} else setStage("intro");
+requestAnimationFrame(frame);
+if (FAST) window.__fs = { get stage() { return stage; }, get E() { return E; }, get TL() { return TL; }, get chart() { return chart; }, get f() { return f; }, get src() { return src; }, mu, decodeMusePacket, museEpoch };
+})();
+
+</script>
+</body>
+</html>
